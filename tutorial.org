@@ -1,0 +1,41 @@
+#+TITLE: The EngMACS Tutorial
+#+SUBTITLE: Keybindings, note-taking, and a general guide to EngMACS
+#+AUTHOR: Sebastian Hyland
+
+think about this: (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+
+
+
+* 1. Introduction
+Welcome to EngMACS! This tutorial will acquaint you with the basics of Emacs, navigation around documents and files using the keyboard, and the simplified keybindings offered by EngMACS using leader keys. As well, *some* of the features offered by EngMACS will be demonstrated to get you started, but Emacs offers plenty of advanced features beyond the scope of this tutorial.
+
+
+
+* 2. What is Evil Mode, anyways?
+EngMACS uses a package called evil-mode, which uses the control scheme of a popular text editing app called Vim. Each buffer (you can think of a buffer as the content in your window; for instance, you currently have the tutorial buffer open) has three modes: *Normal mode*, *Insert mode*, or *Visual mode*. You can see the mode that is currently being used in the bottom left corner of the window: N represents normal, I represents insert, and V represents visual.
+
+** Normal mode
+Most buffers, and all files that you open, will initially open in normal mode. In this mode, all of your key presses will be registered as *commands* rather than text input. For instance, pressing the ~<j>~ key will move the cursor down one line, and pressing the ~<p>~ key will paste the clipboard contents at your cursor's location.
+
+In any other mode, press ~<CTRL-g>~ or ~<ESCAPE>~ to return to normal mode.
+
+
+** Insert mode
+Insert mode is used to insert text, similar to any other text editor. When entering from normal mode, you will notice the cursor change from a square that is covering a character to a line that is between characters.
+
+If you are currently in normal mode, pressing ~<i>~ will enter insert mode with the cursor in front of the highlighted character, and pressing ~<a>~ will enter insert mode with the cursor after the highlighted character.
+
+
+** Visual mode
+Visual mode is used to select regions of text, typically to copy or delete. The selected region will be highlighted, similar to selecting text by click-dragging with your mouse.
+
+If you are currently in normal mode, pressing ~<v>~ will enter visual mode, and pressing ~<SHIFT-v>~ will enter visual mode, but selecting lines of text rather than individual characters. 
+
+
+
+* 2. EngMACS Keybindings
+All "functions" in EngMACS, like opening and saving files, creating notes, etc. will be controlled through sets of keybindings known as keychords. For simplicity, all keychords in EngMACS begin with a leader key. *Ctrl-SPACE* is the general leader key 
+
+* 2. Basics of EngMACS
+
+** Where are my files?
