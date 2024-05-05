@@ -23,7 +23,10 @@
 (add-hook 'emacs-startup-hook (lambda ()
 				(global-display-line-numbers-mode 1)
 				(display-line-numbers-mode -1)
-				(load-theme 'EngMACS-dark t)))
+				(load-theme 'EngMACS-dark t)
+				(setq display-line-numbers-type 'relative)
+				(menu-bar--display-line-numbers-mode-visual 1)
+				))
 
 (unless (file-directory-p "/Local/emacs-auto-saves/")
   (make-directory "/Local/emacs-auto-saves/")) 
@@ -210,27 +213,32 @@
   )
 
 (use-package evil
-   :diminish
-   :init
-   (setq evil-want-integration t)
-   (setq evil-want-keybinding nil)
-   (setq evil-want-C-u-scroll t)
-   (setq evil-want-C-i-jump nil)
-   :config
-   (evil-mode 1)
-   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-   ;; Use visual line motions even outside of visual-line-mode buffers
-   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
-   (evil-set-initial-state 'messages-buffer-mode 'normal)
-   (evil-set-initial-state 'dashboard-mode 'normal))
+  :diminish
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  :config
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+  ;; Use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal)
+  (evil-set-undo-system 'undo-redo)
+  (define-key evil-insert-state-map (kbd "C-p") (kbd "C-o P"))
+  (define-key evil-insert-state-map (kbd "C-y") (kbd "C-o y"))
+  (define-key evil-insert-state-map (kbd "C-x") (kbd "C-o x"))
+  )
 
 (use-package evil-collection
-   :diminish evil-collection-unimpaired-mode
-   :after evil
-   :config
-   (evil-collection-init))
+  :diminish evil-collection-unimpaired-mode
+  :after evil
+  :config
+  (evil-collection-init))
 
 ;; (use-package hydra)
 
@@ -635,6 +643,9 @@
        (t
 	(counsel-find-file nil "/Local/")))
     (counsel-find-file nil "/Local/")))
+
+(define-key evil-visual-state-map (kbd "<backspace>") "\"_x")
+(define-key evil-normal-state-map (kbd "<backspace>") "\"_x")
 
 (eng/leader-keys
   "<return>" '(toggle-writing-mode :which-key "Toggle writing mode")

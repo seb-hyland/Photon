@@ -1,0 +1,83 @@
+
+#+TITLE: The EngMACS Tutorial | Part 1
+#+SUBTITLE: EngMACS Binds
+#+AUTHOR: Sebastian Hyland
+
+
+
+
+* Let's actually do some stuff
+You probably noticed by now that the EngMACS user interface is extremely simple, without any toolbars or menus to click on. This is because every command in EngMACS is carried out through a set of key presses known as a "keychord." However, EngMACS keychords are really quite intuitive, and this section of the tutorial will go over practical keychords that you will be using often, such as saving files, opening files, splitting your screen to open multiple files at once, etc.
+
+** Keychord basics
+Every command that you want to execute in EngMACS is called through a series of key presses (a "keychord") beginning with either ~<CTRL-SPACE>~ or ~<SPACE>~. These two "leader keys" are completely interchangable: either one works just fine to start any keychord. ~<CTRL-SPACE>~ *always* works in every scenario, whereas ~<SPACE>~ works in Normal and Visual modes, but *not* Insert mode because pressing ~<SPACE>~ obviously adds a space when you are editing text. If you want to cancel a key sequence, you can simply press ~<ESCAPE>~.
+
+When you are in the middle of a keychord, EngMACS also opens an information panel on the left to show you the possible keys you can press next.
+
+*Note*: In this tutorial, I will usually describe keychords with ~<SPC [some key] [some key]...>~ (~<SPC>~ is a shortened form of ~<SPACE>~). This is purely for simplicity's sake; both ~<SPACE>~ and ~<CTRL-SPACE>~ can be used to start a keychord.
+
+*Try it out!*
+#+begin_src
+
+Ensure that you are in normal mode. Press <SPC> and wait half a second; notice that a popup window displays on the left.
+
+Notice that the <w> key has "+Window management" as its description in red. Press <w>, and notice how a new menu opens; as well, notice that in the bottom-left corner, it says "SPC w-", showing that it is waiting for another key press to execute a command. This is because <SPC w> is not directly tied to a command, but rather acts as an intermediate "prefix" key in keychords such as <SPC w q> and <SPC w h>, which do execute commands.
+
+These keychords allow EngMACS to intuitively group together functionality; for example, all the commands that begin with <SPC w> are related to managing windows. Press <ESCAPE> now to end the sequence and close the window.
+
+#+end_src
+
+Let's now work through some more concrete examples to better understand the common commands that you will use in EngMACS.
+
+
+
+** *[Example]*: saving a file
+To save a file, press ~<SPC s>~.
+
+*Try it out!*
+#+begin_src
+
+Enter Insert mode by pressing <i>, then add some text to the line below. Notice the save icon next to the filename on the modeline (the information bar at the bottom of the screen that displays the current mode, filename, etc.). Press <ESCAPE> to return to Normal mode. Now press <SPC s>. Notice that the icon disappears, signalling that the file has been saved.
+-----> Add some text here:     <-----
+
+Now, add some text below, and try to save in insert mode with <CTRL-SPC s>.
+-----> Add some text here:     <-----
+
+#+end_src
+
+
+
+** *[Example]*: finding words in a document
+~<SPC f>~ is the EngMACS equivalent to the "find" function in other applications (typically ~<CTRL-f>~).
+
+In EngMACS, some commands are interactive (i.e., they accept input). These commands use a small window at the bottom of your screen called the *minibuffer*. ~<SPC f>~ is one of these commands.
+
+*Try it out!*
+#+begin_src
+
+Press <SPC f> or <CTRL-SPC f>. Notice how a minibuffer window appears at the bottom of the screen with a list of possible options.
+
+Let's imagine we were searching a document for all instances of the word "watermellon".
+
+Let's type in <wat>, the first few letters. Notice how we are presented in the minibuffer with multiple instances. You can navigate between the possible options by using <CTRL-k> and <CTRL-j>. Note that this is similar to moving up/down with <k> and <j> with Vim motions! Try rotation between the different instances of "watermellon" using <CTRL-k> and <CTRL-j>, then selecting a desired option with <ENTER>. Your cursor will jump to the selected option.
+
+-----> Watermellon! <-----
+
+Open up the find menu again with <SPC f>. Type in <wat> again and rotate through some of the options, then press <ESCAPE>. Note that this quits the command, and returns your cursor to its original location instead of jumping to one of the options.
+
+#+end_src
+
+
+
+** *[Example]*: splitting the screen
+
+
+
+* *[Example]*: opening files
+
+* 2. Basics of EngMACS
+
+** Where are my files?
+
+
+[[file:1.1 \[Tutorial\].org][Next ->]]

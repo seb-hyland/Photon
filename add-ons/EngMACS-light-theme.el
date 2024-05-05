@@ -12,30 +12,30 @@
   (error "Requires Emacs 24 or later"))
 
 (autothemer-deftheme
- EngMACS-dark "A modified version of Kanagawa, a theme inspired by the colors of the famous painting by Katsushika Hokusa"
+ EngMACS-light "A modified version of Kanagawa, a theme inspired by the colors of the famous painting by Katsushika Hokusa"
 
  ((((class color) (min-colors #xFFFFFF))        ; col 1 GUI/24bit
    ((class color) (min-colors #xFF)))           ; col 2 Xterm/256
 
   (padding 7)
   ;; Define our color palette
-  (fujiWhite		"#E6E3D3" "#ffffff")
-  (old-white		"#C8C093" "#ffffff")
+  (fujiWhite		"#16161D" "#000000")
+  (old-white		"#2A2A37" "#000000")
 
-  (sumiInk              "#13131a" "#13131a")
-  (sumiInk-0		"#16161D" "#000000")
-  (sumiInk-1b		"#1c1c24" "#000000")
-  (sumiInk-1		"#1F1F28" "#080808")
-  (sumiInk-2		"#2A2A37" "#121212")
-  (sumiInk-3		"#363646" "#303030")
-  (sumiInk-4		"#54546D" "#303030")
-  (sumiInk-5		"#888899" "#303030")
-  (sumiInk-6		"#a0a0ae" "#303030")
+  (sumiInk              "#E6E3D3" "#E6E3D3")
+  (sumiInk-0		"#000000" "#ffffff")
+  (sumiInk-1b		"#F7EEB2" "#ffffff")
+  (sumiInk-1		"#FCF8D4" "#ffffff")
+  (sumiInk-2		"#FCE1BB" "#C99169")
+  (sumiInk-3		"#C99169" "#303030")
+  (sumiInk-4		"#B38E74" "#303030")
+  (sumiInk-5		"#522202" "#303030")
+  (sumiInk-6		"#252535" "#303030")
 
   (waveBlue-1		"#223249" "#4e4e4e")
   (waveBlue-2		"#2D4F67" "#585858")
-  (waveAqua1		"#6A9589" "#6a9589")
-  (waveAqua2		"#7AA89F" "#717C7C")
+  (waveAqua1		"#48635C" "#6a9589")
+  (waveAqua2		"#56756F" "#717C7C")
   
   (samuraiRed       "#E82424" "#585858")
 
@@ -56,12 +56,13 @@
   (springViolet1	"#938AA9" "#717C7C")
   (oniViolet		"#957FB8" "#717C7C")
   (crystalBlue		"#7E9CD8" "#717C7C")
-  (springViolet2	"#9CABCA" "#717C7C")
-  (springBlue		"#7FB4CA" "#717C7C")
+  (springViolet2	"#778dba" "#717C7C")
+
+  (springBlue		"#447c94" "#717C7C")
   (springGreen		"#98BB6C" "#717C7C")
   (boatYellow1		"#938056" "#717C7C")
   (boatYellow2		"#C0A36E" "#717C7C")
-  (carpYellow		"#E6C384" "#717C7C")
+  (carpYellow		"#9C6A46" "#717C7C")
   (sakuraPink		"#D27E99" "#717C7C")
   (waveRed          "#E46876" "#717C7C")
   (peachRed         "#FF5D62" "#717C7C")
@@ -129,8 +130,8 @@
   (elisp-shorthand-font-lock-face                (:foreground fujiWhite))
 
   (info-xref                                     (:foreground peachRed))
-  (minibuffer-prompt-end                         (:foreground autumnRed :background winterRed))
-  (minibuffer-prompt                             (:foreground peachRed :background winterRed :bold t))
+  (minibuffer-prompt-end                         (:foreground springGreen :background winterGreen))
+  (minibuffer-prompt                             (:foreground sumiInk-1 :background springGreen :bold t))
   (epa-mark                                      (:foreground waveRed))
   (dired-mark                                    (:foreground waveRed))
   (trailing-whitespace                           (:background comet))
@@ -185,11 +186,11 @@
   (org-done                                      (:foreground dragonBlue))
   (org-drawer                                    (:foreground springBlue :background winterBlue :height 0.8 :weight 'normal))
   (org-special-keyword                           (:background winterRed :foreground peachRed :height 0.8))
-  (org-code                                      (:background sumiInk-0))
+  (org-code                                      (:background sumiInk-1b))
   (org-meta-line                                 (:background winterGreen :foreground springGreen))
-  (org-block                                     (:background sumiInk-0 :foreground sumiInk-6))
-  (org-block-begin-line                          (:background winterBlue :foreground dragonBlue))
-  (org-block-end-line	                         (:background winterBlue :foreground dragonBlue))
+  (org-block                                     (:background sumiInk-2 :foreground sumiInk-6))
+  (org-block-begin-line                          (:background sumiInk-2 :foreground dragonBlue))
+  (org-block-end-line	                         (:background sumiInk-2 :foreground dragonBlue))
   (org-headline-done                             (:foreground dragonBlue :strike-through t))
   (org-todo                                      (:foreground surimiOrange :bold t))
   (org-headline-todo                             (:foreground sumiInk-2))
@@ -582,5 +583,5 @@
                   (file-name-as-directory
                    (file-name-directory load-file-name))))
 
-(provide-theme 'EngMACS-dark)
+(provide-theme 'EngMACS-light)
 ;;; kanagawa-theme.el ends here

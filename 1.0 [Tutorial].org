@@ -1,0 +1,18 @@
+
+#+TITLE: The EngMACS Tutorial | Part 1
+#+SUBTITLE: Introduction
+#+AUTHOR: Sebastian Hyland
+
+
+
+* Welcome to EngMACS!
+
+EngMACS is a highly configured, extremely powerful tool that can do *basically anything you want*.
+
+To help you quickly get started working with EngMACS, this tutorial aims to acquaint you with the basics through quick explanations and interactive exercises. It has two parts: _Part 1_, which teaches the basics of using EngMACS, and _Part 2_, which explains specific features and their realistic use cases. _Part 1_ should only take around 10-20 minutes to finish, depending on your speed.
+
+Although this software may seem daunting at first, it is unlike anything else you've used before and is jam packed with features that are both cool and extremely practical. It is perfect for note-taking, coding, writing papers, doing math, organizing your calendar... the list goes on and on. It has a steeper learning curve than many other pieces of software, but once you master the basics and start integrating EngMACS into your workflow, I trust that you will begin to realize the incredible efficiency and power that it offers.
+
+Let's get started with the tutorial. Good luck!
+
+[[file:1.1 \[Tutorial\].org][Next >]]

@@ -23,7 +23,9 @@ RUN pacman -Syu --noconfirm && pacman -S --noconfirm \
     rustup \
     tree-sitter \
     cmake \
-    aspell 
+    make \
+    aspell \
+    apsell-en
 
 RUN ln -sf python3 /usr/bin/python
 
