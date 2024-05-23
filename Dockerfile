@@ -13,9 +13,9 @@ RUN pacman -Syu --noconfirm && pacman -S --noconfirm \
     texlive-latexextra \
     texlive-mathscience \
     texlive-pictures \
-    texlive-lang \
+    texlive-langenglish \
+    texlive-langother \
     texlive-bibtexextra \
-    ghostscript \
     octave \
     git \
     curl \
@@ -25,13 +25,15 @@ RUN pacman -Syu --noconfirm && pacman -S --noconfirm \
     cmake \
     make \
     aspell \
-    apsell-en
+    aspell-en \
+    npm \
+    openssh
 
-RUN ln -sf python3 /usr/bin/python
+RUN ln -sf python3 /usr/bin/python && npm install -g npm@10.7.0 && npm install -g git+https://gitlab.com/matsievskiysv/math-preview
 
 COPY init.el /root/.emacs.d/init.el
 COPY add-ons /root/.emacs.d/add-ons
-COPY snippets /root/.emacs.d/snippets
+COPY snippets /root/.emacs.d/snippets-core
 COPY fonts/ /usr/local/share/fonts/
 
 ENV CHROME_BIN=/usr/bin/chromium \

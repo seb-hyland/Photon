@@ -61,7 +61,7 @@
 
     `((,(concat buffer-modified buffer-name) . nil)
       (" " . nil)
-      (,(if vc-branch-name (concat "[" vc-branch-name "]") "") . doom-nano-modeline-vc-branch-name-face)
+      (,(if vc-branch-name (concat "@" vc-branch-name "") "") . doom-nano-modeline-vc-branch-name-face)
       (,(if vc-branch-name " " "") . nil)
       (,(concat "(" mode-name ")") . doom-nano-modeline-major-mode-face))))
 
@@ -102,8 +102,23 @@
     (doom-nano-modeline-default-mode)))
 
 (defun doom-nano-modeline-cursor-position ()
-  "Return the cursor position in the current buffer."
-  `((,(format-mode-line "%l:%c") . doom-nano-modeline-cursor-position-face)))
+  "Return the current perspective name."
+  `((,(concat "[" (persp-current-name) "]") . doom-nano-modeline-cursor-position-face)))
+
+
+(defun doom-nano-modeline-caps-state ()
+  "Return the CAPS LOCK state segment for the modeline."
+  (let ((caps-state (string-trim
+                     (shell-command-to-string "xset -q | sed -n \"s/^.*Caps Lock:\\s*\\(\\S\\+\\).*$/\\1/p\""))))
+    (if (string-equal caps-state "on")
+        `((,(concat "<CAPS ON> ") . doom-nano-modeline-caps-state-face))
+      `((,(concat "") . doom-nano-modeline-caps-state-face)))))
+
+
+(defface doom-nano-modeline-caps-state-face
+  '((t (:inherit doom-nano-modeline-warning-face)))
+  "Face used for the Caps Lock status in the modeline."
+  :group 'doom-nano-modeline)
 
 (defun doom-nano-modeline-visual-selection-information ()
   "Return information about the visual selection in the current buffer."
@@ -156,7 +171,7 @@
   "Return current VC branch if any."
   (if vc-mode
       (let ((backend (vc-backend buffer-file-name)))
-        (concat "#" (substring-no-properties vc-mode
+        (concat (substring-no-properties vc-mode
                                  (+ (if (eq backend 'Hg) 2 3) 2))))  nil))
 
 (defun doom-nano-modeline--space ()

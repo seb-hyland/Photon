@@ -98,6 +98,11 @@
   (setq         header-line-format doom-nano-modeline--saved-header-line-format)
   (setq-default header-line-format doom-nano-modeline--saved-header-line-format))
 
+(defface doom-nano-modeline-active-modified-face
+  '((t (:inherit doom-nano-modeline-active-face :foreground "#E82424")))
+  "Face for active doom-nano modeline when buffer is modified.")
+
+
 (defun doom-nano-modeline--render (left right &optional hide-evil-mode)
   "Render the doom-nano modeline string.
 
@@ -144,8 +149,12 @@ If HIDE-EVIL-MODE is nil, the Evil mode state is not shown in the modeline."
          (macrostring (if hasmacro (concat "● " macroname ) nil))
 
          ;; Select the modeline face.
-         (modeline-face (if active
-                            'doom-nano-modeline-active-face
+	 (modeline-face (if active
+                            (if (and (buffer-file-name)
+                                     (file-regular-p (buffer-file-name))
+                                     (buffer-modified-p))
+                                'doom-nano-modeline-active-modified-face
+                              'doom-nano-modeline-active-face)
                           'doom-nano-modeline-inactive-face))
 
          ;; Select the face to highlight the evil state.

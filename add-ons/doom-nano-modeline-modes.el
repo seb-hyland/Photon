@@ -33,7 +33,8 @@
   (doom-nano-modeline--render (doom-nano-modeline-buffer-name-vc-and-major-mode)
                               (append (funcall doom-nano-modeline-append-information)
                                       (doom-nano-modeline-visual-selection-information)
-                                      (doom-nano-modeline-cursor-position)
+				      (doom-nano-modeline-caps-state)
+				      (doom-nano-modeline-cursor-position)
                                       (doom-nano-modeline--space)
                                       (doom-nano-modeline-org-clock-timer))))
 
@@ -53,7 +54,7 @@
           (directory-file-name
            (file-name-directory default-directory))) . nil)
        (" " . nil)
-       (,(concat "[#" (magit-get-current-branch) "]") . doom-nano-modeline-vc-branch-name-face))
+       (,(concat "@" (magit-get-current-branch)) . doom-nano-modeline-vc-branch-name-face))
      nil
      t))
 
@@ -84,6 +85,7 @@
    (doom-nano-modeline-org-mode-buffer-name-and-major-mode)
    (append (funcall doom-nano-modeline-append-information)
            (doom-nano-modeline-visual-selection-information)
+	   (doom-nano-modeline-caps-state)
            (doom-nano-modeline-cursor-position)
            (doom-nano-modeline--space)
            (doom-nano-modeline-org-clock-timer))))
@@ -172,7 +174,7 @@
   "Render the modeline in `vterm-mode'."
   (doom-nano-modeline--render
    `(;; The name of the shell.
-     (,(concat "vterm [" (file-name-base vterm-shell) "]") . doom-nano-modeline-major-mode-face)
+     (,(concat " vterm [" (file-name-base vterm-shell) "]") . doom-nano-modeline-major-mode-face)
      (" " . nil)
      ;; The abbreviated directory.
      (,(abbreviate-file-name default-directory)))

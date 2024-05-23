@@ -19,13 +19,14 @@
 (global-visual-line-mode 1)
 (setq default-frame-alist
     '((width . 150) (height . 45)))
+(setenv "TZ" "PST8PDT,M3.2.0,M11.1.0")
 
 (add-hook 'emacs-startup-hook (lambda ()
 				(global-display-line-numbers-mode 1)
 				(display-line-numbers-mode -1)
 				(load-theme 'EngMACS-dark t)
 				(setq display-line-numbers-type 'relative)
-				(menu-bar--display-line-numbers-mode-visual 1)
+				(menu-bar--display-line-numbers-mode-visual)
 				))
 
 (unless (file-directory-p "/Local/emacs-auto-saves/")
@@ -97,17 +98,20 @@
  '(doom-modeline-major-mode-icon t)
  '(doom-modeline-major-mode-color-icon t)
  '(doom-modeline-buffer-state-icon t)
- '(doom-modeline-buffer-modification-icon t)
+ '(doom-modeline-buffer-modification-icon nil)
+ '(doom-modeline-buffer-encoding nil)
  '(doom-modeline-icon t)
- '(doom-modeline-time-icon t)
- '(doom-modeline-time-live-icon t)
+ '(doom-modeline-time-icon nil)
+ '(doom-modeline-time-live-icon nil)
+ '(doom-modeline-time-clock-size 0.3)
  '(doom-modeline-buffer-name t)
  '(doom-modeline-height 40)
  '(doom-modeline-support-imenu t)
  '(doom-modeline-bar-width 6)
  '(doom-modeline-position-column-line-format '("%l:%c"))
  '(doom-modeline-minor-modes t)
- '(doom-modeline-enable-word-count t))
+ '(doom-modeline-enable-word-count t)
+ '(doom-modeline-unicode-fallback t))
 
 (custom-set-faces
  '(doom-modeline ((t (:family "SF Mono"))))
@@ -285,6 +289,25 @@
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+;; (defvar ssh-setup nil)
+;; (defun ssh-setup-process ()
+  ;; (unless ssh-setup
+    ;; (when (file-directory-p "/Local/Documents/EngMACS/.ssh")
+      ;; (make-directory "/root/.ssh" t)
+      ;; (copy-directory "/Local/Documents/EngMACS/.ssh" "/root/.ssh" t)
+      ;; (let ((ssh-agent-output (shell-command-to-string "ssh-agent")))
+	;; (with-temp-buffer
+	  ;; (insert ssh-agent-output)
+	  ;; (while (re-search-forward "^[A-Z]+=.+;$" nil t)
+	    ;; (eval-last-sexp)))
+	;; (let ((password (read-string "Enter passphrase for ~/.ssh/id_ed25519: " nil nil t)))
+	  ;; (with-temp-buffer
+	    ;; (insert password)
+	    ;; (call-process "ssh-add" nil 0 nil "~/.ssh/id_ed25519" "-")
+	    ;; (erase-buffer))))
+      ;; (setq ssh-setup t))))
+;; (add-hook 'magit-mode-hook 'ssh-setup-process)
+
 (defun lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode))
@@ -357,6 +380,10 @@
 ;; (use-package deferred :defer t :ensure t)
 ;; (use-package s :defer t :ensure t)
 
+(use-package vterm
+  :config
+  (vterm-module-compile))
+
 (defun org-font-setup ()
   ;; Replace list hyphen with dot
   (font-lock-add-keywords 'org-mode
@@ -414,14 +441,12 @@
 (unless (file-directory-p "~/.emacs.d/previewcache")
   (make-directory "~/.emacs.d/previewcache")) 
 (setq temporary-file-directory "~/.emacs.d/previewcache")
-  (setq org-latex-pdf-process '("latex -shell-escape -interaction nonstopmode %f"))
-  (eval-after-load 'org
-    '(progn
-       (setq org-latex-create-formula-image-program 'dvipng)
-       (setq org-preview-latex-default-process 'dvipng)
-       )
-    )
+(setq org-latex-pdf-process '("latex -shell-escape -interaction nonstopmode %f"))
+(setq org-latex-create-formula-image-program 'dvipng)
+(setq org-preview-latex-default-process 'dvipng)
 (setq org-latex-pdf-process '("pdflatex -interaction nonstopmode -output-directory %o %f"))
+(use-package math-preview
+  :config (math-preview-start-process))
 
 (defun create-latex-preview ()
   (interactive)
@@ -669,11 +694,15 @@
   "n i" '(org-roam-node-insert :which-key "Insert node...")
   "n l" '(org-roam-buffer-toggle :which-key "Toggle org-roam buffer")
   "n u" '(org-roam-ui-open :which-key "Open org-roam graph")
-  "p b" '(org-auctex-preview-buffer :which-key "Create LaTeX previews for entire buffer")
-  "p n" '(org-auctex-preview-dwim :which-key "Create LaTeX preview at point (async)")
-  "p p" '(create-latex-preview :which-key "Create LaTeX preview at point")
+  "p b" '(math-preview-all :which-key "Create LaTeX previews for entire buffer")
+  "p c" '(math-preview-clear-all :which-key "Create LaTeX preview at point (async)")
+  "p p" '(math-preview-at-point :which-key "Create LaTeX preview at point")
   "v a" '(org-transclusion-make-from-link :which-key "Add transclusion from link")
-  "v m" '(org-transclusion-mode :which-key "Toggle transclusions"))
+  "v m" '(org-transclusion-mode :which-key "Toggle transclusions")
+  "x" '(counsel-M-x :which-key "Execute command...")
+  "0" '(lambda () (interactive) (counsel-load-theme) :which-key "Load light theme")
+  "e" '(org-export-dispatch :which-key "Export org file to...")
+  )
 
 (which-key-add-key-based-replacements
   "SPC n" "Org Roam Commands"
