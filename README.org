@@ -1,4 +1,5 @@
-#+TITLE: EngMACS: a Lean, Mean, Note-taking Machine
+#+TITLE: Carbon Config
+#+SUBTITLE: Your second brain in silico
 #+AUTHOR: Sebastian Hyland
 #+PROPERTY: header-args :tangle init.el :TOC_2:
 #+DATE: <2024-04-06>
@@ -36,21 +37,6 @@
   ;; (load "/Local/Downloads/org-starless.el")
 ;; 
 ;; 
-  ;; (defun ssh-setup1-process ()
-    ;; (interactive)
-    ;; (let ((ssh-agent-output (shell-command-to-string "ssh-agent")))
-      ;; (with-temp-buffer
-	;; (insert ssh-agent-output)
-	;; (while (re-search-forward "^[A-Z]+=.+;$" nil t)
-	  ;; (eval-last-sexp)))
-      ;; (let ((password (read-string "Enter passphrase for ~/.ssh/id_ed25519: " nil nil t)))
-	;; (with-temp-buffer
-	  ;; (insert password)
-	  ;; (call-process "ssh-add" nil 0 nil "~/.ssh/id_ed25519" "-")
-	  ;; (erase-buffer))))
-    ;; (setq ssh-setup t))
-;; 
-  ;; (call-process "eval $(ssh-agent)")
 ;; 
   ;; (setq svg-tag-tags
 	;; '(("\\(|[A-Z]+|\\)" . ((lambda (tag)
@@ -100,6 +86,7 @@
   - [[#generalel][General.el]]
   - [[#ivy-and-ivy-rich][Ivy and Ivy-rich]]
   - [[#counsel][Counsel]]
+  - [[#ripgrep][Ripgrep]]
   - [[#which-key][Which-key]]
   - [[#evil-and-evil-collection][Evil and Evil-collection]]
   - [[#hydra][Hydra]]
@@ -206,13 +193,14 @@ Clean up the window and set basic properties
   (scroll-bar-mode -1)   		        
   (tool-bar-mode -1)     		        
   (tooltip-mode -1)                            	        
-  (menu-bar-mode -1)	 	     
+  (menu-bar-mode -1)
+  (auto-revert-mode 1)
   (column-number-mode t)
   (setq visible-bell t)
   (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-  (set-face-attribute 'default nil :family "JetBrains Mono" :height 135)
-  (set-face-attribute 'line-number nil :inherit default :foreground "#3f4040" :slant normal :weight semi-bold :family "JetBrains Mono")
-  (set-face-attribute 'line-number-current-line nil :inherit (hl-line default) :foreground "#81a2be" :slant normal :weight extra-bold :family "JetBrains Mono")
+  (set-face-attribute 'default nil :family "JetBrainsMono Nerd Font" :height 135)
+  (set-face-attribute 'line-number nil :inherit 'default :foreground "#3f4040" :slant 'normal :weight 'semi-bold :family "JetBrainsMono Nerd Font")
+  (set-face-attribute 'line-number-current-line nil :inherit 'hl-line-default :foreground "#81a2be" :slant 'normal :weight 'extra-bold :family "JetBrainsMono Nerd Font")
   (setq frame-title-format nil)
   (prefer-coding-system 'utf-8)
   (global-visual-line-mode 1)
@@ -240,8 +228,6 @@ Set directories
     (make-directory "/Local/Documents/EngMACS/auto-saves/")) 
   (unless (file-directory-p "/Local/Documents/EngMACS/org-roam/")
     (make-directory "/Local/Documents/EngMACS/org-roam/")) 
-  (if (file-directory-p "/Local/Documents/EngMACS/snippets-core/")
-    (delete-directory "/Local/Documents/EngMACS/snippets-core/"))
   (unless (file-directory-p "/Local/Documents/EngMACS/snippets-custom/")
     (make-directory "/Local/Documents/EngMACS/snippets-custom/"))
   (unless (file-directory-p "/Local/Documents/EngMACS/org-agenda/")
@@ -264,42 +250,108 @@ Set directories
 Set up eng/leader-keys
 #+begin_src emacs-lisp
   (global-unset-key (kbd "C-SPC"))
-  (use-package general
-    :config
-    (general-create-definer eng/leader-keys
-      :states '(normal insert visual emacs motion)
-      :keymaps 'override
-      :prefix "SPC"
-      :global-prefix "C-SPC"
-      :non-normal-prefix "C-SPC"))
+;;  (use-package general
+;;   :config
+;;   (general-create-definer eng/leader-keys
+;;     :states '(normal insert visual emacs motion)
+;;     :keymaps 'override
+;;     :prefix "SPC"
+;;     :global-prefix "C-a"
+;;     :non-normal-prefix "C-a"))
 #+end_src
 
 
 ** Ivy and Ivy-rich
 Set up minibuffer tools
 #+begin_src emacs-lisp
-    (use-package ivy
-      :bind (("C-s" . swiper)
-	     :map ivy-minibuffer-map
-	     ("TAB" . ivy-alt-done)	
-	     ("C-l" . ivy-alt-done)
-	     ("C-j" . ivy-next-line)
-	     ("C-k" . ivy-previous-line)
-	     :map ivy-switch-buffer-map
-	     ("C-k" . ivy-previous-line)
-	     ("C-l" . ivy-done)
-	     ("C-d" . ivy-switch-buffer-kill)
-	     :map ivy-reverse-i-search-map
-	     ("C-k" . ivy-previous-line)
-	     ("C-d" . ivy-reverse-i-search-kill))
-      :config
-      (ivy-mode 1))
+	 (use-package ivy
+	   :bind (("C-s" . swiper)
+		  :map ivy-minibuffer-map
+		  ("TAB" . ivy-alt-done)	
+		  ("C-l" . ivy-alt-done)
+		  ("C-j" . ivy-next-line)
+		  ("C-k" . ivy-previous-line)
+		  :map ivy-switch-buffer-map
+		  ("C-k" . ivy-previous-line)
+		  ("C-l" . ivy-done)
+		  ("C-d" . ivy-switch-buffer-kill)
+		  :map ivy-reverse-i-search-map
+		  ("C-k" . ivy-previous-line)
+		  ("C-d" . ivy-reverse-i-search-kill))
+	   :config
+	   (ivy-mode 1))
+     (setq swiper-use-visual-line-p #'ignore)
 
-  (use-package ivy-rich
-      :diminish
-      (eldoc-mode)
-      :init
-      (ivy-rich-mode 1))
+  (use-package orderless
+    :config
+    (setq ivy-re-builders-alist '((t . orderless-ivy-re-builder)))
+    (add-to-list 'ivy-highlight-functions-alist '(orderless-ivy-re-builder . orderless-ivy-highlight)))
+
+       (use-package ivy-rich
+	 :after (counsel)
+	 :diminish
+	 (eldoc-mode)
+	 :init
+	 (ivy-rich-mode 1))
+#+end_src
+
+Use fussy as ivy search backend
+#+begin_src emacs-lisp
+;;  (defun ivy--fussy-sort (name cands)
+;;    "Sort according to closeness to string NAME the string list CANDS."
+;;    (condition-case nil
+;;	(let* ((bolp (= (string-to-char name) ?^))
+;;	       ;; An optimized regex for fuzzy matching
+;;	       ;; "abc" → "^[^a]*a[^b]*b[^c]*c"
+;;	       (fuzzy-regex (concat "\\`"
+;;				    (and bolp (regexp-quote (substring name 1 2)))
+;;				    (mapconcat
+;;				     (lambda (x)
+;;				       (setq x (char-to-string x))
+;;				       (concat "[^" x "]*" (regexp-quote x)))
+;;				     (if bolp (substring name 2) name)
+;;				     "")))
+;;	       ;; Strip off the leading "^" for flx matching
+;;	       (flx-name (if bolp (substring name 1) name))
+;;	       cands-left
+;;	       cands-to-sort)
+;;
+;;	  ;; Filter out non-matching candidates
+;;	  (dolist (cand cands)
+;;	    (when (string-match-p fuzzy-regex cand)
+;;	      (push cand cands-left)))
+;;
+;;	  ;; pre-sort the candidates by length before partitioning
+;;	  (setq cands-left (cl-sort cands-left #'< :key #'length))
+;;
+;;	  ;; partition the candidates into sorted and unsorted groups
+;;	  (dotimes (_ (min (length cands-left) ivy-flx-limit))
+;;	    (push (pop cands-left) cands-to-sort))
+;;
+;;	  (nconc
+;;	   ;; Compute all of the flx scores in one pass and sort
+;;	   (mapcar #'car
+;;		   (sort (mapcar
+;;			  (lambda (cand)
+;;			    (cons cand
+;;				  (car
+;;				   (funcall
+;;				    fussy-score-fn
+;;				    cand flx-name
+;;				    ivy--flx-cache))))
+;;			  cands-to-sort)
+;;			 (lambda (c1 c2)
+;;			   ;; Break ties by length
+;;			   (if (/= (cdr c1) (cdr c2))
+;;			       (> (cdr c1)
+;;				  (cdr c2))
+;;			     (< (length (car c1))
+;;				(length (car c2)))))))
+;;	   ;; Add the unsorted candidates
+;;	   cands-left))
+;;      (error cands)))
+;;
+;;  (advice-add 'ivy--flx-sort :override 'ivy--fussy-sort)
 #+end_src
 
 
@@ -314,6 +366,14 @@ Set up minibuffer completion framework
     :config
     (setq ivy-initial-inputs-alist nil)) 
 #+end_src
+
+
+** Ripgrep
+Set up ripgrep searching
+#+begin_src emacs-lisp
+(use-package rg)
+#+end_src
+
 
 
 ** Which-key
@@ -343,7 +403,7 @@ Set up Vim-style keybindings
     (setq evil-want-C-i-jump nil)
     (setq evil-respect-visual-line-mode t)
     :config
-    (evil-mode 1)
+    (evil-mode t)
     (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
     (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
     ;; Use visual line motions even outside of visual-line-mode buffers
@@ -416,38 +476,34 @@ Set up Git interface
     :diminish (magit-auto-revert-mode auto-revert-mode)
     :custom
     (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+#+end_src
 
-  ;; (defvar ssh-setup nil)
-  ;; (defun ssh-setup-process ()
-    ;; (unless ssh-setup
-      ;; (when (file-directory-p "/Local/Documents/EngMACS/.ssh")
-	;; (make-directory "/root/.ssh" t)
-	;; (copy-directory "/Local/Documents/EngMACS/.ssh" "/root/.ssh" t)
-	;; (let ((ssh-agent-output (shell-command-to-string "ssh-agent")))
-	  ;; (with-temp-buffer
-	    ;; (insert ssh-agent-output)
-	    ;; (while (re-search-forward "^[A-Z]+=.+;$" nil t)
-	      ;; (eval-last-sexp)))
-	  ;; (let ((password (read-string "Enter passphrase for ~/.ssh/id_ed25519: " nil nil t)))
-	    ;; (with-temp-buffer
-	      ;; (insert password)
-	      ;; (call-process "ssh-add" nil 0 nil "~/.ssh/id_ed25519" "-")
-	      ;; (erase-buffer))))
-	;; (setq ssh-setup t))))
-  ;; (add-hook 'magit-mode-hook 'ssh-setup-process)
+Set up SSH
+#+begin_src emacs-lisp
+  (defvar ssh-setup-buffer)
+  (defvar ssh-setup-status nil)
+  (defun ssh-setup ()
+    (interactive)
+    (unless (eq ssh-setup-status t)
+	(setq ssh-setup-buffer (current-buffer))
+      (shell)
+      (process-send-string "*shell*" "ssh-agent > /dev/null 2>&1 && eval $(ssh-agent > /dev/null 2>&1) && ssh-add ~/.ssh/id_ed25519\n")
+      (switch-to-buffer ssh-setup-buffer)
+      (setq ssh-setup-status t)))
+  (add-hook 'magit-mode-hook #'ssh-setup)
 #+end_src
 
 
 ** LSP mode
 Set up LSP integration
 #+begin_src emacs-lisp
-  (defun lsp-mode-setup ()
-    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
-    (lsp-headerline-breadcrumb-mode))
+;;  (defun lsp-mode-setup ()
+;;    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+;;    (lsp-headerline-breadcrumb-mode))
 
   (use-package lsp-mode
     :commands (lsp lsp-deferred)
-    :hook (lsp-mode . lsp-mode-setup)
+    ;; :hook (lsp-mode . lsp-mode-setup)
     :init
     (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
     :config
@@ -463,7 +519,14 @@ Set up LSP integration
 ** Treesitter
 Set up tree-sitter integration
 #+BEGIN_SRC emacs-lisp
-  (use-package tree-sitter-langs)
+  ;;  (setq tsc-dyn-get-from '(:compilation))
+  ;;  (setq tsc-dyn-dir '"/root/.emacs.d/add-ons/elisp-tree-sitter")
+    (require 'tree-sitter)
+    (require 'tree-sitter-langs)
+    (require 'tree-sitter-hl)
+    (require 'tree-sitter-debug)
+    (require 'tree-sitter-query)
+    (add-hook 'prog-mode-hook #'tree-sitter-hl-mode)
 #+END_SRC
 
 
@@ -528,9 +591,8 @@ Set up snippet macros
 #+begin_src emacs-lisp
   (use-package yasnippet
     :config
-    (copy-directory "~/root/.emacs.d/snippets-core/" "/Local/Documents/EngMACS/snippets-core/")
     (setq yas-snippet-dirs '("/Local/Documents/EngMACS/snippets-custom"))
-    (setq yas-snippet-dirs (append yas-snippet-dirs '("/Local/Documents/EngMACS/snippets-core/")))
+    (setq yas-snippet-dirs (append yas-snippet-dirs '("/root/.emacs.d/snippets-core/")))
     (yas-global-mode 1))
 #+end_src
 
@@ -538,37 +600,53 @@ Set up snippet macros
 ** Emacs Application Framework
 Set up EAF apps and browser
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path "~/.emacs.d/add-ons/EAF")
-  (add-to-list 'load-path "~/.emacs.d/add-ons/EAF/app/browser")
-  (add-to-list 'load-path "~/.emacs.d/add-ons/EAF/app/pdf-viewer")
-  (require 'eaf)
-  (require 'eaf-browser)
-  (require 'eaf-pdf-viewer)
-  (use-package epc :defer t :ensure t)
-  (use-package ctable :defer t :ensure t)
-  (use-package deferred :defer t :ensure t)
-  (use-package s :defer t :ensure t)
+  ;; (add-to-list 'load-path "~/.emacs.d/add-ons/EAF")
+  ;; (add-to-list 'load-path "~/.emacs.d/add-ons/EAF/app/browser")
+  ;; (add-to-list 'load-path "~/.emacs.d/add-ons/EAF/app/pdf-viewer")
+  ;; (require 'eaf)
+  ;; (require 'eaf-browser)
+  ;; (require 'eaf-pdf-viewer)
+  ;; (use-package epc :defer t :ensure t)
+  ;; (use-package ctable :defer t :ensure t)
+  ;; (use-package deferred :defer t :ensure t)
+  ;; (use-package s :defer t :ensure t)
 #+END_SRC
 
 
 ** Vterm
 Set up a terminal emulator
-#+BEGIN_SRC emacs-lisp
-  (use-package vterm
+#+begin_src emacs-lisp
+    (use-package vterm
+      :init
+      (setq vterm-always-compile-module t))
+  (use-package vterm-toggle
     :config
-    (vterm-module-compile))
-#+END_SRC
+    (setq vterm-toggle-fullscreen-p nil)
+    (setq vterm-shell "zsh")
+    (add-to-list 'display-buffer-alist
+		 '((lambda (buffer-or-name _)
+		     (let ((buffer (get-buffer buffer-or-name)))
+		       (with-current-buffer buffer
+			 (or (equal major-mode 'vterm-mode)
+			     (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
+		   (display-buffer-reuse-window display-buffer-at-bottom)
+		   (reusable-frames . visible)
+		   (window-height . 0.35))))
+#+end_src
 
 
 ** Perspective
 Set up perspective workspace management
 #+BEGIN_SRC emacs-lisp
-  (use-package perspective)
-  (persp-mode t)
+    (use-package perspective
+  :init
+    (setq persp-suppress-no-prefix-key-warning t)
+  :config
+    (persp-mode t))
 
-  (eng/leader-keys
-    "b" '(persp-counsel-switch-buffer :which-keys "Switch buffer...")
-    "p" '(persp-switch :which-keys "Switch perspective..."))
+;;    (eng/leader-keys
+;;      "b" '(persp-counsel-switch-buffer :which-keys "Switch buffer...")
+;;      "p" '(persp-switch :which-keys "Switch perspective..."))
 #+END_SRC
 
 
@@ -628,17 +706,17 @@ Set up Dired file management
 
 Keybindings for Dired
 #+BEGIN_SRC emacs-lisp
-  (eng/leader-keys
-    "d e" '(wdired-change-to-wdired-mode :which-key "Enter Wdired mode")
-    "<return>" (kbd "C-c C-c")
-    )
-    "SPC n" "Org Roam Commands"
-    "SPC p" "LaTeX Preview Commands"
-    "SPC v" "Transclusion Commands"
-
-  (which-key-add-key-based-replacements
-    "SPC <return>" "Complete/Execute"
-    )
+;;  (eng/leader-keys
+;;    "d e" '(wdired-change-to-wdired-mode :which-key "Enter Wdired mode")
+;;    "<return>" (kbd "C-c C-c")
+;;    )
+;;    "SPC n" "Org Roam Commands"
+;;    "SPC p" "LaTeX Preview Commands"
+;;    "SPC v" "Transclusion Commands"
+;;
+;;  (which-key-add-key-based-replacements
+;;    "SPC <return>" "Complete/Execute"
+;;    )
 #+END_SRC
 
 
@@ -693,7 +771,7 @@ Keybindings for Dired
 
 ** Doom Themes
 #+begin_src emacs-lisp
-  ;; (use-package doom-themes
+ (use-package doom-themes)
     ;; :defer t
     ;; :ensure t
     ;; :config
@@ -780,42 +858,42 @@ Install Nano Modeline from add-ons
 
 Set the Evil mode visual faces
 #+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'nano-modeline-status nil :foreground "black" :weight 'bold)
+  ;; (set-face-attribute 'nano-modeline-status nil :foreground "black" :weight 'bold)
 
-  (defun nano-modeline-set-evil-color ()
-    (cond
-     ((eq evil-state 'normal)
-      (set-face-attribute 'nano-modeline-status nil
-			  :background "#7FB4CA"))
-     ((eq evil-state 'insert)
-      (set-face-attribute 'nano-modeline-status nil
-			  :background "#98BB6C"))
-     ((eq evil-state 'visual)
-      (set-face-attribute 'nano-modeline-status nil
-			  :background "#FF5D62"))
-     ((eq evil-state 'emacs)
-      (set-face-attribute 'nano-modeline-status nil
-			  :background "#957FB8"))))
-
-  (add-hook 'evil-normal-state-entry-hook #'nano-modeline-set-evil-color)
-  (add-hook 'evil-insert-state-entry-hook #'nano-modeline-set-evil-color)
-  (add-hook 'evil-visual-state-entry-hook #'nano-modeline-set-evil-color)
-  (add-hook 'evil-emacs-state-entry-hook #'nano-modeline-set-evil-color)
+  ;; (defun nano-modeline-set-evil-color ()
+    ;; (cond
+     ;; ((eq evil-state 'normal)
+      ;; (set-face-attribute 'nano-modeline-status nil
+			  ;; :background "#7FB4CA"))
+     ;; ((eq evil-state 'insert)
+      ;; (set-face-attribute 'nano-modeline-status nil
+			  ;; :background "#98BB6C"))
+     ;; ((eq evil-state 'visual)
+      ;; (set-face-attribute 'nano-modeline-status nil
+			  ;; :background "#FF5D62"))
+     ;; ((eq evil-state 'emacs)
+      ;; (set-face-attribute 'nano-modeline-status nil
+			  ;; :background "#957FB8"))))
+;; 
+  ;; (add-hook 'evil-normal-state-entry-hook #'nano-modeline-set-evil-color)
+  ;; (add-hook 'evil-insert-state-entry-hook #'nano-modeline-set-evil-color)
+  ;; (add-hook 'evil-visual-state-entry-hook #'nano-modeline-set-evil-color)
+  ;; (add-hook 'evil-emacs-state-entry-hook #'nano-modeline-set-evil-color)
 #+END_SRC
 
 
 Set to red when edits occur
 #+BEGIN_SRC emacs-lisp
-  (defun nano-modeline-save-indicator ()
-    (if (buffer-modified-p)
-	(set-face-attribute 'nano-modeline--empty-face nil
-			    :foreground "#FF5D62"
-			    :background "#2A2A37")
-      (set-face-attribute 'nano-modeline--empty-face nil
-			  :foreground "#E6E3D3")))
-
-  (add-hook 'post-command-hook #'nano-modeline-save-indicator)
-  (add-hook 'after-save-hook #'nano-modeline-save-indicator) 
+  ;; (defun nano-modeline-save-indicator ()
+    ;; (if (buffer-modified-p)
+	;; (set-face-attribute 'nano-modeline--empty-face nil
+			    ;; :foreground "#FF5D62"
+			    ;; :background "#2A2A37")
+      ;; (set-face-attribute 'nano-modeline--empty-face nil
+			  ;; :foreground "#E6E3D3")))
+;; 
+  ;; (add-hook 'post-command-hook #'nano-modeline-save-indicator)
+  ;; (add-hook 'after-save-hook #'nano-modeline-save-indicator) 
 #+END_SRC
 
 
@@ -833,7 +911,7 @@ Set up the EngMACS dashboard
   (load-file "~/.emacs.d/add-ons/engmacs-dashboard.el")
   (add-hook 'window-setup-hook (lambda () (dashboard-open)))
   (add-hook 'window-setup-hook (lambda() (set-face-attribute 'dashboard-heading nil
-		      :family "JetBrains Mono")))
+		      :family "JetBrainsMono Nerd Font")))
   (setq nerd-icons-font-family "Symbols Nerd Font Mono")
 #+end_src
 
@@ -859,9 +937,9 @@ Set up bracket colouring in programming buffers
     (font-lock-add-keywords 'org-mode
 			    '(("^ *\\([-]\\) "
 			       (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-    (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")
+    (set-face-attribute 'variable-pitch nil :family "Vollkorn")
     ;; Set heading font sizes
-    (dolist (face '((org-level-1 . 1.6)
+    (dolist (face '((org-level-1 . 1.8)
 		    (org-level-2 . 1.4)
 		    (org-level-3 . 1.3)
 		    (org-level-4 . 1.2)
@@ -872,13 +950,13 @@ Set up bracket colouring in programming buffers
 		    (org-document-title . 1.9)
 		    (org-document-info . 1.5)
 		    (org-meta-line . 1.3)))
-      (set-face-attribute (car face) nil :height (cdr face) :weight 'bold)))
+      (set-face-attribute (car face) nil :height (cdr face) :weight 'extrabold)))
 
   (defun org-font ()
     (interactive)
     (variable-pitch-mode t)
-    (set-face-attribute 'org-block nil :family "JetBrains Mono")
-    (set-face-attribute 'org-table nil :family "JetBrains Mono"))
+    (set-face-attribute 'org-block nil :family "JetBrainsMono Nerd Font")
+    (set-face-attribute 'org-table nil :family "JetBrainsMono Nerd Font"))
 #+end_src
 
 
@@ -937,14 +1015,14 @@ Set up bracket colouring in programming buffers
 	:init
 	(setq flyspell-correct-interface #'flyspell-correct-ivy)
 	(evil-define-key 'normal flyspell-mode-map (kbd "<return>") #'flyspell-correct-wrapper)
-	(evil-define-key 'visual flyspell-mode-map (kbd "<return>") #'flyspell-correct-wrapper)
+	(evil-define-key 'visual flyspell-mode-map (kbd "<return>") #'flyspell-correct-wrapper))
 #+END_SRC
 
 
 ** LaTeX
 #+begin_src emacs-lisp
     (unless (file-directory-p "~/.emacs.d/previewcache")
-      (make-directory "~/.emcs.d/previewcache")) 
+      (make-directory "~/.emacs.d/previewcache")) 
     (setq temporary-file-directory "~/.emacs.d/previewcache")
     (setq org-latex-pdf-process '("latex -shell-escape -interaction nonstopmode %f"))
     (setq org-latex-create-formula-image-program 'dvipng)
@@ -1089,8 +1167,8 @@ Set up bracket colouring in programming buffers
 
 ** Faces
 #+begin_src emacs-lisp
-   (set-face-attribute 'line-number nil :inherit default :foreground "#3f4040" :slant normal :weight semi-bold :family "JetBrains Mono")
-   (set-face-attribute 'line-number-current-line nil :inherit (hl-line default) :foreground "#81a2be" :slant normal :weight extra-bold :family "JetBrains Mono")
+   ;; (set-face-attribute 'line-number nil :inherit 'default :foreground "#3f4040" :slant normal :weight semi-bold :family "JetBrainsMono Nerd Font")
+   ;; (set-face-attribute 'line-number-current-line nil :inherit (hl-line default) :foreground "#81a2be" :slant normal :weight extra-bold :family "JetBrainsMono Nerd Font")
 #+end_src
 
 
@@ -1101,123 +1179,120 @@ Set up bracket colouring in programming buffers
 
 Use a dark theme with JetBrainsMono for programming, a light theme with Iosevka for text editing
 #+begin_src emacs-lisp
-  (define-minor-mode writing-mode
-    "Toggle between a writing and programming environment."
-    :global t
-    :init-value nil
-    (if writing-mode
-	(progn
-	  ;; Set fonts and themes  [TODO: FIX TABLES]
-	  (set-face-attribute 'default nil :family "Iosevka")
-	  (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")
-	  (set-face-attribute 'org-modern-symbol nil :family "Iosevka")
-	  (global-display-line-numbers-mode -1)
-	  (display-line-numbers-mode -1)
-	  ;; (modus-themes-with-colors
-	  ;;   (set-face-attribute 'mode-line nil
-	  ;; 		      :background "white smoke"
-	  ;; 		      :foreground "black"
-	  ;; 		      :box nil)
-	  ;;   (set-face-attribute 'mode-line-inactive nil
-	  ;; 		      :background bg-dim
-	  ;; 		      :foreground fg-dim))
-	  (set-face-background 'org-block-begin-line "ffffff")
-	  (set-face-background 'org-block "dbe4f1")
-	  (global-org-modern-mode 1)
-	  (setq global-hl-line-mode nil)
-
-	  ;; Change modeline
-	  (setq header-line-format mode-line-format)
-	  (setq-default header-line-format mode-line-format)
-	  (setq mode-line-format nil)
-	  (setq-default mode-line-format nil)
-	  ;; (add-hook 'after-change-major-mode-hook (lambda () (setq mode-line-format nil)))
-	  ;; (add-hook 'after-change-major-mode-hook (lambda () (setq header-line-format mode-line-format)))
-	  ;; (add-hook 'after-change-major-mode-hook (lambda () (setq-default header-line-format mode-line-format))
-
-		    ;; Modify frame
-		    (with-selected-frame (selected-frame)
-		      (modify-frame-parameters
-		       nil
-		       '((right-divider-width . 25)
-			 (internal-border-width . 25))))
-		    (dolist (face '(window-divider
-				    window-divider-first-pixel
-				    window-divider-last-pixel))
-		      (face-spec-reset-face face)
-		      (set-face-foreground face (face-attribute 'default :background)))
-		    (set-face-background 'fringe (face-attribute 'default :background))
-		    (fringe-mode 10)
-
-		    ;; Set writing mode flag
-		    (setq writing-mode-active t)
-		    (message "Writing mode active"))
-
-	  (progn
-	    ;; Set fonts and themes
-	    (set-face-attribute 'default nil :family "JetBrainsMonoNL NF" :height 110)
-	    (global-display-line-numbers-mode 1)
-	    (display-line-numbers-mode 1)
-	    (global-org-modern-mode -1)
-	    (setq global-hl-line-mode t)
-	    (set-face-background 'org-block-begin-line "1a1c23")
-	    (set-face-background 'org-block "1a1c23")
-
-	    ;; Change modeline
-	    (setq header-line-format nil)
-	    (setq-default header-line-format nil)
-	    ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq mode-line-format nil)))
-	    ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq header-line-format mode-line-format)))
-	    ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq-default header-line-format mode-line-format)))
-	    ;; (add-hook 'after-change-major-mode-hook (lambda () (setq header-line-format nil)))
-	    ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq-default header-line-format nil)))
-	    (doom-modeline-mode)
-	    ;; (add-hook 'after-change-major-mode-hook (lambda () (doom-modeline-mode)))
-
-	    ;; Modify frame
-	    (with-selected-frame (selected-frame)
-	      (modify-frame-parameters
-	       nil
-	       '((right-divider-width . 0)
-		 (internal-border-width . 0))))
-	    (face-spec-reset-face 'fringe)
-	    (fringe-mode 20)
-
-	    ;; Set programming mode flag
-	    (setq writing-mode-active nil)
-	    (message "Programming mode active")))
-      ))
+  ;; (define-minor-mode writing-mode
+    ;; "Toggle between a writing and programming environment."
+    ;; :global t
+    ;; :init-value nil
+    ;; (if writing-mode
+	;; (progn
+	  ;; ;; Set fonts and themes  [TODO: FIX TABLES]
+	  ;; (set-face-attribute 'default nil :family "Iosevka")
+	  ;; (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")
+	  ;; (set-face-attribute 'org-modern-symbol nil :family "Iosevka")
+	  ;; (global-display-line-numbers-mode -1)
+	  ;; (display-line-numbers-mode -1)
+	  ;; ;; (modus-themes-with-colors
+	  ;; ;;   (set-face-attribute 'mode-line nil
+	  ;; ;; 		      :background "white smoke"
+	  ;; ;; 		      :foreground "black"
+	  ;; ;; 		      :box nil)
+	  ;; ;;   (set-face-attribute 'mode-line-inactive nil
+	  ;; ;; 		      :background bg-dim
+	  ;; ;; 		      :foreground fg-dim))
+	  ;; (set-face-background 'org-block-begin-line "ffffff")
+	  ;; (set-face-background 'org-block "dbe4f1")
+	  ;; (global-org-modern-mode 1)
+	  ;; (setq global-hl-line-mode nil)
+;; 
+	  ;; ;; Change modeline
+	  ;; (setq header-line-format mode-line-format)
+	  ;; (setq-default header-line-format mode-line-format)
+	  ;; (setq mode-line-format nil)
+	  ;; (setq-default mode-line-format nil)
+	  ;; ;; (add-hook 'after-change-major-mode-hook (lambda () (setq mode-line-format nil)))
+	  ;; ;; (add-hook 'after-change-major-mode-hook (lambda () (setq header-line-format mode-line-format)))
+	  ;; ;; (add-hook 'after-change-major-mode-hook (lambda () (setq-default header-line-format mode-line-format))
+;; 
+		    ;; ;; Modify frame
+		    ;; (with-selected-frame (selected-frame)
+		      ;; (modify-frame-parameters
+		       ;; nil
+		       ;; '((right-divider-width . 25)
+			 ;; (internal-border-width . 25))))
+		    ;; (dolist (face '(window-divider
+				    ;; window-divider-first-pixel
+				    ;; window-divider-last-pixel))
+		      ;; (face-spec-reset-face face)
+		      ;; (set-face-foreground face (face-attribute 'default :background)))
+		    ;; (set-face-background 'fringe (face-attribute 'default :background))
+		    ;; (fringe-mode 10)
+;; 
+		    ;; ;; Set writing mode flag
+		    ;; (setq writing-mode-active t)
+		    ;; (message "Writing mode active"))
+;; 
+	  ;; (progn
+	    ;; ;; Set fonts and themes
+	    ;; (set-face-attribute 'default nil :family "JetBrainsMonoNL NF" :height 110)
+	    ;; (global-display-line-numbers-mode 1)
+	    ;; (display-line-numbers-mode 1)
+	    ;; (global-org-modern-mode -1)
+	    ;; (setq global-hl-line-mode t)
+	    ;; (set-face-background 'org-block-begin-line "1a1c23")
+	    ;; (set-face-background 'org-block "1a1c23")
+;; 
+	    ;; ;; Change modeline
+	    ;; (setq header-line-format nil)
+	    ;; (setq-default header-line-format nil)
+	    ;; ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq mode-line-format nil)))
+	    ;; ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq header-line-format mode-line-format)))
+	    ;; ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq-default header-line-format mode-line-format)))
+	    ;; ;; (add-hook 'after-change-major-mode-hook (lambda () (setq header-line-format nil)))
+	    ;; ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq-default header-line-format nil)))
+	    ;; (doom-modeline-mode)
+	    ;; ;; (add-hook 'after-change-major-mode-hook (lambda () (doom-modeline-mode)))
+;; 
+	    ;; ;; Modify frame
+	    ;; (with-selected-frame (selected-frame)
+	      ;; (modify-frame-parameters
+	       ;; nil
+	       ;; '((right-divider-width . 0)
+		 ;; (internal-border-width . 0))))
+	    ;; (face-spec-reset-face 'fringe)
+	    ;; (fringe-mode 20)
+;; 
+	    ;; ;; Set programming mode flag
+	    ;; (setq writing-mode-active nil)
+	    ;; (message "Programming mode active")))
+      ;; ))
 #+end_src
 
 
 Trigger theme-swaping non-recursively with a custom function
 #+begin_src emacs-lisp
-  (defvar my-light-theme 'modus-operandi)
-  (defvar my-dark-theme 'EngMACS-dark)
-  (defvar my-current-theme my-dark-theme)
-
-  (defun toggle-writing-mode ()
-    "Toggle between light and dark themes."
-    (interactive)
-    (if (eq my-current-theme my-light-theme)
-	(progn
-	  (disable-theme my-light-theme)
-	  (load-theme my-dark-theme t)
-	  (setq my-current-theme my-dark-theme)
-	  (writing-mode -1))
-      (progn
-	(disable-theme my-dark-theme)
-	(load-theme my-light-theme t)
-	(setq my-current-theme my-light-theme)
-	(writing-mode 1))))
+  ;; (defvar my-light-theme 'modus-operandi)
+  ;; (defvar my-dark-theme 'EngMACS-dark)
+  ;; (defvar my-current-theme my-dark-theme)
+;; 
+  ;; (defun toggle-writing-mode ()
+    ;; "Toggle between light and dark themes."
+    ;; (interactive)
+    ;; (if (eq my-current-theme my-light-theme)
+	;; (progn
+	  ;; (disable-theme my-light-theme)
+	  ;; (load-theme my-dark-theme t)
+	  ;; (setq my-current-theme my-dark-theme)
+	  ;; (writing-mode -1))
+      ;; (progn
+	;; (disable-theme my-dark-theme)
+	;; (load-theme my-light-theme t)
+	;; (setq my-current-theme my-light-theme)
+	;; (writing-mode 1))))
 #+end_src
 
 
 
 ** Custom Hotkeys
-:LOGBOOK:
-CLOCK: [2024-05-23 Thu 02:07]--[2024-05-23 Thu 02:07] =>  0:00
-:END:
 
 EngMACS Whichkey buffer
 #+BEGIN_SRC emacs-lisp
@@ -1277,82 +1352,118 @@ Transient suffixes
       (load-theme 'EngMACS-dark t)))
 #+END_SRC
 
-
 #+BEGIN_SRC emacs-lisp
-  (transient-define-prefix engmacs-keys ()
-    [" "
-     :pad-keys t
-     [" Quick commands"
-      ("f" "Search in buffer..." swiper)
-      ("x" "Execute command..." counsel-M-x)
-      ("k" "Kill current buffer" kill-current-buffer)
-      ("K" "Kill buffer..." persp-kill-buffer*)
-      ("p" "Switch perspective..." persp-switch)
-      ]
+  (transient-define-prefix carbon/main ()
+    [:description
+     " "
      [" Open and save files"
+      :pad-keys nil
       ("s" "Save current buffer" save-buffer)
-      ("S" "Save as..." write-file)
+      ("C-s" "Save as..." write-file)
       ("o" "Open file..." engmacs-find-file)
       ("r" "Open recent..." recentf-open)
-      ]
+      ""
+      " Quick commands"
+      ("f" "Search in buffer..." swiper)
+      ("C-f" "Search in current folder..." counsel-rg)
+      ("x" "Execute command..." counsel-M-x)
+      ("k" "Kill current buffer" kill-current-buffer)
+      ("C-k" "Kill buffer..." persp-kill-buffer*)
+      ("p" "Switch perspective..." persp-switch)
      ]
-    [:pad-keys t
      [" Buffer actions"
       ("b" "Switch buffer...     " persp-counsel-switch-buffer)
-      ("l" "Next buffer" next-buffer)
-      ("h" "Previous buffer" previous-buffer)
-      ]
-     [" Text scaling"
+      ("l" "Next buffer" next-buffer :transient t)
+      ("h" "Previous buffer" previous-buffer :transient t)
+      ""
+      ""
+      " Text scaling"
       ("=" "Increase in current buffer" text-scale-increase :transient t)
       ("-" "Decrease in current buffer" text-scale-decrease :transient t)
       (global-scale-inc)
       (global-scale-dec)
-      ]]
-     ["\n Keybind sets"
-      ("w" "  Window management..." delete-window)
-      ("m" "  Math preview..." counsel-M-x)
-      ("w" "  Writing tools..." counsel-M-x)
-      ("c" "  Coding tools..." counsel-M-x)
       ]
+     [" Keybind sets"
+      ("w" "  Buffer management..." delete-window)
+      ("m" "  Math preview..." counsel-M-x)
+      ("e" "  Editing tools..." carbon/editing)
+      ("c" "  Coding tools..." carbon/coding)
+      ]]
     )
+
+  (transient-define-prefix carbon/editing ()
+    [" "
+     [" Spellcheck"
+      ("c" "Correct word at cursor..." flyspell-correct-wrapper)
+      ]])
+
+  (transient-define-prefix carbon/coding ()
+    [" "
+     [" Terminal tools"
+      ("<return>" "Toggle popup terminal" vterm-toggle)
+      ]])
+
+
+
 #+END_SRC
 
 
 EngMACSKeybinds
 #+BEGIN_SRC emacs-lisp
-  (define-key evil-visual-state-map (kbd "<backspace>") "\"_x")
-  (define-key evil-normal-state-map (kbd "<backspace>") "\"_x")
 
-  ;; (eng/leader-keys
-    ;; "<return>" '(toggle-writing-mode :which-key "Toggle writing mode")
-    ;; "r" '(recentf-open :which-key "Open recent file...")
-    ;; "t" '(org-babel-tangle :which-key "Tangle src blocks to file")
-    ;; "o" '(engmacs-find-file :which-key "Open file...")
-    ;; "#" '(count-words :which-key "Word count")
-    ;; "s" '(save-buffer :which-key "Save file")
-    ;; "q" '(delete-window :which-key "Close window")
-    ;; "<tab>" '(org-indent-region :which-key "Format source block [Org]")
-    ;; "f" '(swiper :which-key "Find...")
-    ;; "g" '(magit-status :which-key "Git status")
-    ;; "c" '(comment-or-uncomment-region :which-key "Comment/uncomment region")
-    ;; "k" '(kill-buffer :which-key "Quit buffer...")
-    ;; "h" '(previous-buffer :which-key "Previous buffer")
-    ;; "l" '(next-buffer :which-key "Next buffer")
-    ;; "<left>" '(previous-buffer :which-key "Previous buffer")
-    ;; "<right>" '(next-buffer :which-key "Next buffer")
-    ;; "n f" '(org-roam-node-find :which-key "Find node...")
-    ;; "n i" '(org-roam-node-insert :which-key "Insert node...")
-    ;; "n l" '(org-roam-buffer-toggle :which-key "Toggle org-roam buffer")
-    ;; "n u" '(org-roam-ui-open :which-key "Open org-roam graph")
-    ;; "m b" '(math-preview-all :which-key "Create LaTeX previews for entire buffer")
-    ;; "m c" '(math-preview-clear-all :which-key "Create LaTeX preview at point (async)")
-    ;; "m p" '(math-preview-at-point :which-key "Create LaTeX preview at point")
-    ;; "v a" '(org-transclusion-make-from-link :which-key "Add transclusion from link")
-    ;; "v m" '(org-transclusion-mode :which-key "Toggle transclusions")
-    ;; "x" '(counsel-M-x :which-key "Execute command...")
-    ;; "0" '(lambda () (interactive) (counsel-load-theme) :which-key "Load light theme")
-    ;; "e" '(org-export-dispatch :which-key "Export org file to...")
-    ;; )
+  (global-unset-key (kbd "C-k"))
+  (dolist (state '("normal" "visual"))
+    (let ((map (symbol-value (intern (concat "evil-" state "-state-map")))))
+      (define-key map (kbd "<backspace>") "\"_x")
+      (define-key map (kbd "L") 'evil-forward-word-end)
+      (define-key map (kbd "H") 'evil-backward-word-begin)
+      (define-key map (kbd "C-l") 'evil-end-of-visual-line)
+      (define-key map (kbd "C-h") 'evil-beginning-of-visual-line)      
+      (define-key map (kbd "K") 'evil-backward-paragraph)
+      (define-key map (kbd "J") 'evil-forward-paragraph)
+      (define-key map (kbd "C-k") 'evil-goto-first-line)
+      (define-key map (kbd "C-j") 'evil-goto-line)
+      ))
+
+  (global-set-key (kbd "C-SPC") 'carbon/main)
+  (evil-global-set-key 'normal (kbd "SPC") 'carbon/main)
+  (evil-global-set-key 'visual (kbd "SPC") 'carbon/main)
+  (evil-global-set-key 'emacs (kbd "SPC") 'carbon/main)
+  (evil-global-set-key 'motion (kbd "SPC") 'carbon/main)
+  (evil-global-set-key 'operator (kbd "SPC") 'carbon/main)
+  (define-key transient-base-map (kbd "<escape>") 'transient-quit-all)
+
+
+	      ;; (eng/leader-keys
+		;; "<return>" '(toggle-writing-mode :which-key "Toggle writing mode")
+		;; "r" '(recentf-open :which-key "Open recent file...")
+		;; "t" '(org-babel-tangle :which-key "Tangle src blocks to file")
+		;; "o" '(engmacs-find-file :which-key "Open file...")
+		;; "#" '(count-words :which-key "Word count")
+		;; "s" '(save-buffer :which-key "Save file")
+		;; "q" '(delete-window :which-key "Close window")
+		;; "<tab>" '(org-indent-region :which-key "Format source block [Org]")
+		;; "f" '(swiper :which-key "Find...")
+		;; "g" '(magit-status :which-key "Git status")
+		;; "c" '(comment-or-uncomment-region :which-key "Comment/uncomment region")
+		;; "k" '(kill-buffer :which-key "Quit buffer...")
+		;; "h" '(previous-buffer :which-key "Previous buffer")
+		;; "l" '(next-buffer :which-key "Next buffer")
+		;; "<left>" '(previous-buffer :which-key "Previous buffer")
+		;; "<right>" '(next-buffer :which-key "Next buffer")
+		;; "n f" '(org-roam-node-find :which-key "Find node...")
+		;; "n i" '(org-roam-node-insert :which-key "Insert node...")
+		;; "n l" '(org-roam-buffer-toggle :which-key "Toggle org-roam buffer")
+		;; "n u" '(org-roam-ui-open :which-key "Open org-roam graph")
+		;; "m b" '(math-preview-all :which-key "Create LaTeX previews for entire buffer")
+		;; "m c" '(math-preview-clear-all :which-key "Create LaTeX preview at point (async)")
+		;; "m p" '(math-preview-at-point :which-key "Create LaTeX preview at point")
+		;; "v a" '(org-transclusion-make-from-link :which-key "Add transclusion from link")
+		;; "v m" '(org-transclusion-mode :which-key "Toggle transclusions")
+		;; "x" '(counsel-M-x :which-key "Execute command...")
+		;; "0" '(lambda () (interactive) (counsel-load-theme) :which-key "Load light theme")
+		;; "e" '(org-export-dispatch :which-key "Export org file to...")
+		;; )
 #+END_SRC
 
 Define prefix keys
