@@ -90,7 +90,7 @@ RUN \
 
 RUN apk add tauri-cli --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
 
-RUN apk add libappindicator-dev --repository=http://dl-cdn.alpinelinux.org/alpine/v3.2/community/
+RUN apk add libappindicator-dev --repository=http://dl-cdn.alpinelinux.org/alpine/v3.15/community/
 
 
 RUN ln -sf python3 /usr/bin/python 
@@ -112,7 +112,7 @@ COPY starship.toml /root/.config/starship.toml
 COPY chromium.conf /etc/chromium/chromium.conf
 
 ENV CHROME_BIN=/usr/bin/chromium \
-    CHROME_PATH=/usr/lib/chromium/ \
+    CHROME_PATH=/usr/lib/chromium/
 
 ENV DISPLAY=host.docker.internal:0.0
 
