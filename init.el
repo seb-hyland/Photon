@@ -75,9 +75,9 @@
 (column-number-mode t)
 (setq visible-bell t)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-(set-face-attribute 'default nil :family "JetBrainsMono Nerd Font" :height 135)
-(set-face-attribute 'line-number nil :inherit 'default :foreground "#3f4040" :slant 'normal :weight 'semi-bold :family "JetBrainsMono Nerd Font")
-(set-face-attribute 'line-number-current-line nil :inherit 'hl-line-default :foreground "#81a2be" :slant 'normal :weight 'extra-bold :family "JetBrainsMono Nerd Font")
+(set-face-attribute 'default nil :family "Liga SFMono Nerd Font" :height 135)
+(set-face-attribute 'line-number nil :inherit 'default :foreground "#3f4040" :slant 'normal :weight 'semi-bold :family "Liga SFMono Nerd Font")
+(set-face-attribute 'line-number-current-line nil :inherit 'hl-line-default :foreground "#81a2be" :slant 'normal :weight 'extra-bold :family "Liga SFMono Nerd Font Nerd Font")
 (setq frame-title-format nil)
 (prefer-coding-system 'utf-8)
 (global-visual-line-mode 1)
@@ -86,6 +86,9 @@
 (setenv "TZ" "PST8PDT,M3.2.0,M11.1.0")
 (setq display-line-numbers-type 'relative)
 (menu-bar--display-line-numbers-mode-visual)
+(electric-pair-mode t)
+;; Not sure about this:
+(setq global-map (make-sparse-keymap))
 
 (add-hook 'emacs-startup-hook (lambda ()
 				(global-display-line-numbers-mode 1)
@@ -93,24 +96,24 @@
 				(load-theme 'EngMACS-dark t)
 				))
 
-(unless (file-directory-p "/Local/Documents/EngMACS/")
-  (make-directory "/Local/Documents/EngMACS/")) 
-(unless (file-directory-p "/Local/Documents/EngMACS/auto-saves/")
-  (make-directory "/Local/Documents/EngMACS/auto-saves/")) 
-(unless (file-directory-p "/Local/Documents/EngMACS/org-roam/")
-  (make-directory "/Local/Documents/EngMACS/org-roam/")) 
-(unless (file-directory-p "/Local/Documents/EngMACS/snippets-custom/")
-  (make-directory "/Local/Documents/EngMACS/snippets-custom/"))
-(unless (file-directory-p "/Local/Documents/EngMACS/org-agenda/")
-  (make-directory "/Local/Documents/EngMACS/org-agenda/")) 
+(unless (file-directory-p "/Local/Documents/Photon/")
+  (make-directory "/Local/Documents/Photon/")) 
+(unless (file-directory-p "/Local/Documents/Photon/auto-saves/")
+  (make-directory "/Local/Documents/Photon/auto-saves/")) 
+(unless (file-directory-p "/Local/Documents/Photon/org-roam/")
+  (make-directory "/Local/Documents/Photon/org-roam/")) 
+(unless (file-directory-p "/Local/Documents/Photon/snippets-custom/")
+  (make-directory "/Local/Documents/Photon/snippets-custom/"))
+(unless (file-directory-p "/Local/Documents/Photon/org-agenda/")
+  (make-directory "/Local/Documents/Photon/org-agenda/")) 
 
 (setq backup-directory-alist
-      '(("." . "/Local/Documents/EngMACS/auto-saves/")))
+      '(("." . "/Local/Documents/Photon/auto-saves/")))
 
-(setq auto-save-list-file-prefix '("/Local/Documents/EngMACS/auto-saves/")
-      auto-save-file-name-transforms '((".*" "/Local/Documents/EngMACS/auto-saves/" t)))
+(setq auto-save-list-file-prefix '("/Local/Documents/Photon/auto-saves/")
+      auto-save-file-name-transforms '((".*" "/Local/Documents/Photon/auto-saves/" t)))
 
-(setq org-roam-directory "/Local/Documents/EngMACS/org-roam")
+(setq org-roam-directory "/Local/Documents/Photon/org-roam")
 
 (global-unset-key (kbd "C-SPC"))
 ;;  (use-package general
@@ -292,14 +295,16 @@
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+(if (file-directory-p "/Local/Documents/Photon/.ssh")
+  (copy-directory "/Local/Documents/Photon/.ssh" "/root/.ssh")) 
 (defvar ssh-setup-buffer)
 (defvar ssh-setup-status nil)
 (defun ssh-setup ()
   (interactive)
-  (unless (eq ssh-setup-status t)
-      (setq ssh-setup-buffer (current-buffer))
+  (if (equal ssh-setup-status nil)
+    (setq ssh-setup-buffer (current-buffer))
     (shell)
-    (process-send-string "*shell*" "ssh-agent > /dev/null 2>&1 && eval $(ssh-agent > /dev/null 2>&1) && ssh-add ~/.ssh/id_ed25519\n")
+    (process-send-string "*shell*" "chmod 600 /root/.ssh/id_ed25519 && ssh-agent > /dev/null 2>&1 && eval $(ssh-agent) > /dev/null 2>&1 && ssh-add ~/.ssh/id_ed25519 \n")
     (switch-to-buffer ssh-setup-buffer)
     (setq ssh-setup-status t)))
 (add-hook 'magit-mode-hook #'ssh-setup)
@@ -308,27 +313,27 @@
 ;;    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
 ;;    (lsp-headerline-breadcrumb-mode))
 
-  (use-package lsp-mode
-    :commands (lsp lsp-deferred)
-    ;; :hook (lsp-mode . lsp-mode-setup)
-    :init
-    (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-    :config
-    (lsp-enable-which-key-integration t))
+  ;; (use-package lsp-mode
+  ;;   :commands (lsp lsp-deferred)
+  ;;   ;; :hook (lsp-mode . lsp-mode-setup)
+  ;;   :init
+  ;;   (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  ;;   :config
+  ;;   (lsp-enable-which-key-integration t))
 
-  (use-package lsp-ui
-    :hook (lsp-mode . lsp-ui-mode)
-    :custom
-    (lsp-ui-doc-position 'bottom))
+  ;; (use-package lsp-ui
+  ;;   :hook (lsp-mode . lsp-ui-mode)
+  ;;   :custom
+  ;;   (lsp-ui-doc-position 'bottom))
 
-;;  (setq tsc-dyn-get-from '(:compilation))
-;;  (setq tsc-dyn-dir '"/root/.emacs.d/add-ons/elisp-tree-sitter")
-  (require 'tree-sitter)
-  (require 'tree-sitter-langs)
-  (require 'tree-sitter-hl)
-  (require 'tree-sitter-debug)
-  (require 'tree-sitter-query)
-  (add-hook 'prog-mode-hook #'tree-sitter-hl-mode)
+(setq tsc-dyn-get-from '(:compilation))
+(setq tsc-dyn-dir '"/root/.emacs.d/add-ons/elisp-tree-sitter")
+(require 'tree-sitter)
+(require 'tree-sitter-langs)
+(require 'tree-sitter-hl)
+(require 'tree-sitter-debug)
+(require 'tree-sitter-query)
+(add-hook 'prog-mode-hook #'tree-sitter-hl-mode)
 
 (use-package company
   :defer t
@@ -368,7 +373,7 @@
 
 (use-package yasnippet
   :config
-  (setq yas-snippet-dirs '("/Local/Documents/EngMACS/snippets-custom"))
+  (setq yas-snippet-dirs '("/Local/Documents/Photon/snippets-custom"))
   (setq yas-snippet-dirs (append yas-snippet-dirs '("/root/.emacs.d/snippets-core/")))
   (yas-global-mode 1))
 
@@ -384,12 +389,11 @@
 ;; (use-package s :defer t :ensure t)
 
 (use-package vterm
-    :init
-    (setq vterm-always-compile-module t))
+    :load-path "~/.emacs.d/vterm")
 (use-package vterm-toggle
   :config
   (setq vterm-toggle-fullscreen-p nil)
-  (setq vterm-shell "zsh")
+  (setq vterm-shell "fish")
   (add-to-list 'display-buffer-alist
 	       '((lambda (buffer-or-name _)
 		   (let ((buffer (get-buffer buffer-or-name)))
@@ -409,6 +413,17 @@
 ;;    (eng/leader-keys
 ;;      "b" '(persp-counsel-switch-buffer :which-keys "Switch buffer...")
 ;;      "p" '(persp-switch :which-keys "Switch perspective..."))
+
+(use-package avy)
+
+(use-package zoom
+  :init
+  (zoom-mode t)
+  )
+
+(use-package expand-region)
+
+(use-package visual-regexp-steroids)
 
 (use-package autothemer
   :ensure t)
@@ -430,6 +445,7 @@
   )
 
 (eval-after-load 'dired '(progn (require 'joseph-single-dired)))
+(add-hook 'dired-mode-hook #'dired-hide-details-mode)
 
 (use-package neotree
   :config
@@ -615,10 +631,10 @@
   :config
   (dashboard-setup-startup-hook)
   )
-(load-file "~/.emacs.d/add-ons/engmacs-dashboard.el")
+(load-file "~/.emacs.d/add-ons/photon-dashboard.el")
 (add-hook 'window-setup-hook (lambda () (dashboard-open)))
 (add-hook 'window-setup-hook (lambda() (set-face-attribute 'dashboard-heading nil
-		    :family "JetBrainsMono Nerd Font")))
+		    :family "Liga SFMono Nerd Font")))
 (setq nerd-icons-font-family "Symbols Nerd Font Mono")
 
 (use-package rainbow-delimiters
@@ -627,13 +643,14 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (defun org-font-setup ()
+(interactive)
   "Customizes Org mode fonts for headings and list hyphens."
   ;; Replace list hyphen with dot
   (font-lock-add-keywords 'org-mode
 			  '(("^ *\\([-]\\) "
 			     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-  (set-face-attribute 'variable-pitch nil :family "Vollkorn")
-  ;; Set heading font sizes
+  (set-face-attribute 'variable-pitch nil :family "DM Sans")
+(add-hook 'org-mode-hook (lambda () (variable-pitch-mode t)))
   (dolist (face '((org-level-1 . 1.8)
 		  (org-level-2 . 1.4)
 		  (org-level-3 . 1.3)
@@ -645,28 +662,42 @@
 		  (org-document-title . 1.9)
 		  (org-document-info . 1.5)
 		  (org-meta-line . 1.3)))
-    (set-face-attribute (car face) nil :height (cdr face) :weight 'extrabold)))
+    (set-face-attribute (car face) nil :height (cdr face)))
 
-(defun org-font ()
-  (interactive)
-  (variable-pitch-mode t)
-  (set-face-attribute 'org-block nil :family "JetBrainsMono Nerd Font")
-  (set-face-attribute 'org-table nil :family "JetBrainsMono Nerd Font"))
+  (dolist (face '((org-level-1)
+		  (org-level-2)
+		  (org-document-title)
+		  ))
+    (set-face-attribute (car face) nil :weight 'extrabold))
+
+  (dolist (face '((org-level-3)
+		  (org-level-4)
+		  (org-document-info)
+		  (org-meta-line)))
+    (set-face-attribute (car face) nil :weight 'bold))
+
+  (dolist (face '((org-level-5)
+		  (org-level-6)
+		  (org-level-7)
+		  (org-level-8)
+		  ))
+    (set-face-attribute (car face) nil :weight 'medium))
+
+  (set-face-attribute 'org-block nil :family "Liga SFMono Nerd Font")
+  (set-face-attribute 'org-table nil :family "Liga SFMono Nerd Font"))
+(add-hook 'emacs-startup-hook #'org-font-setup)
 
 (use-package org
   :config
   (setq org-ellipsis " ▾")
   (delete-selection-mode t)
-  (org-font-setup)
   (with-eval-after-load 'org
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((emacs-lisp . t)
        (octave . t)
        (latex . t)
-       (python .t))))
-  :hook
-  (org-mode . org-font))
+       (python .t)))))
 
 ;; (use-package modus-themes)
 ;; (use-package org-modern
@@ -770,14 +801,14 @@
 
 (run-with-timer 0 5 #'org-roam-node-update)
 
-(unless (file-directory-p "/Local/Documents/EngMACS/keychain/")
-  (make-directory "/Local/Documents/EngMACS/keychain/"))
-(unless (file-exists-p "/Local/Documents/EngMACS/keychain/gemini")
-  (write-region "" nil "/Local/Documents/EngMACS/keychain/gemini"))
+(unless (file-directory-p "/Local/Documents/Photon/keychain/")
+  (make-directory "/Local/Documents/Photon/keychain/"))
+(unless (file-exists-p "/Local/Documents/Photon/keychain/gemini")
+  (write-region "" nil "/Local/Documents/Photon/keychain/gemini"))
 
 (defun get-gemini-key ()
   (with-temp-buffer
-    (insert-file-contents "/Local/Documents/EngMACS/keychain/gemini")
+    (insert-file-contents "/Local/Documents/Photon/keychain/gemini")
     (string-trim (buffer-string))))
 
 (use-package gptel)
@@ -785,6 +816,7 @@
   (setq
    gptel-model "gemini-1.5-pro-latest"
    gptel-default-mode 'org-mode
+   gptel--system-message ""
    gptel-backend (gptel-make-gemini "Gemini"
 		   :key (get-gemini-key)
 		   :stream t)))
@@ -909,156 +941,262 @@
 	;; (setq my-current-theme my-light-theme)
 	;; (writing-mode 1))))
 
-;; (defvar engmacs-keyinfo-name "*EngMACS Commands*")
+(defface photon-transient-dynamic-face
+    '((t (:foreground "#7FB4CA" :weight bold)))
+    "Face for dynamic transients")
 
-;; (defun engmacs-show-keyinfo ()
-;;   (message "Keyinfo triggered")
-;;   (let ((buffer (get-buffer-create engmacs-keyinfo-name)))
-;;     (with-current-buffer buffer
-;;       (erase-buffer)
-;;       (insert "Hello world") ; Replace with your desired key information
-;;       (display-buffer-in-side-window buffer '((side . left))))
-;;     (run-with-idle-timer 1 nil (lambda () (kill-buffer buffer)))
-    ;; ))
+  (defun photon-find-file ()
+    (interactive)
+    (if (stringp buffer-file-name)
+	(cond
+	 ((eq major-mode 'dired-mode)
+	  (counsel-find-file))
+	 ((string-match "/Local/" (buffer-file-name))
+	  (counsel-find-file))
+	 (t
+	  (counsel-find-file nil "/Local/")))
+      (counsel-find-file nil "/Local/")))
 
-(defun engmacs-find-file ()
+  (defun photon-C-j ()
+    (interactive)
+    (if (minibuffer-window-active-p (selected-window))
+	(ivy-next-line)
+      (execute-kbd-macro (kbd "G")))) 
+
+  (defun photon-C-k ()
+    (interactive)
+    (if (minibuffer-window-active-p (selected-window))
+	(ivy-previous-line)
+      (execute-kbd-macro (kbd "gg"))))
+
+  (transient-define-suffix global-scale-inc ()
+    :transient t
+    :key "]"
+    :description "Increase globally"
+    (interactive)
+    (global-text-scale-adjust 2) (kbd "<escape>"))
+
+  (transient-define-suffix global-scale-dec ()
+    :transient t
+    :key "["
+    :description "Decrease globally"
+    (interactive)
+    (global-text-scale-adjust -2) (kbd "<escape>"))
+
+  (transient-define-suffix toggle-theme ()
+    :transient nil
+    :key "<return>"
+    :description "Toggle light/dark theme"
+    (interactive)
+    (if (eq 'EngMACS-dark (car custom-enabled-themes))
+	(load-theme 'EngMACS-light t)
+      (load-theme 'EngMACS-dark t)))
+
+  (use-package org-modern
+    :init
+    (setq org-modern-hide-stars 't)
+  (setq org-modern-block-fringe 6))
+
+  (defun org-entities-show ()
+    (interactive)
+    (setq org-hide-emphasis-markers nil)
+    (global-org-modern-mode -1)
+    (dolist (buf (match-buffers '(major-mode . org-mode)))
+    (with-current-buffer buf
+      (display-line-numbers-mode t)))
+    (remove-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1))))
+
+  (defun org-entities-hide ()
+    (interactive)
+    (setq org-hide-emphasis-markers t)
+    (global-org-modern-mode t)
+    (dolist (buf (match-buffers '(major-mode . org-mode)))
+    (with-current-buffer buf
+      (display-line-numbers-mode -1)))
+    (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1))))
+
+  (defvar org-entities-state "HIDDEN")
+
+  (defun org-entities-toggle ()
+    (interactive)
+    (if (equal org-entities-state "HIDDEN")
+	(progn
+	  (org-entities-show)
+	  (setq org-entities-state "VISIBLE"))
+      (progn
+	(org-entities-hide)
+	(setq org-entities-state "HIDDEN"))))
+
+  (org-entities-hide)
+
+
+(defun photon-face-selection ()
+  "Presents the user with options to set the variable-pitch font face."
   (interactive)
-  (if (stringp buffer-file-name)
-      (cond
-       ((eq major-mode 'dired-mode)
-	(counsel-find-file))
-       ((string-match "/Local/" (buffer-file-name))
-	(counsel-find-file))
-       (t
-	(counsel-find-file nil "/Local/")))
-    (counsel-find-file nil "/Local/")))
+  (let* ((font-choices '("Sans-serif" "Serif" "Monospace"))
+	 (choice (completing-read "Choose typeface class: " font-choices nil t))
+	 (font-mapping '(("Sans-serif" . "DM Sans")
+			 ("Serif" . "Lora")
+			 ("Monospace" . "Liga SFMono Nerd Font")))
+	 (selected-font (cdr (assoc choice font-mapping))))
+    (set-face-attribute 'variable-pitch nil :family selected-font)))
 
-(transient-define-suffix global-scale-inc ()
-  :transient t
-  :key "]"
-  :description "Increase globally"
-  (interactive)
-  (global-text-scale-adjust 2) (kbd "<escape>"))
+(transient-define-prefix photon/main ()
+	[:description
+	 " "
+	 ["  Open and save files"
+	  :pad-keys nil
+	  ("s" "Save current buffer" save-buffer)
+	  ("S" "󰁣 Save as..." write-file)
+	  ("o" "Open file..." photon-find-file)
+	  ("r" "Open recent..." recentf-open)
+	  ""
+	  ""
+	  "  Quick commands"
+	  ("f" "Search in buffer..." swiper)
+	  ("F" "󰁣 Search in directory..." counsel-rg)
+	  ("x" "Execute command..." counsel-M-x)
+	  ("p" "Switch perspective..." persp-switch)
+	 ]
+	 ["  Buffer actions"
+	  ("b" "Switch buffer...     " persp-counsel-switch-buffer)
+	  ("l" "Next buffer" next-buffer :transient t)
+	  ("h" "Previous buffer" previous-buffer :transient t)
+	  ("k" "Kill current buffer" kill-current-buffer)
+	  ("K" "󰁣 Kill buffer..." persp-kill-buffer*)
+	  ""
+	  "  Text scaling"
+	  ("=" "Increase in current buffer" text-scale-increase :transient t)
+	  ("-" "Decrease in current buffer" text-scale-decrease :transient t)
+	  (global-scale-inc)
+	  (global-scale-dec)
+	  ]
+	 ["  Keybind sets"
+	  ("w" "   Window management..." photon/window)
+	  ("m" "   Math preview..." counsel-M-x)
+	  ("e" "   Editing tools..." photon/editing)
+	  ("d" " 󰈙  Org document tools..." photon/org)
+	  ("c" "   Coding tools..." photon/coding)
+	  ]]
+	)
 
-(transient-define-suffix global-scale-dec ()
-  :transient t
-  :key "["
-  :description "Decrease globally"
-  (interactive)
-  (global-text-scale-adjust -2) (kbd "<escape>"))
+      (transient-define-prefix photon/editing ()
+	[" "
+	 ["  Spellcheck"
+	  ("c" "Correct word at cursor..." flyspell-correct-wrapper)
+	  ]])
 
-(transient-define-suffix toggle-theme ()
-  :transient nil
-  :key "<return>"
-  :description "Toggle light/dark theme"
-  (interactive)
-  (if (eq 'EngMACS-dark (car custom-enabled-themes))
-      (load-theme 'EngMACS-light t)
-    (load-theme 'EngMACS-dark t)))
+      (transient-define-prefix photon/coding ()
+	[" "
+	 ["  Terminal tools"
+	  ("<return>" "Toggle popup terminal" vterm-toggle)
+	  ]])
 
-(transient-define-prefix carbon/main ()
-  [:description
-   " "
-   [" Open and save files"
-    :pad-keys nil
-    ("s" "Save current buffer" save-buffer)
-    ("C-s" "Save as..." write-file)
-    ("o" "Open file..." engmacs-find-file)
-    ("r" "Open recent..." recentf-open)
-    ""
-    " Quick commands"
-    ("f" "Search in buffer..." swiper)
-    ("C-f" "Search in current folder..." counsel-rg)
-    ("x" "Execute command..." counsel-M-x)
-    ("k" "Kill current buffer" kill-current-buffer)
-    ("C-k" "Kill buffer..." persp-kill-buffer*)
-    ("p" "Switch perspective..." persp-switch)
-   ]
-   [" Buffer actions"
-    ("b" "Switch buffer...     " persp-counsel-switch-buffer)
-    ("l" "Next buffer" next-buffer :transient t)
-    ("h" "Previous buffer" previous-buffer :transient t)
-    ""
-    ""
-    " Text scaling"
-    ("=" "Increase in current buffer" text-scale-increase :transient t)
-    ("-" "Decrease in current buffer" text-scale-decrease :transient t)
-    (global-scale-inc)
-    (global-scale-dec)
-    ]
-   [" Keybind sets"
-    ("w" "  Buffer management..." delete-window)
-    ("m" "  Math preview..." counsel-M-x)
-    ("e" "  Editing tools..." carbon/editing)
-    ("c" "  Coding tools..." carbon/coding)
-    ]]
-  )
+      (transient-define-prefix photon/window ()
+	[" "
+	 ["󱂬  Manage windows"
+	  ("r" "Create on right" split-window-right)
+	  ("b" "Create below" split-window-below)
+	  ("q" "Close current window" delete-window)
+	  ]
+	 ["󰆾  Move between windows"
+	  ("h" "Move left" windmove-left)
+	  ("j" "Move down" windmove-down)
+	  ("k" "Move up" windmove-up)
+	  ("l" "Move right" windmove-right)
+	  ]])
 
-(transient-define-prefix carbon/editing ()
-  [" "
-   [" Spellcheck"
-    ("c" "Correct word at cursor..." flyspell-correct-wrapper)
-    ]])
+    (transient-define-prefix photon/org ()
+      [" "
+       ["󱓦 Editing commands"
+	("e" "Expand selection" er/expand-region)
+	("c" "Contract selection" er/contract-region)]
+[" Visual commands"
+	("v" org-entities-toggle
+	 :description
+	 (lambda ()
+	   (format "Toggle entities [%s]" (propertize org-entities-state 'face 'photon-transient-dynamic-face))))
+("f" "Change document font..." photon-face-selection)
+	]
+  ["󱃖 Babel commands"
+("t" "Tangle code blocks" org-babel-tangle)
+]
+  ])
 
-(transient-define-prefix carbon/coding ()
-  [" "
-   [" Terminal tools"
-    ("<return>" "Toggle popup terminal" vterm-toggle)
-    ]])
+(defvar photon-keymap (make-keymap)
+      "Keymap for Photon general bindings")
 
-(global-unset-key (kbd "C-k"))
-(dolist (state '("normal" "visual"))
-  (let ((map (symbol-value (intern (concat "evil-" state "-state-map")))))
-    (define-key map (kbd "<backspace>") "\"_x")
-    (define-key map (kbd "L") 'evil-forward-word-end)
-    (define-key map (kbd "H") 'evil-backward-word-begin)
-    (define-key map (kbd "C-l") 'evil-end-of-visual-line)
-    (define-key map (kbd "C-h") 'evil-beginning-of-visual-line)      
-    (define-key map (kbd "K") 'evil-backward-paragraph)
-    (define-key map (kbd "J") 'evil-forward-paragraph)
-    (define-key map (kbd "C-k") 'evil-goto-first-line)
-    (define-key map (kbd "C-j") 'evil-goto-line)
-    ))
+    (define-minor-mode photon-mode
+      "Minor mode for my personal keybindings."
+      :init-value t
+      :global t
+      :keymap photon-keymap)
 
-(global-set-key (kbd "C-SPC") 'carbon/main)
-(evil-global-set-key 'normal (kbd "SPC") 'carbon/main)
-(evil-global-set-key 'visual (kbd "SPC") 'carbon/main)
-(evil-global-set-key 'emacs (kbd "SPC") 'carbon/main)
-(evil-global-set-key 'motion (kbd "SPC") 'carbon/main)
-(evil-global-set-key 'operator (kbd "SPC") 'carbon/main)
-(define-key transient-base-map (kbd "<escape>") 'transient-quit-all)
+    (add-to-list 'emulation-mode-map-alists
+		 `((photon-mode . ,photon-keymap)))
+
+(photon-mode t)
+    (dolist (binding '(("C-SPC" . photon/main)
+		       ("<normal-state> SPC" . photon/main)
+		       ("<visual-state> SPC" . photon/main)
+		       ("M-h" . windmove-left)
+		       ("M-j" . windmove-down)
+		       ("M-k" . windmove-up)
+		       ("M-l" . windmove-right)
+		       ("C-j" . photon-C-j)
+		       ("C-k" . photon-C-k)
+		       ("C-? k" . describe-key)
+		       ("C-? f" . counsel-describe-function)
+		       ("C-? v" . counsel-describe-variable)
+		       ))
+      (define-key photon-keymap (kbd (car binding)) (cdr binding)))
+  ;; This likely doesnt work!!!!!!
+;;    (dolist (binding '(("SPC" . photon/main)
+;;		       ("<backspace>" . "\"_x")
+;;		       ("H" . evil-backward-word-begin)
+;;		       ("J" . evil-forward-paragraph)
+;;		       ("K" . evil-backward-paragraph)
+;;		       ("L" . evil-forward-word-end)
+;;		       ("C-h" . evil-beginning-of-visual-line)
+;;		       ("C-j" . evil-goto-line)
+;;		       ("C-k" . evil-goto-first-line)
+;;		       ("C-l" . evil-end-of-visual-line)
+;;		       ("f" . avy-goto-char)))
+;;      (define-key photon-keymap (kbd (concat "<normal-state> " (car binding))) (cdr binding))
+;;      (define-key photon-keymap (kbd (concat "<visual-state> "  (car binding))) (cdr binding)))
 
 
-	    ;; (eng/leader-keys
-	      ;; "<return>" '(toggle-writing-mode :which-key "Toggle writing mode")
-	      ;; "r" '(recentf-open :which-key "Open recent file...")
-	      ;; "t" '(org-babel-tangle :which-key "Tangle src blocks to file")
-	      ;; "o" '(engmacs-find-file :which-key "Open file...")
-	      ;; "#" '(count-words :which-key "Word count")
-	      ;; "s" '(save-buffer :which-key "Save file")
-	      ;; "q" '(delete-window :which-key "Close window")
-	      ;; "<tab>" '(org-indent-region :which-key "Format source block [Org]")
-	      ;; "f" '(swiper :which-key "Find...")
-	      ;; "g" '(magit-status :which-key "Git status")
-	      ;; "c" '(comment-or-uncomment-region :which-key "Comment/uncomment region")
-	      ;; "k" '(kill-buffer :which-key "Quit buffer...")
-	      ;; "h" '(previous-buffer :which-key "Previous buffer")
-	      ;; "l" '(next-buffer :which-key "Next buffer")
-	      ;; "<left>" '(previous-buffer :which-key "Previous buffer")
-	      ;; "<right>" '(next-buffer :which-key "Next buffer")
-	      ;; "n f" '(org-roam-node-find :which-key "Find node...")
-	      ;; "n i" '(org-roam-node-insert :which-key "Insert node...")
-	      ;; "n l" '(org-roam-buffer-toggle :which-key "Toggle org-roam buffer")
-	      ;; "n u" '(org-roam-ui-open :which-key "Open org-roam graph")
-	      ;; "m b" '(math-preview-all :which-key "Create LaTeX previews for entire buffer")
-	      ;; "m c" '(math-preview-clear-all :which-key "Create LaTeX preview at point (async)")
-	      ;; "m p" '(math-preview-at-point :which-key "Create LaTeX preview at point")
-	      ;; "v a" '(org-transclusion-make-from-link :which-key "Add transclusion from link")
-	      ;; "v m" '(org-transclusion-mode :which-key "Toggle transclusions")
-	      ;; "x" '(counsel-M-x :which-key "Execute command...")
-	      ;; "0" '(lambda () (interactive) (counsel-load-theme) :which-key "Load light theme")
-	      ;; "e" '(org-export-dispatch :which-key "Export org file to...")
-	      ;; )
+
+    ;; (global-unset-key (kbd "C-k"))
+     (dolist (state '("normal" "visual"))
+       (let ((map (symbol-value (intern (concat "evil-" state "-state-map")))))
+	 (define-key map (kbd "SPC") 'photon/main)
+	 (define-key map (kbd "<backspace>") "\"_x")
+	 (define-key map (kbd "H") 'evil-backward-word-begin)
+	 (define-key map (kbd "J") 'evil-forward-paragraph)
+	 (define-key map (kbd "K") 'evil-backward-paragraph)
+	 (define-key map (kbd "L") 'evil-forward-word-end)
+	 (define-key map (kbd "C-h") 'evil-beginning-of-visual-line)      
+	 (define-key map (kbd "C-j") 'evil-goto-line)      
+	 (define-key map (kbd "C-k") 'evil-goto-first-line)      
+	 (define-key map (kbd "C-l") 'evil-end-of-visual-line)
+	 (define-key map (kbd "f") 'evil-avy-goto-char-2)
+	 (define-key map (kbd "F") 'evil-avy-goto-word-1)
+	 ))
+
+    ;; (global-set-key (kbd "C-SPC") 'photon/main)
+    ;; (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon/main)
+    ;; (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/window)
+    ;; (define-key org-mode-map (kbd "<normal-state> C-k") 'evil-goto-first-line)
+    ;; (define-key org-mode-map (kbd "<normal-state> C-j") 'evil-goto-line)
+    ;; (define-key org-mode-map (kbd "<visual-state> C-k") 'evil-goto-first-line)
+    ;; (define-key org-mode-map (kbd "<visual-state> C-j") 'evil-goto-line)
+    ;; (evil-global-set-key 'normal (kbd "SPC") 'photon/main)
+    ;; (evil-global-set-key 'visual (kbd "SPC") 'photon/main)
+    ;; (evil-global-set-key 'emacs (kbd "SPC") 'photon/main)
+    ;; (evil-global-set-key 'motion (kbd "SPC") 'photon/main)
+    ;; (evil-global-set-key 'operator (kbd "SPC") 'photon/main)
+    (define-key transient-base-map (kbd "<escape>") 'transient-quit-all)
 
 (which-key-add-key-based-replacements
   "SPC n" "Org Roam Commands"

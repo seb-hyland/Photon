@@ -1,56 +1,51 @@
 
-#+TITLE: The EngMACS Tutorial | Part 1
-#+SUBTITLE: EngMACS Binds
-#+AUTHOR: Sebastian Hyland
-
-
+#+TITLE: Tutorial
+#+SUBTITLE: 1.2 - The Photon Command Window
 
 
 * Let's actually do some stuff
-You probably noticed by now that the EngMACS user interface is extremely simple, without any toolbars or menus to click on. This is because every command in EngMACS is carried out through a set of key presses known as a "keychord." However, EngMACS keychords are really quite intuitive, and this section of the tutorial will go over practical keychords that you will be using often, such as saving files, opening files, splitting your screen to open multiple files at once, etc.
+You probably noticed by now that the Photon user interface is extremely simple, without any toolbars or menus to click on. This is because every command in Photon is carried out through a set of key presses rather than mouse clicks. However, Photon keychords are really quite intuitive, and this section of the tutorial will go over practical keychords that you will be using often, such as saving files, opening files, splitting your screen to open multiple files at once, etc.
 
-** Keychord basics
-Every command that you want to execute in EngMACS is called through a series of key presses (a "keychord") beginning with either ~<CTRL-SPACE>~ or ~<SPACE>~. These two "leader keys" are completely interchangable: either one works just fine to start any keychord. ~<CTRL-SPACE>~ *always* works in every scenario, whereas ~<SPACE>~ works in Normal and Visual modes, but *not* Insert mode because pressing ~<SPACE>~ obviously adds a space when you are editing text. If you want to cancel a key sequence, you can simply press ~<ESCAPE>~.
+** The command window
+In Photon, ~<CTRL-SPACE>~ or ~<SPACE>~ open a command window which displays a menu of all available commands. ~<CTRL-SPACE>~ works in *every mode*, whereas ~<SPACE>~ works in *Normal and Visual modes, but not Insert mode*. This is because pressing ~<SPACE>~ obviously adds a space when you are editing text. To close the command window and cancel a key sequence, you can simply press ~<ESCAPE>~.
 
-When you are in the middle of a keychord, EngMACS also opens an information panel on the left to show you the possible keys you can press next.
-
-*Note*: In this tutorial, I will usually describe keychords with ~<SPC [some key] [some key]...>~ (~<SPC>~ is a shortened form of ~<SPACE>~). This is purely for simplicity's sake; both ~<SPACE>~ and ~<CTRL-SPACE>~ can be used to start a keychord.
+*Note*: In this tutorial, I will usually describe keychords with ~<SPC [some key] [some key]...>~, where ~<SPC>~ is a shortened form of ~<SPACE>~. This is purely for simplicity's sake; both ~<SPACE>~ and ~<CTRL-SPACE>~ can be used to open the command menu.
 
 *Try it out!*
 #+begin_src
 
-Ensure that you are in normal mode. Press <SPC> and wait half a second; notice that a popup window displays on the left.
+Ensure that you are in normal mode. Press <SPC> and notice the command window that pops up. This window contains short descriptions for each command along with its corresponding keybind. Some of the commands have a 󰁣 symbol before the description; this reminds the user that the command is bound to an uppercase key (for instance, "Save as..." is bound to S, which requires you to hold the <SHIFT> key).
 
-Notice that the <w> key has "+Window management" as its description in red. Press <w>, and notice how a new menu opens; as well, notice that in the bottom-left corner, it says "SPC w-", showing that it is waiting for another key press to execute a command. This is because <SPC w> is not directly tied to a command, but rather acts as an intermediate "prefix" key in keychords such as <SPC w q> and <SPC w h>, which do execute commands.
+On the right of the menu, there is a section called "Keybind sets". Try pressing <w>, which opens the "Window management..." set. Note that this opens a new submenu for commands specific to window management. Due to the depth of Photon's functionality, many advanced commands are nested within one of these "Keybind sets."
 
-These keychords allow EngMACS to intuitively group together functionality; for example, all the commands that begin with <SPC w> are related to managing windows. Press <ESCAPE> now to end the sequence and close the window.
+Press <ESCAPE> now to close the window without executing a command.
 
 #+end_src
 
-Let's now work through some more concrete examples to better understand the common commands that you will use in EngMACS.
+Let's now work through some more concrete examples to better understand the common commands that you will use in Photon.
 
 
 
-** *[Example]*: saving a file
+** [Example]: Saving a file
 To save a file, press ~<SPC s>~.
 
 *Try it out!*
 #+begin_src
 
-Enter Insert mode by pressing <i>, then add some text to the line below. Notice the save icon next to the filename on the modeline (the information bar at the bottom of the screen that displays the current mode, filename, etc.). Press <ESCAPE> to return to Normal mode. Now press <SPC s>. Notice that the icon disappears, signalling that the file has been saved.
+Enter Insert mode by pressing <i>, then add some text to the line below. Notice that the buffer name in the top left becomes red with two stars. Press <ESCAPE> to return to Normal mode. Now press <SPC s>. Notice that the buffer name returns to normal, signalling that the file's current state has been saved.
 -----> Add some text here:     <-----
 
-Now, add some text below, and try to save in insert mode with <CTRL-SPC s>.
+Now, add some text below, and try to save while in insert mode with <CTRL-SPC s>.
 -----> Add some text here:     <-----
 
 #+end_src
 
 
 
-** *[Example]*: finding words in a document
-~<SPC f>~ is the EngMACS equivalent to the "find" function in other applications (typically ~<CTRL-f>~).
+** [Example]: Finding words in a document
+~<SPC f>~ is the Photon equivalent to the "find" function in other applications (typically ~<CTRL-f>~).
 
-In EngMACS, some commands are interactive (i.e., they accept input). These commands use a small window at the bottom of your screen called the *minibuffer*. ~<SPC f>~ is one of these commands.
+In Photon, some commands are interactive (i.e., they accept input). These commands use a small window at the bottom of your screen called the *minibuffer*. ~<SPC f>~ is one of these commands.
 
 *Try it out!*
 #+begin_src
@@ -59,25 +54,87 @@ Press <SPC f> or <CTRL-SPC f>. Notice how a minibuffer window appears at the bot
 
 Let's imagine we were searching a document for all instances of the word "watermellon".
 
-Let's type in <wat>, the first few letters. Notice how we are presented in the minibuffer with multiple instances. You can navigate between the possible options by using <CTRL-k> and <CTRL-j>. Note that this is similar to moving up/down with <k> and <j> with Vim motions! Try rotation between the different instances of "watermellon" using <CTRL-k> and <CTRL-j>, then selecting a desired option with <ENTER>. Your cursor will jump to the selected option.
+Let's type in <wat>, the first few letters. Notice how we are presented in the minibuffer with multiple instances. You can navigate between the possible options by using <CTRL-k> and <CTRL-j>. Note that <j>/<k> are the same keys that you used earlier for movement!
+
+Try moving between the different instances of "watermellon" using <CTRL-k> and <CTRL-j>, then selecting a desired option with <ENTER>. Your cursor will jump to the selected option.
 
 -----> Watermellon! <-----
 
-Open up the find menu again with <SPC f>. Type in <wat> again and rotate through some of the options, then press <ESCAPE>. Note that this quits the command, and returns your cursor to its original location instead of jumping to one of the options.
+Open up the find menu again with <SPC f>. Type in <wat> again and rotate through some of the options, then press <ESCAPE>. Note that this quits the command, and returns your cursor to its original location instead of jumping to one of the options. <ESCAPE> will always quit commands that require minibuffer input.
 
 #+end_src
 
 
+Photon also has another powerful search feature: it can search all the documents in a folder! This works quite similarly to ~<SPC f>~, but is instead bound to the uppercase (~<SPC F>~). Executing this command will search all files within the working directory (e.g., if you are currently working on a file in your Downloads folder, ~<SPC F>~ will search ALL files in your Downloads folder).
 
-** *[Example]*: splitting the screen
+*Try it out!*
+#+begin_src
+
+Execute <SPC F>. Note that it requires a search string that is minimum 3 characters in length. Type "fin" and notice that results display the file in which the string was found, the line where the string is located, and a brief preview of the line.
+
+Pressing <ENTER> would open the file at that line, but let's press <ESC> to cancel the search.
+  
+#+end_src
 
 
 
-* *[Example]*: opening files
+** [Example]: Cursor jumping
+Photon includes the ~<SPC j>~ and ~<SPC J>~ bindings to jump to a visible character or word, respectively. Let me show you how they work with an example:
 
-* 2. Basics of EngMACS
+*Try it!*
+#+begin_src
+Let's try out the jump to character function. We are going to try to jump our cursor to the word below; specifically to fix the misspelling. We want to add an "e" after the "i" in "Science", thus, let's jump to the "i". To do this, we will press <SPC j> <i>. This will highlight all instances of the "i" character that are currently visible and overlay new character(s) over them. If you see a red character where the "i" below used to be, press that key to jump to that location. If you see a red and blue character, press the red key then the blue one in succession.
 
-** Where are my files?
+-----> Scince <-----
+
+Now that your point is over the "i", press <a> to enter insert mode with the cursor AFTER the "i". Add an "e", and press <ESC> when you are done.
+
+<SPC J> (uppercase) jumps to a word instead of character. It works very similarly; input the first character of the word that you want to jump to, then input the overlaid character(s) to jump to the start of the word. For instance, let's try <SPC J> <w> to try and jump the cursor to the start of the below word.
+
+-----> Watermelon <-----
+
+Note: This method of cursor jumping can be useful and quicker than picking up the mouse or moving with <h/j/k/l> in some scenarios; however, if you find it unecessarily complex, you can ignore it.
+#+end_src
+
+
+
+** [Example]: Multiple frames 
+Photon has the ability to split its frame into multiple windows displaying different buffers. The keybinding set ~<SPC w>~ deals with window management.
+
+*Try it out!*
+#+begin_src
+
+Press <SPC w>, and briefly look over the available commands.
+
+Let's create a frame to the right of the current. If you are already in the <SPC w> menu, press <r> to do so. Notice how by default, the new window opens displaying the same buffer that you are currently working in. If you want, make an edit to the line below; note that the buffer in the right will update in real time.
+
+----->                    <-----
+
+Now, let's move the cursor over to that buffer. Although you can click your mouse to move between windows, it is often quicker to use a keybinding. <SPC w> followed by <h/j/k/l> will move your cursor to the next buffer on the left/bottom/top/right of the current one. Try using <SPC w l> to move to the new window. Note that the currently active window will auto-zoom to occupy more space in the frame.
+
+Let's now close this new window. This can be done with <SPC w x>, the command to close the currently active window. Note: this command will not do anything if there is only one window.
+
+#+end_src
+
+
+** [Example]: Opening files
+Photon runs in Linux container separate from the rest of you filesystem. However, your home folder has been mounted to ~/Local/~ in the container. Thus, a file called ~foo.txt~ in your ~Downloads~ folder, for instance, can be found at ~/Local/Downloads/foo.txt~ in Photon. Similarly, a file named ~bar.org~ in your ~Documents~ folder can be found at ~/Local/Documents/bar.org~.
+
+The ~<SPC o>~ command opens a minibuffer prompt to open a file; it usually has the directory of the current file already inputted.
+
+*Try it out!*
+#+begin_src
+
+Let's work in a new window so that the tutorial remains visible. Create a window to the right with <SPC w r> and activate it with <SPC w l>.
+
+Press <SPC o> and note that a minibuffer prompt opens, with an initial input of "/Local/Documents/Photon/Tutorial" (the folder where this file is located) and a list of all files/folders inside this directory. Remember that you can use <CTRL-j> and <CTRL-k> to navigate the selections.
+
+Press <BACKSPACE> and note that the input jumps back one level to "/Local/Documents/Photon". Begin typing "tut" and notice that the only selection available is the "Tutorial" folder (you can tell that this is a directory since it has a folder icon). Press <TAB>, and notice that the input re-includes this directory: "/Local/Documents/Photon/Tutorial". Note that you can open a selected file by pressing <ENTER>; let's not do that just yet.
+
+If you want to access Photon's full file manager, you can easily press <ENTER> when selecting a directory. Let's press <BACKSPACE> until our initial input just includes "/Local/". Now, begin typing "downl" to search for your Downloads folder; when it is the current selection, press <ENTER>. Notice that a file manager buffer opens showing all the files in your Downloads folder; you can open a file or directory with <ENTER>, and you can jump back one directory (e.g., from "/Local/Downloads" to "/Local/") by pressing "^". A dedicated explanation for how you can copy, delete, and modify files in these buffers (known as "Dired" buffers) is available in a later tutorial page.
+  
+#+end_src
+
 
 
 [[file:1.1 \[Tutorial\].org][Next ->]]

@@ -1,34 +1,30 @@
 
-#+TITLE: The EngMACS Tutorial | Part 1
-#+SUBTITLE: Vim Motions
-#+AUTHOR: Sebastian Hyland
-
-
+#+TITLE: Tutorial
+#+SUBTITLE: 1.1 - Editing text
 
 
 * Introduction
-Before we get to actually doing things in EngMACS, we need to understand how EngMACS deals with commands and text input. This is done through a framework commonly known as the *Vim motions*.
-
-Although you can navigate around files using your mouse, as you are likely accustomed to, EngMACS implements the keybinds of a popular editor known as *Vim*. Although it can be confusing at first, it enables you to navigate your documents without your fingers ever leaving the keyboard to use the mouse. This will be one of the longer - and more boring - parts of the tutorial, but bear with me. I promise it'll get more interesting later!
-
+Before we get to actually doing things in Photon, we need to understand the special way in which Photon deals with commands and text input.
 
 
 
 * The modes
-In Vim motions, each file can be in one of three modes: *Normal mode*, *Insert mode*, or *Visual mode*. You can see the current mode in the bottom-left corner of your window: *N* represents normal mode, *I* represents insert mode, and *V* represents visual mode. You can also quickly recognize the mode through the color of the symbol: *Normal* is blue, *Insert* is lavender, and *Visual* is red. 
+In Photon, each file can be in one of three modes: *Normal mode*, *Insert mode*, or *Visual mode*. You can see the current mode in the top-left corner of your window: *N* represents normal mode, *I* represents insert mode, and *V* represents visual mode. You can also quickly recognize the mode through the color of the symbol: *Normal* is green, *Insert* is blue, and *Visual* is red. 
 
 
 ** Normal mode
 Normal mode is used to *move around files and execute commands*.
 
-When you open a file, it will always be in normal mode by default. In this mode, all of your key presses will be registered as *commands* rather than text input. For instance, pressing the ~<j>~ key will move the cursor down one line, and pressing the ~<p>~ key will paste the clipboard contents at your cursor's location.
+When you open a file, it will always be in normal mode by default. In this mode, all of your key presses will be registered as *commands* rather than text input. This mode is often used for moving around your document quickly and manipulating text (e.g., copying/pasting).
 
 *Try it out!*
 #+begin_src
 
-Click somewhere along this line of text to move your cursor there. Notice that pressing <h> moves your cursor left, <l> moves right, <j> moves up one line, and <k> moves down one line.
+First make sure you're in Normal mode; check that in the top left corner, there is a green N. If not, press <ESCAPE> to return to normal mode.
 
-IMPORTANT NOTE: In general, Vim keybinds are CASE-SENSITIVE (lowercase and uppercase versions are often related, but different). All of the keybinds that I will demonstrate are lowercase, so make sure your caps lock is off!
+You can move left/down/up/right with the <h>/<j>/<k>/<l> keys. Try pressing these keys now, and see what happens! We'll cover advanced movement in more detail later.
+
+IMPORTANT NOTE: In general, keybinds are CASE-SENSITIVE. Make sure your CAPS LOCK is off to avoid confusion!
 
 #+end_src
 
@@ -37,17 +33,20 @@ IMPORTANT NOTE: In general, Vim keybinds are CASE-SENSITIVE (lowercase and upper
 ** Insert mode
 Insert mode is used to *insert text*.
 
-You can easily tell when you are in insert mode, since the cursor shape changes from a square covering a character to a line between characters.
+You can easily tell when you are in insert mode, since the cursor shape changes from a square to a line. Note that when I refer to the "cursor", I am speaking about the blinking "text cursor," not your mouse pointer.
 
-If you are currently in normal mode, pressing ~<i>~ will enter insert mode with the cursor in front of the highlighted character, and pressing ~<a>~ will enter insert mode with the cursor after the highlighted character. Pressing ~<ESCAPE>~ returns you to Normal mode.
+If you are currently in normal mode, pressing ~<i>~ will enter insert mode in front of the current character, and pressing ~<a>~ will enter insert mode with the cursor after the current character. Pressing ~<ESCAPE>~ returns you to Normal mode.
 
 *Try it out!*
 #+begin_src
 
-Click within the arrows below to move your cursor there. Press <i> and notice that (1) your cursor changes and (2) key presses on your keyboard now insert text. When you are done, press <ESCAPE> to return to normal mode; notice that <h> <j> <k> <l> register as movement commands again rather than text input!
+First, ensure you are in Normal mode. Then, using the <j> and <k> keys, move your cursor down to line below, and use <h>/<l> to position the cursor between the arrows.
 
 -->          <--
 
+Press <i> and notice that (1) your cursor changes and (2) key presses on your keyboard now insert text.
+
+When you are done, press <ESCAPE> to return to normal mode; notice that <h> <j> <k> <l> register as movement commands again rather than text input.
 #+end_src
 
 
@@ -55,14 +54,16 @@ Click within the arrows below to move your cursor there. Press <i> and notice th
 ** Visual mode
 Visual mode is used to *select regions of text*, typically to copy or delete.
 
-If you are currently in normal mode, pressing ~<v>~ will enter visual mode, and pressing ~<SHIFT-v>~ will enter visual mode, but selecting lines of text rather than individual characters. Again, pressing ~<ESCAPE>~ returns you to normal mode.
+If you are currently in normal mode, pressing ~<v>~ will enter visual mode, and pressing ~<SHIFT-v>~ will enter visual line mode (selecting lines of text at a time). Again, pressing ~<ESCAPE>~ returns you to normal mode.
 
 *Try it out!*
 #+begin_src
 
-Click somewhere along this line of text to move your cursor there. Press <v>, then move the cursor with <h> <j> <k> or <l>. Notice that moving around now selects the region.
+Ensure you are in Normal mode. Move your cursor into the box using <h> <j> <k> <l>.
 
-Press <ESCAPE> to return to normal mode. Now press <SHIFT-V>. You are selecting lines now! Try using <j> and <k> to select multiple lines. When you are done, press <ESCAPE> again.
+Press <v> to enter Visual mode, then move the cursor with <h> <j> <k> or <l>. Notice that moving around now selects the region.
+
+Press <ESCAPE> to return to Normal mode. Now press <SHIFT-V>. You are selecting lines now! Try using <j> and <k> to select multiple lines. When you are done, press <ESCAPE> again.
 
 #+end_src
 
@@ -70,19 +71,36 @@ Press <ESCAPE> to return to normal mode. Now press <SHIFT-V>. You are selecting 
 
 
 * Advanced motions
-Congratulations! You now have a strong understanding of the fundamentals of Vim movement and the three modes. But there are many, many, MANY more Vim-style commands offered by EngMACS. Here are some important advanced commands that you may regularly use:
+Congratulations! You now have a strong understanding of the fundamentals of the three modes. Let's move on to some important advanced commands that will help you navigate quicker and execute common actions.
 
 
 ** Moving around faster
-Moving around with just ~<hjkl>~ is slow and tedious. It is much faster to move horizontally with ~<w>~ and ~<b>~. These move your cursor forwards/backwards by one *word* rather than a single character.
+Moving around with just ~<hjkl>~ is slow and tedious. To move quicker, use ~<SHIFT>~ or ~<CTRL>~ in combination with ~<hjkl>~.
 
-Additionally, all of the previously mentioned motions can be prefixed with a number to repeat it multiple times. For instance, typing ~<4h>~ jumps the cursor back by 4 characters; ~<2j>~ jumps you down two lines; ~<3w>~ jumps you forwards three words, etc. You might have noticed that the line numbers on the left hand side of the screen are a bit weird: that's because they are *relative* to the current line you are on. This allows you to quickly jump up/down a desired number of lines by using ~<[some number] k>~ or ~<[some number] j>~.
+| Keybind   | Action                                          |
+|-----------+-------------------------------------------------|
+| SHIFT-h/l | Jump forwards/backwards by one *word*           |
+| CTRL-h/l  | Jump to the beginning/end of the current *line* |
+| SHIFT-j/k | Move up/down *paragraphs*                       |
+| CTRL-j/k  | Move to the top/bottom of the current *buffer*  |
+
+*Try it out!*
+#+begin_src
+
+Let's try moving around quicker. Ensure you are in normal mode. Jump into this box by pressing <SHIFT-j> or <SHIFT-k>. Once you're inside, navigate your cursor onto this line of text. Try using <SHIFT-h> and <SHIFT-l> to move forward/backwards quickly, then try to use <CTRL-h> and <CTRL-l> to jump to the beginning/end of lines.
+  
+#+end_src
+
+
+Additionally, all of the previously mentioned motions can be prefixed with a number to repeat it multiple times. For instance, typing ~<4h>~ jumps the cursor back by 4 characters; ~<2j>~ jumps you down two lines; ~<3 SHIFT-j>~ jumps you down three paragraphs, etc.
+
+You might have noticed that the line numbers on the left hand side of the screen are a bit weird: that's because they are *relative* to the current line you are on. This allows you to quickly jump up/down a desired number of lines by using ~<[some number] k>~ or ~<[some number] j>~.
 
 
 *Try it out!*
 #+begin_src
 
-What number is on the left of this line? Is this line above or below the cursor? Try jumping to this line by using the line number on the left and k/j to jump up/down. For instance, if this line is lower than your cursor and has number 19, press <19j>. Make sure you are in normal mode before using movement keys!
+<=== What number is on the left of this line? Is this line above or below the cursor? Try jumping to this line by using the line number on the left and k/j to jump up/down. For instance, if this line is lower than your cursor and has number 19, press <19j>. Make sure you are in normal mode before using movement keys!
 
 Once you're inside this box, try using <hjkl> and <w>/<b> to move around, but with numbers in front to repeat the action multiple times! 
 
@@ -91,7 +109,9 @@ Once you're inside this box, try using <hjkl> and <w>/<b> to move around, but wi
 
 
 ** Copying and pasting
-Copying and pasting in EngMACS is different from other applications, since the usual ~<CTRL-c>~, ~<CTRL-v>~, and ~<CTRL-x>~ keybinds are not used. Instead, ~<y>~ is used to "yank" (copy) text, ~<p>~ is used to paste text, and ~<x>~ is used to cut text. *Note*: ~<p>~ (lowercase p) pastes _behind_ the cursor, whereas ~<P>~ (uppercase P) pastes _in front of_ the cursor.
+Copying and pasting in Photon is different from other applications, since the usual ~<CTRL-c>~, ~<CTRL-v>~, and ~<CTRL-x>~ keybinds are not used. Instead, ~<y>~ is used to "yank" (copy) text, ~<p>~ is used to paste text, and ~<x>~ is used to cut text.
+
+*Note*: ~<p>~ (lowercase p) pastes _behind_ the cursor, whereas ~<P>~ (uppercase P) pastes _in front of_ the cursor.
 
 *Try it out!*
 #+begin_src
@@ -104,36 +124,37 @@ Now, select part of the text below, and use <x> to cut it. Then paste where it s
 -----> Here is some text. Select some of this line. Try using visual mode to select a region! <-----
 -----> Paste here:                                                                            <-----
 
-You can use <dd> to cut an entire line of text. Move your cursor onto the line below (try using your navigation keys!), then (without selecting any region of text, and while in normal mode) press <dd> to cut the line. Note that all commands with <x> and <d>/<dd> will copy the removed text to your clipboard.
------> Use <dd> on this line to delete it! <-----
-
 #+end_src
 
-*Note*: in EngMACS, you can use ~<backspace>~ in normal mode to delete text *without* copying it to the clipboard. As well, you can use ~<CTRL-y>~, ~<CTRL-x>~, and ~<CTRL-p>~ to quickly copy, cut, and paste in *Insert* mode. While everything else that you have learned up to this point involves standard Vim keybindings that you can find on online guides, these binds are EngMACS-only features.
+
+*Note*: in Photon, you can use ~<backspace>~ in normal mode to delete text *without* copying it to the clipboard.
 
 *Try it out!*
 #+begin_src
 
-Here's a practical example of why relative line numbers can be useful. Click on the first bullet point below, and press <SHIFT-V> to enter line-wise visual mode. Note that last bullet is on line "2" (relatively); thus, you can press <2j> to select all the bullets. When you have successfully selected the region, use <backspace> to delete it without cutting it. When you are done, press <ESCAPE> to return to normal mode!
+Here's a practical example of why relative line numbers can be useful.
+
+Move your cursor onto the first bullet point below, and press <SHIFT-V> to enter line-wise visual mode. Note that last bullet is 2 lines below the selected line (the line number on the left of the final bullet is 2); thus, you can press <2j> to select all the bullets.
+
+When you have successfully selected the region, use <backspace> to delete it without cutting it. When you are done, press <ESCAPE> to return to normal mode!
 
 - Here's the first point
 - Here's the second point
 - Here's the last point
-
-Enter insert mode, then highlight (select) the text below with your mouse. Press <CTRL-y> to copy it, then press <CTRL-p> to paste it.
------> Copy some of this line, then paste here:    <-----
 
 #+end_src
 
 
 
 ** Undo and redo
-EngMACS uses ~<u>~ to undo and ~<CTRL-r>~ to redo. Note: sometimes it can be unpredictable how far back the undo command goes. If you are thinking of making a change that you may want to undo, you should *save* your file before making the change. When you manually save the file, it creates a point that you can undo back to.
+Photon uses ~<u>~ to undo and ~<CTRL-r>~ to redo.
+
+*Note*: sometimes it can be unpredictable how far back the undo command goes. If you are thinking of making a change that you may want to undo, you should *save* your file before making the change. When you manually save the file, it creates a point that you can undo back to.
 
 *Try it out!*
 #+begin_src
 
-1. Move your cursor onto the line below the instructions. Press <dd> in Normal mode to delete the line.
+1. Move your cursor onto the line below the instructions. Press <SHIFT-V> then <x> in Normal mode to cut the line.
 2. Press <u> to undo the deletion.
 3. Press <CTRL-r> to redo the deletion.
 
@@ -142,31 +163,33 @@ EngMACS uses ~<u>~ to undo and ~<CTRL-r>~ to redo. Note: sometimes it can be unp
 #+end_src
 
 
-** *[Advanced]*: registers
-Technically, EngMACS doesn't have a singular clipboard that it copies to. Instead, it has a large number of "registers." By default, using ~<y>~, ~<x>~, etc. copies to register _0_. However, you can specify a register to use by pressing ~< " [register name] [command] >~. I recommend using the keyboard letters ~<a-z>~ as register names (avoid using numbers as names or special characters).
+** [Advanced]: registers
+Technically, Photon doesn't have a singular clipboard that it copies to. Instead, it has a large number of "registers." By default, using ~<y>~, ~<x>~, etc. copies to register _0_. However, you can specify a register to use by pressing ~<">   <[register name]>   <[command]>~. I recommend using the keyboard letters ~<a-z>~ as register names (avoid using numbers as names or special characters).
 
-So, if I wanted to copy some selected text into register _a_, I would type ~<" a y>~ (~<a>~ designating the register letter, ~<y>~ representing the copy action). Here's a demonstration of why this can be useful:
+For example, if I wanted to copy some selected text into register _a_, I would type ~<" a y>~: (~<">~ shows that you are about to specify a register, ~<a>~ designating the register name, and ~<y>~ representing the copy action). Here's a demonstration of why this can be useful:
 
 *Try it out!*
 #+begin_src
 
-1. Select some of this row using your mouse or keyboard, and press <" a y> to copy it to register a.
-2. Select some of this row using your mouse or keyboard, and press <" b y> to copy it to register b.
+Move your cursor onto the below line. Try using the relative line number in conjunction with <j> or <k>. Remember, you can enter visual (selection) mode with <v> and then use <h>/<l> to expand the selection.
+
+1. Select some of this row, and press <" a y> to copy it to register a.
+2. Select some of this row, and press <" b y> to copy it to register b.
 3. Ensuring you are in normal mode, move your cursor inside the below arrows and press <" a p> to paste from register a.
 ----->                    <-----
 4. Move your cursor inside the below arrows and press <" b p> to paste from register b.
 ----->                    <-----
 Copying to different registers can sometimes be useful if you are trying to copy/paste multiple different things constantly!
 
-5. In normal mode, type <:reg> and press enter. Notice how a window pops up showing what is currently saved in each register! Can you see the contents of the a and b registers?
-6. Select the popup window, and press <SPACE w q> to close it. We will go over these types of commands next.
+5. In normal mode, type :reg and press enter. Notice how a window pops up showing what is currently saved in each register! Can you see the contents of the a and b registers?
+6. Press <q> to close the popup window.
 
 #+end_src
 
 
 
 ** Conclusion
-Congratulations! You now have a pretty good mastery of Vim commands. This can be pretty overwhelming at first, but remember that you can always use the mouse to move around if that is more comfortable for you: the best way to do things is the way that is most comfortable for you. However, if you're willing to give it a shot, slowly trying to use more Vim-style movement can make you significantly faster in the future. Note that that there are still *many* more advanced Vim commands for specific scenarios which are not covered here.
+Congratulations! You now have a pretty good mastery of Photon's commands. This can be pretty overwhelming at first, but remember that you can always use the mouse to move around and select regions if you prefer: the best way to do things is the way that is most comfortable for you. However, if you're willing to give it a shot, slowly trying to use more keyboard-style movement will make you significantly faster and more efficient in the future. That was a lot, so let's summarize what we learned.
 
 
 
@@ -174,17 +197,16 @@ Congratulations! You now have a pretty good mastery of Vim commands. This can be
 Before you move on to more interesting sections, here's a summary:
 
 *[Crucial to know]*:
-- Normal mode is for commands, insert mode is to edit text, visual mode is to select regions of text
+- *Normal mode* is for commands, *insert mode* is to edit text, *visual mode* is to select regions of text
 - Copying/cutting/pasting with ~<y>~ ~<x>~ ~<p>~
 - Undo/redo with ~<u>~ and ~<CTRL-r>~
 
-*Note*: it is easy to accidentally try to use Normal-mode commands in Visual mode, or use the uppercase variants of commands accidentally by having CAPS-LOCK on. You can usually undo Vim commands easily with ~<u>~, but get used to checking the mode indicator in the bottom left corner to make sure you are in the right mode.
+*Note*: it is easy to accidentally try to use Normal-mode commands in Visual mode, or use the uppercase variants of commands accidentally by having CAPS-LOCK on. If you find yourself making this mistake consistently, get used to quickly glancing at the top left corner to check what mode you're in.
 
 *[Optional]*:
-- Moving with ~<h>~ ~<j>~ ~<k>~ ~<l>~ and ~<w>~ ~<b>~
+- Moving with ~<h>~ ~<j>~ ~<k>~ ~<l>~ and their ~<SHIFT>/<CTRL>~ versions
 - Combining movement commands with numerical prefixes (e.g., ~<3h>~) to move multiple times
   - Relative line numbers, a useful tool to quickly select multiple lines of text or move around vertically
-- Copy/cut/pasting in normal mode with ~<CTRL-y>~, ~<CTRL-x>~, and ~<CTRL-p>~
 - Advanced copying/cutting into registers, and pasting from them with ~< " [register letter] [command] >~
 
 

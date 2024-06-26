@@ -1,0 +1,29 @@
+#+BEGIN_SRC shell
+
+  apk add \
+    autoconf \
+    texinfo \
+    libgccjit-dev \
+    gnutls-dev \
+    giflib-dev \
+    libxpm-dev \
+
+  ./configure --build=x86_64-alpine-linux-musl --host=x86_64-alpine-linux-musl --prefix=/usr --sysconfdir=/etc --libexecdir=/usr/lib --localstatedir=/var --with-gameuser=:games --with-gpm --with-harfbuzz --with-json --with-x-toolkit=athena --without-toolkit-scroll-bars --without-dbus --with-xft --with-jpeg=yes --with-tiff=yes --with-native-compilation=aot --without-compress-install --with-x-toolkit=gtk3 --with-xwidgets 'CFLAGS=-Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -O2 -flto=auto' 'LDFLAGS=-Wl,--as-needed,-O1,--sort-common -Wl,-z,pack-relative-relocs'
+
+
+  --build x86_64-linux-gnu --prefix=/usr --sharedstatedir=/var/lib --libexecdir=/usr/libexec --localstatedir=/var/lib
+  4 --infodir=/usr/share/info --mandir=/usr/share/man --with-libsystemd --with-pop=yes
+  5 --enable-locallisppath=/etc/emacs:/usr/local/share/emacs/28.2/site-lisp:/usr/local/share/emacs/site-lisp:/usr/share/emacs/28.2/site-lisp\
+  6 :/usr/share/emacs/site-lisp --with-sound=alsa --without-gconf --with-mailutils --with-native-compilation --build x86_64-linux-gnu
+  7 --prefix=/usr --sharedstatedir=/var/lib --libexecdir=/usr/libexec --localstatedir=/var/lib --infodir=/usr/share/info
+  8 --mandir=/usr/share/man --with-libsystemd --with-pop=yes
+  9 --enable-locallisppath=/etc/emacs:/usr/local/share/emacs/28.2/site-lisp:/usr/local/share/emacs/site-lisp:/usr/share/emacs/28.2/site-lisp\
+ 10 :/usr/share/emacs/site-lisp --with-sound=alsa --without-gconf --with-mailutils --with-native-compilation --with-cairo --with-x=yes
+ 11 --with-x-toolkit=gtk3 --with-toolkit-scroll-bars 'CFLAGS=-g -O2 -ffile-prefix-map=/build/emacs-mPr7Vr/emacs-28.2+1=.
+ 12 -fstack-protector-strong -Wformat -Werror=format-security -Wall' 'CPPFLAGS=-Wdate-time -D_FORTIFY_SOURCE=2' LDFLAGS=-Wl,-z,relro
+
+#+END_SRC
+
+#+BEGIN_SRC shell
+
+#+END_SRC
