@@ -697,7 +697,8 @@
      '((emacs-lisp . t)
        (octave . t)
        (latex . t)
-       (python .t)))))
+       (python .t)))
+    (org-font-setup)))
 
 ;; (use-package modus-themes)
 ;; (use-package org-modern

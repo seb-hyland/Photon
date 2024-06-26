@@ -1027,7 +1027,8 @@ Set up bracket colouring in programming buffers
        '((emacs-lisp . t)
 	 (octave . t)
 	 (latex . t)
-	 (python .t)))))
+	 (python .t)))
+      (org-font-setup))) 
 #+end_src
 
 
