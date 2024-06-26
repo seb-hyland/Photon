@@ -649,7 +649,6 @@
   (font-lock-add-keywords 'org-mode
 			  '(("^ *\\([-]\\) "
 			     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-  (set-face-attribute 'variable-pitch nil :family "DM Sans")
 (add-hook 'org-mode-hook (lambda () (variable-pitch-mode t)))
   (dolist (face '((org-level-1 . 1.8)
 		  (org-level-2 . 1.4)
@@ -685,7 +684,8 @@
 
   (set-face-attribute 'org-block nil :family "Liga SFMono Nerd Font")
   (set-face-attribute 'org-table nil :family "Liga SFMono Nerd Font"))
-(add-hook 'emacs-startup-hook #'org-font-setup)
+(add-hook 'org-mode-hook #'org-font-setup)
+(set-face-attribute 'variable-pitch nil :family "DM Sans")
 
 (use-package org
   :config
@@ -698,7 +698,7 @@
        (octave . t)
        (latex . t)
        (python .t)))
-    (org-font-setup)))
+    ))
 
 ;; (use-package modus-themes)
 ;; (use-package org-modern
