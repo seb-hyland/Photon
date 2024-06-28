@@ -1,42 +1,42 @@
 ;; (current-time-string)
-  ;; (setq doom-modeline-time-icon t)
-  ;; (load "/Local/Documents/EngMACS/add-ons/EngMACS-light-theme.el")
-  ;; (load "/Local/Downloads/org-starless.el")
+;; (setq doom-modeline-time-icon t)
+;; (load "/Local/Documents/EngMACS/add-ons/EngMACS-light-theme.el")
+;; (load "/Local/Downloads/org-starless.el")
 ;; 
 ;; 
 ;; 
-  ;; (setq svg-tag-tags
-	;; '(("\\(|[A-Z]+|\\)" . ((lambda (tag)
-				 ;; (svg-tag-make :beg 1 :end -1))))))
-  ;; (setq svg-tag-tags
-	;; '((":HELLO:" . ((lambda (tag) (svg-tag-make "HELLO"))))))
+;; (setq svg-tag-tags
+;; '(("\\(|[A-Z]+|\\)" . ((lambda (tag)
+;; (svg-tag-make :beg 1 :end -1))))))
+;; (setq svg-tag-tags
+;; '((":HELLO:" . ((lambda (tag) (svg-tag-make "HELLO"))))))
 ;; 
-  ;; :WHY???:
-  ;; (svg-tag-mode t)
-  ;; (require 'svg-tag-mode)
+;; :WHY???:
+;; (svg-tag-mode t)
+;; (require 'svg-tag-mode)
 ;; 
-  ;; |HELLO|
+;; |HELLO|
 ;; 
-  ;; (load "/Local/Downloads/doom-nano-modeline-main/doom-nano-modeline-modes.el")
-  ;; (nano-modeline-text-mode t)
+;; (load "/Local/Downloads/doom-nano-modeline-main/doom-nano-modeline-modes.el")
+;; (nano-modeline-text-mode t)
 ;; 
 ;; 
-  ;; (remove-hook 'prog-mode-hook            #'nano-modeline-prog-mode)
-  ;; (remove-hook 'text-mode-hook            #'nano-modeline-text-mode)
-  ;; (remove-hook 'org-mode-hook             #'nano-modeline-org-mode)
-  ;; (remove-hook 'pdf-view-mode-hook        #'nano-modeline-pdf-mode)
-  ;; (remove-hook 'mu4e-headers-mode-hook    #'nano-modeline-mu4e-headers-mode)
-  ;; (remove-hook 'mu4e-view-mode-hook       #'nano-modeline-mu4e-message-mode)
-  ;; (remove-hook 'mu4e-compose-mode-hook    #'nano-modeline-mu4e-compose-mode)
-  ;; (remove-hook 'elfeed-show-mode-hook     #'nano-modeline-elfeed-entry-mode)
-  ;; (remove-hook 'elfeed-search-mode-hook   #'nano-modeline-elfeed-search-mode)
-  ;; (remove-hook 'elpher-mode-hook          #'nano-modeline-elpher-mode)
-  ;; (remove-hook 'term-mode-hook            #'nano-modeline-term-mode)
-  ;; (remove-hook 'eat-mode-hook             #'nano-modeline-eat-mode)
-  ;; (remove-hook 'xwidget-webkit-mode-hook  #'nano-modeline-xwidget-mode)
-  ;; (remove-hook 'messages-buffer-mode-hook #'nano-modeline-message-mode)
-  ;; (remove-hook 'org-capture-mode-hook     #'nano-modeline-org-capture-mode)
-  ;; (remove-hook 'org-agenda-mode-hook      #'nano-modeline-org-agenda-mode)
+;; (remove-hook 'prog-mode-hook            #'nano-modeline-prog-mode)
+;; (remove-hook 'text-mode-hook            #'nano-modeline-text-mode)
+;; (remove-hook 'org-mode-hook             #'nano-modeline-org-mode)
+;; (remove-hook 'pdf-view-mode-hook        #'nano-modeline-pdf-mode)
+;; (remove-hook 'mu4e-headers-mode-hook    #'nano-modeline-mu4e-headers-mode)
+;; (remove-hook 'mu4e-view-mode-hook       #'nano-modeline-mu4e-message-mode)
+;; (remove-hook 'mu4e-compose-mode-hook    #'nano-modeline-mu4e-compose-mode)
+;; (remove-hook 'elfeed-show-mode-hook     #'nano-modeline-elfeed-entry-mode)
+;; (remove-hook 'elfeed-search-mode-hook   #'nano-modeline-elfeed-search-mode)
+;; (remove-hook 'elpher-mode-hook          #'nano-modeline-elpher-mode)
+;; (remove-hook 'term-mode-hook            #'nano-modeline-term-mode)
+;; (remove-hook 'eat-mode-hook             #'nano-modeline-eat-mode)
+;; (remove-hook 'xwidget-webkit-mode-hook  #'nano-modeline-xwidget-mode)
+;; (remove-hook 'messages-buffer-mode-hook #'nano-modeline-message-mode)
+;; (remove-hook 'org-capture-mode-hook     #'nano-modeline-org-capture-mode)
+;; (remove-hook 'org-agenda-mode-hook      #'nano-modeline-org-agenda-mode)
 
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -61,9 +61,9 @@
       gc-cons-percentage 0.6)
 
 (if (boundp 'comp-deferred-compilation)
-      (setq comp-deferred-compilation nil)
-    (setq native-comp-deferred-compilation nil))
-  (setq load-prefer-newer noninteractive)
+    (setq comp-deferred-compilation nil)
+  (setq native-comp-deferred-compilation nil))
+(setq load-prefer-newer noninteractive)
 (setq comp-async-report-warnings-errors nil)
 
 (setq inhibit-startup-message t)
@@ -93,7 +93,7 @@
 (add-hook 'emacs-startup-hook (lambda ()
 				(global-display-line-numbers-mode 1)
 				(display-line-numbers-mode -1)
-				(load-theme 'EngMACS-dark t)
+				(load-theme 'photon-dark t)
 				))
 
 (unless (file-directory-p "/Local/Documents/Photon/")
@@ -126,34 +126,35 @@
 ;;     :non-normal-prefix "C-a"))
 
 (use-package ivy
-	 :bind (("C-s" . swiper)
-		:map ivy-minibuffer-map
-		("TAB" . ivy-alt-done)	
-		("C-l" . ivy-alt-done)
-		("C-j" . ivy-next-line)
-		("C-k" . ivy-previous-line)
-		:map ivy-switch-buffer-map
-		("C-k" . ivy-previous-line)
-		("C-l" . ivy-done)
-		("C-d" . ivy-switch-buffer-kill)
-		:map ivy-reverse-i-search-map
-		("C-k" . ivy-previous-line)
-		("C-d" . ivy-reverse-i-search-kill))
-	 :config
-	 (ivy-mode 1))
-   (setq swiper-use-visual-line-p #'ignore)
+  :bind (("C-s" . swiper)
+	 :map ivy-minibuffer-map
+	 ("TAB" . ivy-alt-done)	
+	 ("C-l" . ivy-alt-done)
+	 ("C-j" . ivy-next-line)
+	 ("C-k" . ivy-previous-line)
+	 :map ivy-switch-buffer-map
+	 ("C-k" . ivy-previous-line)
+	 ("C-l" . ivy-done)
+	 ("C-d" . ivy-switch-buffer-kill)
+	 :map ivy-reverse-i-search-map
+	 ("C-k" . ivy-previous-line)
+	 ("C-d" . ivy-reverse-i-search-kill))
+  :config
+  (ivy-mode 1))
+(setq swiper-use-visual-line-p #'ignore)
+
+(use-package ivy-rich
+  :after (counsel)
+  :diminish
+  (eldoc-mode)
+  :init
+  (ivy-rich-mode 1))
 
 (use-package orderless
+  :after (ivy counsel ivy-rich)
   :config
   (setq ivy-re-builders-alist '((t . orderless-ivy-re-builder)))
   (add-to-list 'ivy-highlight-functions-alist '(orderless-ivy-re-builder . orderless-ivy-highlight)))
-
-     (use-package ivy-rich
-       :after (counsel)
-       :diminish
-       (eldoc-mode)
-       :init
-       (ivy-rich-mode 1))
 
 ;;  (defun ivy--fussy-sort (name cands)
 ;;    "Sort according to closeness to string NAME the string list CANDS."
@@ -296,13 +297,13 @@
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 (if (file-directory-p "/Local/Documents/Photon/.ssh")
-  (copy-directory "/Local/Documents/Photon/.ssh" "/root/.ssh")) 
+    (copy-directory "/Local/Documents/Photon/.ssh" "/root/.ssh")) 
 (defvar ssh-setup-buffer)
 (defvar ssh-setup-status nil)
 (defun ssh-setup ()
   (interactive)
   (if (equal ssh-setup-status nil)
-    (setq ssh-setup-buffer (current-buffer))
+      (setq ssh-setup-buffer (current-buffer))
     (shell)
     (process-send-string "*shell*" "chmod 600 /root/.ssh/id_ed25519 && ssh-agent > /dev/null 2>&1 && eval $(ssh-agent) > /dev/null 2>&1 && ssh-add ~/.ssh/id_ed25519 \n")
     (switch-to-buffer ssh-setup-buffer)
@@ -313,26 +314,26 @@
 ;;    (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
 ;;    (lsp-headerline-breadcrumb-mode))
 
-  ;; (use-package lsp-mode
-  ;;   :commands (lsp lsp-deferred)
-  ;;   ;; :hook (lsp-mode . lsp-mode-setup)
-  ;;   :init
-  ;;   (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-  ;;   :config
-  ;;   (lsp-enable-which-key-integration t))
+;; (use-package lsp-mode
+;;   :commands (lsp lsp-deferred)
+;;   ;; :hook (lsp-mode . lsp-mode-setup)
+;;   :init
+;;   (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+;;   :config
+;;   (lsp-enable-which-key-integration t))
 
-  ;; (use-package lsp-ui
-  ;;   :hook (lsp-mode . lsp-ui-mode)
-  ;;   :custom
-  ;;   (lsp-ui-doc-position 'bottom))
+;; (use-package lsp-ui
+;;   :hook (lsp-mode . lsp-ui-mode)
+;;   :custom
+;;   (lsp-ui-doc-position 'bottom))
 
-(setq tsc-dyn-get-from '(:compilation))
-(setq tsc-dyn-dir '"/root/.emacs.d/add-ons/elisp-tree-sitter")
-(require 'tree-sitter)
-(require 'tree-sitter-langs)
-(require 'tree-sitter-hl)
-(require 'tree-sitter-debug)
-(require 'tree-sitter-query)
+;; (setq tsc-dyn-get-from '(:compilation))
+;; (setq tsc-dyn-dir '"/root/.emacs.d/add-ons/elisp-tree-sitter")
+(use-package tree-sitter)
+(use-package tree-sitter-langs)
+;; (require 'tree-sitter-hl)
+;; (require 'tree-sitter-debug)
+;; (require 'tree-sitter-query)
 (add-hook 'prog-mode-hook #'tree-sitter-hl-mode)
 
 (use-package company
@@ -389,7 +390,7 @@
 ;; (use-package s :defer t :ensure t)
 
 (use-package vterm
-    :load-path "~/.emacs.d/vterm")
+  :load-path "~/.emacs.d/vterm")
 (use-package vterm-toggle
   :config
   (setq vterm-toggle-fullscreen-p nil)
@@ -406,9 +407,9 @@
 
 (use-package perspective
   :init
-    (setq persp-suppress-no-prefix-key-warning t)
+  (setq persp-suppress-no-prefix-key-warning t)
   :config
-    (persp-mode t))
+  (persp-mode t))
 
 ;;    (eng/leader-keys
 ;;      "b" '(persp-counsel-switch-buffer :which-keys "Switch buffer...")
@@ -472,54 +473,54 @@
 ;;    )
 
 (use-package shrink-path
-    :ensure t
-    :demand t
-    :diminish)
-  
-  ;; (require 'doom-modeline)
-  ;; (require 'doom-modeline-autoloads)
-  ;; (require 'doom-modeline-core)
-  ;; (require 'doom-modeline-env)
-  ;; ;; (require 'doom-modeline-pkg)
-  ;; (require 'doom-modeline-segments)
+  :ensure t
+  :demand t
+  :diminish)
+
+;; (require 'doom-modeline)
+;; (require 'doom-modeline-autoloads)
+;; (require 'doom-modeline-core)
+;; (require 'doom-modeline-env)
+;; ;; (require 'doom-modeline-pkg)
+;; (require 'doom-modeline-segments)
 ;; 
-  ;; (add-hook 'emacs-startup-hook (lambda () (doom-modeline-mode 1)))
+;; (add-hook 'emacs-startup-hook (lambda () (doom-modeline-mode 1)))
 ;; 
-  ;; (custom-set-variables
-   ;; '(doom-modeline-major-mode-icon t)
-   ;; '(doom-modeline-major-mode-color-icon t)
-   ;; '(doom-modeline-buffer-state-icon t)
-   ;; '(doom-modeline-buffer-modification-icon nil)
-   ;; '(doom-modeline-buffer-encoding nil)
-   ;; '(doom-modeline-icon t)
-   ;; '(doom-modeline-time-icon nil)
-   ;; '(doom-modeline-time-live-icon nil)
-   ;; '(doom-modeline-time-clock-size 0.3)
-   ;; '(doom-modeline-buffer-name t)
-   ;; '(doom-modeline-height 40)
-   ;; '(doom-modeline-support-imenu t)
-   ;; '(doom-modeline-bar-width 6)
-   ;; '(doom-modeline-position-column-line-format '("%l:%c"))
-   ;; '(doom-modeline-minor-modes t)
-   ;; '(doom-modeline-enable-word-count t)
-   ;; '(doom-modeline-unicode-fallback t))
+;; (custom-set-variables
+;; '(doom-modeline-major-mode-icon t)
+;; '(doom-modeline-major-mode-color-icon t)
+;; '(doom-modeline-buffer-state-icon t)
+;; '(doom-modeline-buffer-modification-icon nil)
+;; '(doom-modeline-buffer-encoding nil)
+;; '(doom-modeline-icon t)
+;; '(doom-modeline-time-icon nil)
+;; '(doom-modeline-time-live-icon nil)
+;; '(doom-modeline-time-clock-size 0.3)
+;; '(doom-modeline-buffer-name t)
+;; '(doom-modeline-height 40)
+;; '(doom-modeline-support-imenu t)
+;; '(doom-modeline-bar-width 6)
+;; '(doom-modeline-position-column-line-format '("%l:%c"))
+;; '(doom-modeline-minor-modes t)
+;; '(doom-modeline-enable-word-count t)
+;; '(doom-modeline-unicode-fallback t))
 ;; 
-  ;; (custom-set-faces
-   ;; '(doom-modeline ((t (:family "SF Mono"))))
-   ;; '(doom-modeline-bar ((t (:background "#9099AB" :family "SF Mono"))))
-   ;; '(doom-modeline-icon ((t (:family "Symbols Nerd Font Mono" :height 100))))
-   ;; '(doom-modeline-icon-inactive ((t (:family "Symbols Nerd Font Mono" :height 100))))
-   ;; '(mode-line ((t (:family "SF Mono"))))
-   ;; '(mode-line-active ((t (:family "SF Mono"))))
-   ;; '(mode-line-inactive ((t (:family "SF Mono")))))
+;; (custom-set-faces
+;; '(doom-modeline ((t (:family "SF Mono"))))
+;; '(doom-modeline-bar ((t (:background "#9099AB" :family "SF Mono"))))
+;; '(doom-modeline-icon ((t (:family "Symbols Nerd Font Mono" :height 100))))
+;; '(doom-modeline-icon-inactive ((t (:family "Symbols Nerd Font Mono" :height 100))))
+;; '(mode-line ((t (:family "SF Mono"))))
+;; '(mode-line-active ((t (:family "SF Mono"))))
+;; '(mode-line-inactive ((t (:family "SF Mono")))))
 
 (use-package doom-themes)
-   ;; :defer t
-   ;; :ensure t
-   ;; :config
-   ;; (setq doom-themes-enable-bold t 
-	 ;; doom-themes-enable-italic t)
-   ;; (doom-themes-visual-bell-config))
+;; :defer t
+;; :ensure t
+;; :config
+;; (setq doom-themes-enable-bold t 
+;; doom-themes-enable-italic t)
+;; (doom-themes-visual-bell-config))
 
 ;; (require 'doom-nano-modeline)
 ;; (require 'doom-nano-modeline-core)
@@ -543,22 +544,6 @@
 (require 'doom-nano-modeline-misc)
 (require 'doom-nano-modeline-modes)
 (doom-nano-modeline-mode t)
-(set-face-attribute 'doom-nano-modeline-active-face nil :weight 'bold)
-(set-face-attribute 'doom-nano-modeline-evil-emacs-state-face nil :background "#957FB8" :foreground "black")
-(set-face-attribute 'doom-nano-modeline-evil-normal-state-face nil :background "#98BB6C" :foreground "black")
-(set-face-attribute 'doom-nano-modeline-evil-insert-state-face nil :background "#7FB4CA" :foreground "black")
-(set-face-attribute 'doom-nano-modeline-evil-visual-state-face nil :background "#E82424" :foreground "black")
-(set-face-attribute 'doom-nano-modeline-evil-replace-state-face nil :background "#957FB8" :foreground "black")
-(set-face-attribute 'doom-nano-modeline-evil-operator-state-face nil :background "#957FB8" :foreground "black")
-(set-face-attribute 'doom-nano-modeline-evil-motion-state-face nil :background "#957FB8" :foreground "black")
-(dolist (face '(doom-nano-modeline-evil-emacs-state-face
-		doom-nano-modeline-evil-normal-state-face
-		doom-nano-modeline-evil-motion-state-face
-		doom-nano-modeline-evil-insert-state-face
-		doom-nano-modeline-evil-replace-state-face
-		doom-nano-modeline-evil-operator-state-face
-		doom-nano-modeline-evil-visual-state-face))
-  (set-face-attribute face nil :box '(:line-pad nil)))
 
 ;; (use-package nano-modeline
 ;; :config
@@ -594,36 +579,36 @@
 
 ;; (set-face-attribute 'nano-modeline-status nil :foreground "black" :weight 'bold)
 
-  ;; (defun nano-modeline-set-evil-color ()
-    ;; (cond
-     ;; ((eq evil-state 'normal)
-      ;; (set-face-attribute 'nano-modeline-status nil
-			  ;; :background "#7FB4CA"))
-     ;; ((eq evil-state 'insert)
-      ;; (set-face-attribute 'nano-modeline-status nil
-			  ;; :background "#98BB6C"))
-     ;; ((eq evil-state 'visual)
-      ;; (set-face-attribute 'nano-modeline-status nil
-			  ;; :background "#FF5D62"))
-     ;; ((eq evil-state 'emacs)
-      ;; (set-face-attribute 'nano-modeline-status nil
-			  ;; :background "#957FB8"))))
+;; (defun nano-modeline-set-evil-color ()
+;; (cond
+;; ((eq evil-state 'normal)
+;; (set-face-attribute 'nano-modeline-status nil
+;; :background "#7FB4CA"))
+;; ((eq evil-state 'insert)
+;; (set-face-attribute 'nano-modeline-status nil
+;; :background "#98BB6C"))
+;; ((eq evil-state 'visual)
+;; (set-face-attribute 'nano-modeline-status nil
+;; :background "#FF5D62"))
+;; ((eq evil-state 'emacs)
+;; (set-face-attribute 'nano-modeline-status nil
+;; :background "#957FB8"))))
 ;; 
-  ;; (add-hook 'evil-normal-state-entry-hook #'nano-modeline-set-evil-color)
-  ;; (add-hook 'evil-insert-state-entry-hook #'nano-modeline-set-evil-color)
-  ;; (add-hook 'evil-visual-state-entry-hook #'nano-modeline-set-evil-color)
-  ;; (add-hook 'evil-emacs-state-entry-hook #'nano-modeline-set-evil-color)
+;; (add-hook 'evil-normal-state-entry-hook #'nano-modeline-set-evil-color)
+;; (add-hook 'evil-insert-state-entry-hook #'nano-modeline-set-evil-color)
+;; (add-hook 'evil-visual-state-entry-hook #'nano-modeline-set-evil-color)
+;; (add-hook 'evil-emacs-state-entry-hook #'nano-modeline-set-evil-color)
 
 ;; (defun nano-modeline-save-indicator ()
-    ;; (if (buffer-modified-p)
-	;; (set-face-attribute 'nano-modeline--empty-face nil
-			    ;; :foreground "#FF5D62"
-			    ;; :background "#2A2A37")
-      ;; (set-face-attribute 'nano-modeline--empty-face nil
-			  ;; :foreground "#E6E3D3")))
+;; (if (buffer-modified-p)
+;; (set-face-attribute 'nano-modeline--empty-face nil
+;; :foreground "#FF5D62"
+;; :background "#2A2A37")
+;; (set-face-attribute 'nano-modeline--empty-face nil
+;; :foreground "#E6E3D3")))
 ;; 
-  ;; (add-hook 'post-command-hook #'nano-modeline-save-indicator)
-  ;; (add-hook 'after-save-hook #'nano-modeline-save-indicator)
+;; (add-hook 'post-command-hook #'nano-modeline-save-indicator)
+;; (add-hook 'after-save-hook #'nano-modeline-save-indicator)
 
 (use-package dashboard
   :ensure t
@@ -634,7 +619,7 @@
 (load-file "~/.emacs.d/add-ons/photon-dashboard.el")
 (add-hook 'window-setup-hook (lambda () (dashboard-open)))
 (add-hook 'window-setup-hook (lambda() (set-face-attribute 'dashboard-heading nil
-		    :family "Liga SFMono Nerd Font")))
+							   :family "Liga SFMono Nerd Font")))
 (setq nerd-icons-font-family "Symbols Nerd Font Mono")
 
 (use-package rainbow-delimiters
@@ -643,22 +628,21 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (defun org-font-setup ()
-(interactive)
+  (interactive)
   "Customizes Org mode fonts for headings and list hyphens."
   ;; Replace list hyphen with dot
   (font-lock-add-keywords 'org-mode
 			  '(("^ *\\([-]\\) "
 			     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-(add-hook 'org-mode-hook (lambda () (variable-pitch-mode t)))
-  (dolist (face '((org-level-1 . 1.8)
-		  (org-level-2 . 1.4)
-		  (org-level-3 . 1.3)
-		  (org-level-4 . 1.2)
+  (dolist (face '((org-level-1 . 1.9)
+		  (org-level-2 . 1.6)
+		  (org-level-3 . 1.35)
+		  (org-level-4 . 1.15)
 		  (org-level-5 . 1.1)
 		  (org-level-6 . 1.1)
 		  (org-level-7 . 1.1)
 		  (org-level-8 . 1.1)
-		  (org-document-title . 1.9)
+		  (org-document-title . 2.3)
 		  (org-document-info . 1.5)
 		  (org-meta-line . 1.3)))
     (set-face-attribute (car face) nil :height (cdr face)))
@@ -684,8 +668,12 @@
 
   (set-face-attribute 'org-block nil :family "Liga SFMono Nerd Font")
   (set-face-attribute 'org-table nil :family "Liga SFMono Nerd Font"))
-(add-hook 'org-mode-hook #'org-font-setup)
-(set-face-attribute 'variable-pitch nil :family "DM Sans")
+
+(add-hook 'org-mode-hook
+	  (lambda ()
+	    (variable-pitch-mode t)))
+(add-hook 'org-mode-hook 'org-font-setup)
+(set-face-attribute 'variable-pitch nil :family "SF Pro Text")
 
 (use-package org
   :config
@@ -702,17 +690,17 @@
 
 ;; (use-package modus-themes)
 ;; (use-package org-modern
-  ;; :diminish
-  ;; :custom
-  ;; ;; Edit settings
-  ;; (org-auto-align-tags nil)
-  ;; (org-tags-column 0)
-  ;; (org-catch-invisible-edits 'show-and-error)
-  ;; (org-special-ctrl-a/e t)
-  ;; (org-insert-heading-respect-content t)
-  ;; ;; Org styling, hide markup etc.
-  ;; (org-hide-emphasis-markers t)
-  ;; (org-ellipsis "…"))
+;; :diminish
+;; :custom
+;; ;; Edit settings
+;; (org-auto-align-tags nil)
+;; (org-tags-column 0)
+;; (org-catch-invisible-edits 'show-and-error)
+;; (org-special-ctrl-a/e t)
+;; (org-insert-heading-respect-content t)
+;; ;; Org styling, hide markup etc.
+;; (org-hide-emphasis-markers t)
+;; (org-ellipsis "…"))
 
 (use-package toc-org
   :ensure t
@@ -829,380 +817,392 @@
 (use-package rustic)
 
 ;; (custom-set-variables
- ;; '(custom-safe-themes '("796c44be3d1352f823614b1c75023018053fcdc56d88801874d6c939354f7d99" "a9eeab09d61fef94084a95f82557e147d9630fbbb82a837f971f83e66e21e5ad" "b29ba9bfdb34d71ecf3322951425a73d825fb2c002434282d2e0e8c44fce8185" "9f297216c88ca3f47e5f10f8bd884ab24ac5bc9d884f0f23589b0a46a608fe14" "6a5584ee8de384f2d8b1a1c30ed5b8af1d00adcbdcd70ba1967898c265878acf" "9013233028d9798f901e5e8efb31841c24c12444d3b6e92580080505d56fd392" "a9abd706a4183711ffcca0d6da3808ec0f59be0e8336868669dc3b10381afb6f" "8d8207a39e18e2cc95ebddf62f841442d36fcba01a2a9451773d4ed30b632443" "f5f80dd6588e59cfc3ce2f11568ff8296717a938edd448a947f9823a4e282b66" "4990532659bb6a285fee01ede3dfa1b1bdf302c5c3c8de9fad9b6bc63a9252f7" "8c7e832be864674c220f9a9361c851917a93f921fedb7717b1b5ece47690c098" "e70e87ad139f94d3ec5fdf782c978450fc2cb714d696e520b176ff797b97b8d2" "77fff78cc13a2ff41ad0a8ba2f09e8efd3c7e16be20725606c095f9a19c24d3d" "34cf3305b35e3a8132a0b1bdf2c67623bc2cb05b125f8d7d26bd51fd16d547ec" "571661a9d205cb32dfed5566019ad54f5bb3415d2d88f7ea1d00c7c794e70a36" "e1f4f0158cd5a01a9d96f1f7cdcca8d6724d7d33267623cc433fe1c196848554" "7e377879cbd60c66b88e51fad480b3ab18d60847f31c435f15f5df18bdb18184" "1f292969fc19ba45fbc6542ed54e58ab5ad3dbe41b70d8cb2d1f85c22d07e518" "88f7ee5594021c60a4a6a1c275614103de8c1435d6d08cc58882f920e0cec65e" default))
- ;; '(package-selected-packages
-   ;; '(org-modern modus-themes diminish evil-collection evil magit general helpful rainbow-delimiters which-key counsel-projectile projectile company-auctex company auctex org-bullets ivy-rich dashboard vterm kanagawa-theme flycheck cargo rust-mode zuul treemacs-nerd-icons nerdtab mood-line doom-themes doom-modeline-now-playing counsel)))
+;; '(custom-safe-themes '("796c44be3d1352f823614b1c75023018053fcdc56d88801874d6c939354f7d99" "a9eeab09d61fef94084a95f82557e147d9630fbbb82a837f971f83e66e21e5ad" "b29ba9bfdb34d71ecf3322951425a73d825fb2c002434282d2e0e8c44fce8185" "9f297216c88ca3f47e5f10f8bd884ab24ac5bc9d884f0f23589b0a46a608fe14" "6a5584ee8de384f2d8b1a1c30ed5b8af1d00adcbdcd70ba1967898c265878acf" "9013233028d9798f901e5e8efb31841c24c12444d3b6e92580080505d56fd392" "a9abd706a4183711ffcca0d6da3808ec0f59be0e8336868669dc3b10381afb6f" "8d8207a39e18e2cc95ebddf62f841442d36fcba01a2a9451773d4ed30b632443" "f5f80dd6588e59cfc3ce2f11568ff8296717a938edd448a947f9823a4e282b66" "4990532659bb6a285fee01ede3dfa1b1bdf302c5c3c8de9fad9b6bc63a9252f7" "8c7e832be864674c220f9a9361c851917a93f921fedb7717b1b5ece47690c098" "e70e87ad139f94d3ec5fdf782c978450fc2cb714d696e520b176ff797b97b8d2" "77fff78cc13a2ff41ad0a8ba2f09e8efd3c7e16be20725606c095f9a19c24d3d" "34cf3305b35e3a8132a0b1bdf2c67623bc2cb05b125f8d7d26bd51fd16d547ec" "571661a9d205cb32dfed5566019ad54f5bb3415d2d88f7ea1d00c7c794e70a36" "e1f4f0158cd5a01a9d96f1f7cdcca8d6724d7d33267623cc433fe1c196848554" "7e377879cbd60c66b88e51fad480b3ab18d60847f31c435f15f5df18bdb18184" "1f292969fc19ba45fbc6542ed54e58ab5ad3dbe41b70d8cb2d1f85c22d07e518" "88f7ee5594021c60a4a6a1c275614103de8c1435d6d08cc58882f920e0cec65e" default))
+;; '(package-selected-packages
+;; '(org-modern modus-themes diminish evil-collection evil magit general helpful rainbow-delimiters which-key counsel-projectile projectile company-auctex company auctex org-bullets ivy-rich dashboard vterm kanagawa-theme flycheck cargo rust-mode zuul treemacs-nerd-icons nerdtab mood-line doom-themes doom-modeline-now-playing counsel)))
 
 ;; (set-face-attribute 'line-number nil :inherit 'default :foreground "#3f4040" :slant normal :weight semi-bold :family "JetBrainsMono Nerd Font")
 ;; (set-face-attribute 'line-number-current-line nil :inherit (hl-line default) :foreground "#81a2be" :slant normal :weight extra-bold :family "JetBrainsMono Nerd Font")
 
 ;; (define-minor-mode writing-mode
-    ;; "Toggle between a writing and programming environment."
-    ;; :global t
-    ;; :init-value nil
-    ;; (if writing-mode
-	;; (progn
-	  ;; ;; Set fonts and themes  [TODO: FIX TABLES]
-	  ;; (set-face-attribute 'default nil :family "Iosevka")
-	  ;; (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")
-	  ;; (set-face-attribute 'org-modern-symbol nil :family "Iosevka")
-	  ;; (global-display-line-numbers-mode -1)
-	  ;; (display-line-numbers-mode -1)
-	  ;; ;; (modus-themes-with-colors
-	  ;; ;;   (set-face-attribute 'mode-line nil
-	  ;; ;; 		      :background "white smoke"
-	  ;; ;; 		      :foreground "black"
-	  ;; ;; 		      :box nil)
-	  ;; ;;   (set-face-attribute 'mode-line-inactive nil
-	  ;; ;; 		      :background bg-dim
-	  ;; ;; 		      :foreground fg-dim))
-	  ;; (set-face-background 'org-block-begin-line "ffffff")
-	  ;; (set-face-background 'org-block "dbe4f1")
-	  ;; (global-org-modern-mode 1)
-	  ;; (setq global-hl-line-mode nil)
+;; "Toggle between a writing and programming environment."
+;; :global t
+;; :init-value nil
+;; (if writing-mode
+;; (progn
+;; ;; Set fonts and themes  [TODO: FIX TABLES]
+;; (set-face-attribute 'default nil :family "Iosevka")
+;; (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")
+;; (set-face-attribute 'org-modern-symbol nil :family "Iosevka")
+;; (global-display-line-numbers-mode -1)
+;; (display-line-numbers-mode -1)
+;; ;; (modus-themes-with-colors
+;; ;;   (set-face-attribute 'mode-line nil
+;; ;; 		      :background "white smoke"
+;; ;; 		      :foreground "black"
+;; ;; 		      :box nil)
+;; ;;   (set-face-attribute 'mode-line-inactive nil
+;; ;; 		      :background bg-dim
+;; ;; 		      :foreground fg-dim))
+;; (set-face-background 'org-block-begin-line "ffffff")
+;; (set-face-background 'org-block "dbe4f1")
+;; (global-org-modern-mode 1)
+;; (setq global-hl-line-mode nil)
 ;; 
-	  ;; ;; Change modeline
-	  ;; (setq header-line-format mode-line-format)
-	  ;; (setq-default header-line-format mode-line-format)
-	  ;; (setq mode-line-format nil)
-	  ;; (setq-default mode-line-format nil)
-	  ;; ;; (add-hook 'after-change-major-mode-hook (lambda () (setq mode-line-format nil)))
-	  ;; ;; (add-hook 'after-change-major-mode-hook (lambda () (setq header-line-format mode-line-format)))
-	  ;; ;; (add-hook 'after-change-major-mode-hook (lambda () (setq-default header-line-format mode-line-format))
+;; ;; Change modeline
+;; (setq header-line-format mode-line-format)
+;; (setq-default header-line-format mode-line-format)
+;; (setq mode-line-format nil)
+;; (setq-default mode-line-format nil)
+;; ;; (add-hook 'after-change-major-mode-hook (lambda () (setq mode-line-format nil)))
+;; ;; (add-hook 'after-change-major-mode-hook (lambda () (setq header-line-format mode-line-format)))
+;; ;; (add-hook 'after-change-major-mode-hook (lambda () (setq-default header-line-format mode-line-format))
 ;; 
-		    ;; ;; Modify frame
-		    ;; (with-selected-frame (selected-frame)
-		      ;; (modify-frame-parameters
-		       ;; nil
-		       ;; '((right-divider-width . 25)
-			 ;; (internal-border-width . 25))))
-		    ;; (dolist (face '(window-divider
-				    ;; window-divider-first-pixel
-				    ;; window-divider-last-pixel))
-		      ;; (face-spec-reset-face face)
-		      ;; (set-face-foreground face (face-attribute 'default :background)))
-		    ;; (set-face-background 'fringe (face-attribute 'default :background))
-		    ;; (fringe-mode 10)
+;; ;; Modify frame
+;; (with-selected-frame (selected-frame)
+;; (modify-frame-parameters
+;; nil
+;; '((right-divider-width . 25)
+;; (internal-border-width . 25))))
+;; (dolist (face '(window-divider
+;; window-divider-first-pixel
+;; window-divider-last-pixel))
+;; (face-spec-reset-face face)
+;; (set-face-foreground face (face-attribute 'default :background)))
+;; (set-face-background 'fringe (face-attribute 'default :background))
+;; (fringe-mode 10)
 ;; 
-		    ;; ;; Set writing mode flag
-		    ;; (setq writing-mode-active t)
-		    ;; (message "Writing mode active"))
+;; ;; Set writing mode flag
+;; (setq writing-mode-active t)
+;; (message "Writing mode active"))
 ;; 
-	  ;; (progn
-	    ;; ;; Set fonts and themes
-	    ;; (set-face-attribute 'default nil :family "JetBrainsMonoNL NF" :height 110)
-	    ;; (global-display-line-numbers-mode 1)
-	    ;; (display-line-numbers-mode 1)
-	    ;; (global-org-modern-mode -1)
-	    ;; (setq global-hl-line-mode t)
-	    ;; (set-face-background 'org-block-begin-line "1a1c23")
-	    ;; (set-face-background 'org-block "1a1c23")
+;; (progn
+;; ;; Set fonts and themes
+;; (set-face-attribute 'default nil :family "JetBrainsMonoNL NF" :height 110)
+;; (global-display-line-numbers-mode 1)
+;; (display-line-numbers-mode 1)
+;; (global-org-modern-mode -1)
+;; (setq global-hl-line-mode t)
+;; (set-face-background 'org-block-begin-line "1a1c23")
+;; (set-face-background 'org-block "1a1c23")
 ;; 
-	    ;; ;; Change modeline
-	    ;; (setq header-line-format nil)
-	    ;; (setq-default header-line-format nil)
-	    ;; ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq mode-line-format nil)))
-	    ;; ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq header-line-format mode-line-format)))
-	    ;; ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq-default header-line-format mode-line-format)))
-	    ;; ;; (add-hook 'after-change-major-mode-hook (lambda () (setq header-line-format nil)))
-	    ;; ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq-default header-line-format nil)))
-	    ;; (doom-modeline-mode)
-	    ;; ;; (add-hook 'after-change-major-mode-hook (lambda () (doom-modeline-mode)))
+;; ;; Change modeline
+;; (setq header-line-format nil)
+;; (setq-default header-line-format nil)
+;; ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq mode-line-format nil)))
+;; ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq header-line-format mode-line-format)))
+;; ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq-default header-line-format mode-line-format)))
+;; ;; (add-hook 'after-change-major-mode-hook (lambda () (setq header-line-format nil)))
+;; ;; (remove-hook 'after-change-major-mode-hook (lambda () (setq-default header-line-format nil)))
+;; (doom-modeline-mode)
+;; ;; (add-hook 'after-change-major-mode-hook (lambda () (doom-modeline-mode)))
 ;; 
-	    ;; ;; Modify frame
-	    ;; (with-selected-frame (selected-frame)
-	      ;; (modify-frame-parameters
-	       ;; nil
-	       ;; '((right-divider-width . 0)
-		 ;; (internal-border-width . 0))))
-	    ;; (face-spec-reset-face 'fringe)
-	    ;; (fringe-mode 20)
+;; ;; Modify frame
+;; (with-selected-frame (selected-frame)
+;; (modify-frame-parameters
+;; nil
+;; '((right-divider-width . 0)
+;; (internal-border-width . 0))))
+;; (face-spec-reset-face 'fringe)
+;; (fringe-mode 20)
 ;; 
-	    ;; ;; Set programming mode flag
-	    ;; (setq writing-mode-active nil)
-	    ;; (message "Programming mode active")))
-      ;; ))
+;; ;; Set programming mode flag
+;; (setq writing-mode-active nil)
+;; (message "Programming mode active")))
+;; ))
 
 ;; (defvar my-light-theme 'modus-operandi)
-  ;; (defvar my-dark-theme 'EngMACS-dark)
-  ;; (defvar my-current-theme my-dark-theme)
+;; (defvar my-dark-theme 'EngMACS-dark)
+;; (defvar my-current-theme my-dark-theme)
 ;; 
-  ;; (defun toggle-writing-mode ()
-    ;; "Toggle between light and dark themes."
-    ;; (interactive)
-    ;; (if (eq my-current-theme my-light-theme)
-	;; (progn
-	  ;; (disable-theme my-light-theme)
-	  ;; (load-theme my-dark-theme t)
-	  ;; (setq my-current-theme my-dark-theme)
-	  ;; (writing-mode -1))
-      ;; (progn
-	;; (disable-theme my-dark-theme)
-	;; (load-theme my-light-theme t)
-	;; (setq my-current-theme my-light-theme)
-	;; (writing-mode 1))))
+;; (defun toggle-writing-mode ()
+;; "Toggle between light and dark themes."
+;; (interactive)
+;; (if (eq my-current-theme my-light-theme)
+;; (progn
+;; (disable-theme my-light-theme)
+;; (load-theme my-dark-theme t)
+;; (setq my-current-theme my-dark-theme)
+;; (writing-mode -1))
+;; (progn
+;; (disable-theme my-dark-theme)
+;; (load-theme my-light-theme t)
+;; (setq my-current-theme my-light-theme)
+;; (writing-mode 1))))
 
 (defface photon-transient-dynamic-face
-    '((t (:foreground "#7FB4CA" :weight bold)))
-    "Face for dynamic transients")
+      '((t (:foreground "#7FB4CA" :weight bold)))
+      "Face for dynamic transients")
 
-  (defun photon-find-file ()
-    (interactive)
-    (if (stringp buffer-file-name)
-	(cond
-	 ((eq major-mode 'dired-mode)
-	  (counsel-find-file))
-	 ((string-match "/Local/" (buffer-file-name))
-	  (counsel-find-file))
-	 (t
-	  (counsel-find-file nil "/Local/")))
-      (counsel-find-file nil "/Local/")))
+    (defun photon-find-file ()
+      (interactive)
+      (if (stringp buffer-file-name)
+	  (cond
+	   ((eq major-mode 'dired-mode)
+	    (counsel-find-file))
+	   ((string-match "/Local/" (buffer-file-name))
+	    (counsel-find-file))
+	   (t
+	    (counsel-find-file nil "/Local/")))
+	(counsel-find-file nil "/Local/")))
 
-  (defun photon-C-j ()
-    (interactive)
-    (if (minibuffer-window-active-p (selected-window))
-	(ivy-next-line)
-      (execute-kbd-macro (kbd "G")))) 
+    (defun photon-C-j ()
+      (interactive)
+      (if (minibuffer-window-active-p (selected-window))
+	  (ivy-next-line)
+	(execute-kbd-macro (kbd "G")))) 
 
-  (defun photon-C-k ()
-    (interactive)
-    (if (minibuffer-window-active-p (selected-window))
-	(ivy-previous-line)
-      (execute-kbd-macro (kbd "gg"))))
+    (defun photon-C-k ()
+      (interactive)
+      (if (minibuffer-window-active-p (selected-window))
+	  (ivy-previous-line)
+	(execute-kbd-macro (kbd "gg"))))
 
-  (transient-define-suffix global-scale-inc ()
-    :transient t
-    :key "]"
-    :description "Increase globally"
-    (interactive)
-    (global-text-scale-adjust 2) (kbd "<escape>"))
+    (transient-define-suffix global-scale-inc ()
+      :transient t
+      :key "]"
+      :description "Increase globally"
+      (interactive)
+      (global-text-scale-adjust 2) (kbd "<escape>"))
 
-  (transient-define-suffix global-scale-dec ()
-    :transient t
-    :key "["
-    :description "Decrease globally"
-    (interactive)
-    (global-text-scale-adjust -2) (kbd "<escape>"))
+    (transient-define-suffix global-scale-dec ()
+      :transient t
+      :key "["
+      :description "Decrease globally"
+      (interactive)
+      (global-text-scale-adjust -2) (kbd "<escape>"))
 
-  (transient-define-suffix toggle-theme ()
-    :transient nil
-    :key "<return>"
-    :description "Toggle light/dark theme"
-    (interactive)
-    (if (eq 'EngMACS-dark (car custom-enabled-themes))
-	(load-theme 'EngMACS-light t)
-      (load-theme 'EngMACS-dark t)))
+    (transient-define-suffix toggle-theme ()
+      :transient nil
+      :key "<return>"
+      :description "Toggle light/dark theme"
+      (interactive)
+      (if (eq 'EngMACS-dark (car custom-enabled-themes))
+	  (load-theme 'EngMACS-light t)
+	(load-theme 'EngMACS-dark t)))
 
-  (use-package org-modern
-    :init
-    (setq org-modern-hide-stars 't)
-  (setq org-modern-block-fringe 6))
+    (use-package org-modern
+      :init
+      (setq org-modern-hide-stars 't)
+      (setq org-modern-block-fringe 6))
 
-  (defun org-entities-show ()
-    (interactive)
-    (setq org-hide-emphasis-markers nil)
-    (global-org-modern-mode -1)
-    (dolist (buf (match-buffers '(major-mode . org-mode)))
-    (with-current-buffer buf
-      (display-line-numbers-mode t)))
-    (remove-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1))))
+    (defun org-entities-show ()
+      (interactive)
+      (setq org-hide-emphasis-markers nil)
+      (global-org-modern-mode -1)
+      (dolist (buf (match-buffers '(major-mode . org-mode)))
+	(with-current-buffer buf
+	  (display-line-numbers-mode t)))
+      (remove-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1))))
 
-  (defun org-entities-hide ()
-    (interactive)
-    (setq org-hide-emphasis-markers t)
-    (global-org-modern-mode t)
-    (dolist (buf (match-buffers '(major-mode . org-mode)))
-    (with-current-buffer buf
-      (display-line-numbers-mode -1)))
-    (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1))))
+    (defun org-entities-hide ()
+      (interactive)
+      (setq org-hide-emphasis-markers t)
+      (global-org-modern-mode t)
+      (dolist (buf (match-buffers '(major-mode . org-mode)))
+	(with-current-buffer buf
+	  (display-line-numbers-mode -1)))
+      (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1))))
 
-  (defvar org-entities-state "HIDDEN")
+    (defvar org-entities-state "HIDDEN")
 
-  (defun org-entities-toggle ()
-    (interactive)
-    (if (equal org-entities-state "HIDDEN")
+    (defun org-entities-toggle ()
+      (interactive)
+      (if (equal org-entities-state "HIDDEN")
+	  (progn
+	    (org-entities-show)
+	    (setq org-entities-state "VISIBLE"))
 	(progn
-	  (org-entities-show)
-	  (setq org-entities-state "VISIBLE"))
-      (progn
-	(org-entities-hide)
-	(setq org-entities-state "HIDDEN"))))
+	  (org-entities-hide)
+	  (setq org-entities-state "HIDDEN"))))
 
-  (org-entities-hide)
+    (org-entities-hide)
 
 
-(defun photon-face-selection ()
-  "Presents the user with options to set the variable-pitch font face."
+    (defun photon-face-selection ()
+      "Presents the user with options to set the variable-pitch font face."
+      (interactive)
+      (let* ((font-choices '("Sans-serif" "Serif" "Monospace"))
+	     (choice (completing-read "Choose typeface class: " font-choices nil t))
+	     (font-mapping '(("Sans-serif" . "SF Pro Text")
+			     ("Serif" . "Lora")
+			     ("Monospace" . "Liga SFMono Nerd Font")))
+	     (selected-font (cdr (assoc choice font-mapping))))
+	(set-face-attribute 'variable-pitch nil :family selected-font)))
+
+(defvar photon-opp-theme "light")
+
+(defun photon-theme-toggle ()
   (interactive)
-  (let* ((font-choices '("Sans-serif" "Serif" "Monospace"))
-	 (choice (completing-read "Choose typeface class: " font-choices nil t))
-	 (font-mapping '(("Sans-serif" . "DM Sans")
-			 ("Serif" . "Lora")
-			 ("Monospace" . "Liga SFMono Nerd Font")))
-	 (selected-font (cdr (assoc choice font-mapping))))
-    (set-face-attribute 'variable-pitch nil :family selected-font)))
+  (if (equal (car custom-enabled-themes) 'photon-dark)
+      (progn (load-theme 'photon-light t) (setq photon-opp-theme "dark"))
+    (progn (load-theme 'photon-dark t) (setq photon-opp-theme "light")))
+	(org-font-setup))
+
+    (use-package org-fragtog
+      :load-path "~/.emacs.d/add-ons"
+      :hook (org-mode . org-fragtog-mode))
 
 (transient-define-prefix photon/main ()
-	[:description
-	 " "
-	 ["  Open and save files"
-	  :pad-keys nil
-	  ("s" "Save current buffer" save-buffer)
-	  ("S" "󰁣 Save as..." write-file)
-	  ("o" "Open file..." photon-find-file)
-	  ("r" "Open recent..." recentf-open)
-	  ""
-	  ""
-	  "  Quick commands"
-	  ("f" "Search in buffer..." swiper)
-	  ("F" "󰁣 Search in directory..." counsel-rg)
-	  ("x" "Execute command..." counsel-M-x)
-	  ("p" "Switch perspective..." persp-switch)
-	 ]
-	 ["  Buffer actions"
-	  ("b" "Switch buffer...     " persp-counsel-switch-buffer)
-	  ("l" "Next buffer" next-buffer :transient t)
-	  ("h" "Previous buffer" previous-buffer :transient t)
-	  ("k" "Kill current buffer" kill-current-buffer)
-	  ("K" "󰁣 Kill buffer..." persp-kill-buffer*)
-	  ""
-	  "  Text scaling"
-	  ("=" "Increase in current buffer" text-scale-increase :transient t)
-	  ("-" "Decrease in current buffer" text-scale-decrease :transient t)
-	  (global-scale-inc)
-	  (global-scale-dec)
-	  ]
-	 ["  Keybind sets"
-	  ("w" "   Window management..." photon/window)
-	  ("m" "   Math preview..." counsel-M-x)
-	  ("e" "   Editing tools..." photon/editing)
-	  ("d" " 󰈙  Org document tools..." photon/org)
-	  ("c" "   Coding tools..." photon/coding)
-	  ]]
-	)
+		[:description
+		 " "
+		 ["  Open and save files"
+		  :pad-keys nil
+		  ("s" "Save current buffer" save-buffer)
+		  ("S" "󰁣 Save as..." write-file)
+		  ("o" "Open file..." photon-find-file)
+		  ("r" "Open recent..." recentf-open)
+		  ""
+		  ""
+		  "  Quick commands"
+		  ("f" "Search in buffer..." swiper)
+		  ("F" "󰁣 Search in directory..." counsel-rg)
+		  ("x" "Execute command..." counsel-M-x)
+		  ("p" "Switch perspective..." persp-switch)
+		  ]
+		 ["  Buffer actions"
+		  ("b" "Switch buffer...     " persp-counsel-switch-buffer)
+		  ("l" "Next buffer" next-buffer :transient t)
+		  ("h" "Previous buffer" previous-buffer :transient t)
+		  ("k" "Kill current buffer" kill-current-buffer)
+		  ("K" "󰁣 Kill buffer..." persp-kill-buffer*)
+		  ""
+		  "  Text scaling"
+		  ("=" "Increase in current buffer" text-scale-increase :transient t)
+		  ("-" "Decrease in current buffer" text-scale-decrease :transient t)
+		  (global-scale-inc)
+		  (global-scale-dec)
+		  ]
+		 ["  Keybind sets"
+		  ("w" "   Window settings..." photon/window)
+		  ("m" "   Math preview..." counsel-M-x)
+		  ("e" "   Editing tools..." photon/editing)
+		  ("d" " 󰈙  Org document tools..." photon/org)
+		  ("c" "   Coding tools..." photon/coding)
+		  ]]
+		)
 
-      (transient-define-prefix photon/editing ()
-	[" "
-	 ["  Spellcheck"
-	  ("c" "Correct word at cursor..." flyspell-correct-wrapper)
+	      (transient-define-prefix photon/editing ()
+		[" "
+		 ["  Spellcheck"
+		  ("c" "Correct word at cursor..." flyspell-correct-wrapper)
+		  ]])
+
+	      (transient-define-prefix photon/coding ()
+		[" "
+		 ["  Terminal tools"
+		  ("<return>" "Toggle popup terminal" vterm-toggle)
+		  ]])
+
+	      (transient-define-prefix photon/window ()
+		[" "
+		 ["󱂬  Manage windows"
+		  ("r" "Create on right" split-window-right)
+		  ("b" "Create below" split-window-below)
+		  ("q" "Close current window" delete-window)
+		  ]
+		 ["󰆾  Move between windows"
+		  ("h" "Move left" windmove-left)
+		  ("j" "Move down" windmove-down)
+		  ("k" "Move up" windmove-up)
+		  ("l" "Move right" windmove-right)
+		  ]
+	    [
+	"󰏘 Visual settings"
+	("t" photon-theme-toggle
+  :description
+  (lambda ()
+(format "Activate %s theme" photon-opp-theme)))
 	  ]])
 
-      (transient-define-prefix photon/coding ()
-	[" "
-	 ["  Terminal tools"
-	  ("<return>" "Toggle popup terminal" vterm-toggle)
-	  ]])
-
-      (transient-define-prefix photon/window ()
-	[" "
-	 ["󱂬  Manage windows"
-	  ("r" "Create on right" split-window-right)
-	  ("b" "Create below" split-window-below)
-	  ("q" "Close current window" delete-window)
-	  ]
-	 ["󰆾  Move between windows"
-	  ("h" "Move left" windmove-left)
-	  ("j" "Move down" windmove-down)
-	  ("k" "Move up" windmove-up)
-	  ("l" "Move right" windmove-right)
-	  ]])
-
-    (transient-define-prefix photon/org ()
-      [" "
-       ["󱓦 Editing commands"
-	("e" "Expand selection" er/expand-region)
-	("c" "Contract selection" er/contract-region)]
-[" Visual commands"
-	("v" org-entities-toggle
-	 :description
-	 (lambda ()
-	   (format "Toggle entities [%s]" (propertize org-entities-state 'face 'photon-transient-dynamic-face))))
-("f" "Change document font..." photon-face-selection)
-	]
-  ["󱃖 Babel commands"
-("t" "Tangle code blocks" org-babel-tangle)
-]
-  ])
+	      (transient-define-prefix photon/org ()
+		[" "
+		 ["󱓦 Editing commands"
+		  ("e" "Expand selection" er/expand-region)
+		  ("c" "Contract selection" er/contract-region)
+		  ("t" "Tangle code blocks" org-babel-tangle)
+		  ]
+		 [" Visual commands"
+		  ("v" org-entities-toggle
+		   :description
+		   (lambda ()
+		     (format "Toggle entities [%s]" (propertize org-entities-state 'face 'photon-transient-dynamic-face))))
+		  ("f" "Change document font..." photon-face-selection)
+		  ]
+		 ["󱃖 LaTeX commands"
+		  ("p" org-fragtog-mode
+		   :description
+		   (lambda ()
+		     (format "Toggle LaTeX auto-preview [%s]" (if org-fragtog-mode
+								  (propertize "ACTIVE" 'face 'photon-transient-dynamic-face)
+								(propertize "INACTIVE" 'face 'photon-transient-dynamic-face))))
+		   )
+		  ("a" "Preview all LaTeX fragments" math-preview-all)
+		  ("d" "Clear all LaTeX fragments" math-preview-clear-all)
+		  ]
+		 ])
 
 (defvar photon-keymap (make-keymap)
-      "Keymap for Photon general bindings")
+  "Keymap for Photon general bindings")
 
-    (define-minor-mode photon-mode
-      "Minor mode for my personal keybindings."
-      :init-value t
-      :global t
-      :keymap photon-keymap)
+(define-minor-mode photon-mode
+  "Minor mode for my personal keybindings."
+  :init-value t
+  :global t
+  :keymap photon-keymap)
 
-    (add-to-list 'emulation-mode-map-alists
-		 `((photon-mode . ,photon-keymap)))
+(add-to-list 'emulation-mode-map-alists
+	     `((photon-mode . ,photon-keymap)))
 
 (photon-mode t)
-    (dolist (binding '(("C-SPC" . photon/main)
-		       ("<normal-state> SPC" . photon/main)
-		       ("<visual-state> SPC" . photon/main)
-		       ("M-h" . windmove-left)
-		       ("M-j" . windmove-down)
-		       ("M-k" . windmove-up)
-		       ("M-l" . windmove-right)
-		       ("C-j" . photon-C-j)
-		       ("C-k" . photon-C-k)
-		       ("C-? k" . describe-key)
-		       ("C-? f" . counsel-describe-function)
-		       ("C-? v" . counsel-describe-variable)
-		       ))
-      (define-key photon-keymap (kbd (car binding)) (cdr binding)))
-  ;; This likely doesnt work!!!!!!
-;;    (dolist (binding '(("SPC" . photon/main)
-;;		       ("<backspace>" . "\"_x")
-;;		       ("H" . evil-backward-word-begin)
-;;		       ("J" . evil-forward-paragraph)
-;;		       ("K" . evil-backward-paragraph)
-;;		       ("L" . evil-forward-word-end)
-;;		       ("C-h" . evil-beginning-of-visual-line)
-;;		       ("C-j" . evil-goto-line)
-;;		       ("C-k" . evil-goto-first-line)
-;;		       ("C-l" . evil-end-of-visual-line)
-;;		       ("f" . avy-goto-char)))
-;;      (define-key photon-keymap (kbd (concat "<normal-state> " (car binding))) (cdr binding))
-;;      (define-key photon-keymap (kbd (concat "<visual-state> "  (car binding))) (cdr binding)))
+(dolist (binding '(("C-SPC" . photon/main)
+		   ("<normal-state> SPC" . photon/main)
+		   ("<visual-state> SPC" . photon/main)
+		   ("M-h" . windmove-left)
+		   ("M-j" . windmove-down)
+		   ("M-k" . windmove-up)
+		   ("M-l" . windmove-right)
+		   ("C-j" . photon-C-j)
+		   ("C-k" . photon-C-k)
+		   ("C-? k" . describe-key)
+		   ("C-? f" . counsel-describe-function)
+		   ("C-? v" . counsel-describe-variable)
+		   ))
+  (define-key photon-keymap (kbd (car binding)) (cdr binding)))
 
+(dolist (state '("normal" "visual"))
+  (let ((map (symbol-value (intern (concat "evil-" state "-state-map")))))
+    (define-key map (kbd "SPC") 'photon/main)
+    (define-key map (kbd "<backspace>") "\"_x")
+    (define-key map (kbd "H") 'evil-backward-word-begin)
+    (define-key map (kbd "J") 'evil-forward-paragraph)
+    (define-key map (kbd "K") 'evil-backward-paragraph)
+    (define-key map (kbd "L") 'evil-forward-word-end)
+    (define-key map (kbd "C-h") 'evil-beginning-of-visual-line)      
+    (define-key map (kbd "C-j") 'evil-goto-line)      
+    (define-key map (kbd "C-k") 'evil-goto-first-line)      
+    (define-key map (kbd "C-l") 'evil-end-of-visual-line)
+    (define-key map (kbd "f") 'evil-avy-goto-char-2)
+    (define-key map (kbd "F") 'evil-avy-goto-word-1)
+    ))
 
+ (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon/main)
+ (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/window)
+;; (define-key org-mode-map (kbd "<normal-state> C-k") 'evil-goto-first-line)
+;; (define-key org-mode-map (kbd "<normal-state> C-j") 'evil-goto-line)
+;; (define-key org-mode-map (kbd "<visual-state> C-k") 'evil-goto-first-line)
+;; (define-key org-mode-map (kbd "<visual-state> C-j") 'evil-goto-line)
+;; (evil-global-set-key 'normal (kbd "SPC") 'photon/main)
+;; (evil-global-set-key 'visual (kbd "SPC") 'photon/main)
+;; (evil-global-set-key 'emacs (kbd "SPC") 'photon/main)
+;; (evil-global-set-key 'motion (kbd "SPC") 'photon/main)
+;; (evil-global-set-key 'operator (kbd "SPC") 'photon/main)
+(define-key transient-base-map (kbd "<escape>") 'transient-quit-all)
 
-    ;; (global-unset-key (kbd "C-k"))
-     (dolist (state '("normal" "visual"))
-       (let ((map (symbol-value (intern (concat "evil-" state "-state-map")))))
-	 (define-key map (kbd "SPC") 'photon/main)
-	 (define-key map (kbd "<backspace>") "\"_x")
-	 (define-key map (kbd "H") 'evil-backward-word-begin)
-	 (define-key map (kbd "J") 'evil-forward-paragraph)
-	 (define-key map (kbd "K") 'evil-backward-paragraph)
-	 (define-key map (kbd "L") 'evil-forward-word-end)
-	 (define-key map (kbd "C-h") 'evil-beginning-of-visual-line)      
-	 (define-key map (kbd "C-j") 'evil-goto-line)      
-	 (define-key map (kbd "C-k") 'evil-goto-first-line)      
-	 (define-key map (kbd "C-l") 'evil-end-of-visual-line)
-	 (define-key map (kbd "f") 'evil-avy-goto-char-2)
-	 (define-key map (kbd "F") 'evil-avy-goto-word-1)
-	 ))
-
-    ;; (global-set-key (kbd "C-SPC") 'photon/main)
-    ;; (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon/main)
-    ;; (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/window)
-    ;; (define-key org-mode-map (kbd "<normal-state> C-k") 'evil-goto-first-line)
-    ;; (define-key org-mode-map (kbd "<normal-state> C-j") 'evil-goto-line)
-    ;; (define-key org-mode-map (kbd "<visual-state> C-k") 'evil-goto-first-line)
-    ;; (define-key org-mode-map (kbd "<visual-state> C-j") 'evil-goto-line)
-    ;; (evil-global-set-key 'normal (kbd "SPC") 'photon/main)
-    ;; (evil-global-set-key 'visual (kbd "SPC") 'photon/main)
-    ;; (evil-global-set-key 'emacs (kbd "SPC") 'photon/main)
-    ;; (evil-global-set-key 'motion (kbd "SPC") 'photon/main)
-    ;; (evil-global-set-key 'operator (kbd "SPC") 'photon/main)
-    (define-key transient-base-map (kbd "<escape>") 'transient-quit-all)
-
-(which-key-add-key-based-replacements
-  "SPC n" "Org Roam Commands"
-  "SPC p" "LaTeX Preview Commands"
-  "SPC v" "Transclusion Commands"
-  )
+;;  (which-key-add-key-based-replacements
+;;    "SPC n" "Org Roam Commands"
+;;    "SPC p" "LaTeX Preview Commands"
+;;    "SPC v" "Transclusion Commands"
+;;    )
 
 (setq gc-cons-threshold (expt 2 23))

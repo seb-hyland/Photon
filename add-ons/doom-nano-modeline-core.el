@@ -99,7 +99,7 @@
   (setq-default header-line-format doom-nano-modeline--saved-header-line-format))
 
 (defface doom-nano-modeline-active-modified-face
-  '((t (:inherit doom-nano-modeline-active-face :foreground "#E82424")))
+  '((t (:inherit doom-nano-modeline-active-face)))
   "Face for active doom-nano modeline when buffer is modified.")
 
 
