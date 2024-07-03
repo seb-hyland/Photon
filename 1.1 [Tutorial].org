@@ -1,6 +1,6 @@
 
 #+TITLE: Tutorial
-#+SUBTITLE: 1.1 - Editing text
+#+SUBTITLE: Modal editing
 
 
 * Introduction
@@ -8,8 +8,8 @@ Before we get to actually doing things in Photon, we need to understand the spec
 
 
 
-* The modes
-In Photon, each file can be in one of three modes: *Normal mode*, *Insert mode*, or *Visual mode*. You can see the current mode in the top-left corner of your window: *N* represents normal mode, *I* represents insert mode, and *V* represents visual mode. You can also quickly recognize the mode through the color of the symbol: *Normal* is green, *Insert* is blue, and *Visual* is red. 
+* What is modal editing?
+In Photon, you can be in one of three modes: *Normal mode*, *Insert mode*, or *Visual mode*. You can see the current mode in the top-left corner of your window: *N* represents normal mode, *I* represents insert mode, and *V* represents visual mode. You can also quickly recognize the mode through the color of the symbol: *Normal* is green, *Insert* is blue, and *Visual* is red. 
 
 
 ** Normal mode
@@ -33,7 +33,7 @@ IMPORTANT NOTE: In general, keybinds are CASE-SENSITIVE. Make sure your CAPS LOC
 ** Insert mode
 Insert mode is used to *insert text*.
 
-You can easily tell when you are in insert mode, since the cursor shape changes from a square to a line. Note that when I refer to the "cursor", I am speaking about the blinking "text cursor," not your mouse pointer.
+You can easily tell when you are in insert mode, since the cursor shape changes from a square to a line. Note that when this tutorial refers to the "cursor", it is speaking about the blinking "text cursor," not your mouse pointer.
 
 If you are currently in normal mode, pressing ~<i>~ will enter insert mode in front of the current character, and pressing ~<a>~ will enter insert mode with the cursor after the current character. Pressing ~<ESCAPE>~ returns you to Normal mode.
 
@@ -54,7 +54,7 @@ When you are done, press <ESCAPE> to return to normal mode; notice that <h> <j> 
 ** Visual mode
 Visual mode is used to *select regions of text*, typically to copy or delete.
 
-If you are currently in normal mode, pressing ~<v>~ will enter visual mode, and pressing ~<SHIFT-v>~ will enter visual line mode (selecting lines of text at a time). Again, pressing ~<ESCAPE>~ returns you to normal mode.
+If you are currently in normal mode, pressing ~<v>~ will enter visual mode, and pressing ~<SHIFT-v>~ will enter visual-line mode (selecting lines rather than individual characters). Again, pressing ~<ESCAPE>~ returns you to normal mode.
 
 *Try it out!*
 #+begin_src
@@ -77,46 +77,41 @@ Congratulations! You now have a strong understanding of the fundamentals of the 
 ** Moving around faster
 Moving around with just ~<hjkl>~ is slow and tedious. To move quicker, use ~<SHIFT>~ or ~<CTRL>~ in combination with ~<hjkl>~.
 
-| Keybind   | Action                                          |
-|-----------+-------------------------------------------------|
-| SHIFT-h/l | Jump forwards/backwards by one *word*           |
-| CTRL-h/l  | Jump to the beginning/end of the current *line* |
-| SHIFT-j/k | Move up/down *paragraphs*                       |
-| CTRL-j/k  | Move to the top/bottom of the current *buffer*  |
+Here's a table to recap all of the movement commands so far:
+
+|-----------+----------------------------------------------------------|
+| *Keybind*   | Action                                                   |
+|-----------+----------------------------------------------------------|
+| ~h/l~       | Move forwards/backwards by one *character*                 |
+| ~SHIFT-h/l~ | Move forwards/backwards by one *word*                      |
+| ~CTRL-h/l~  | Move forwards/backwards to the beginning/end of the *line* |
+|-----------+----------------------------------------------------------|
+| ~j/k~       | Move up/down *lines*                                       |
+| ~SHIFT-j/k~ | Move up/down *paragraphs*                                  |
+| ~CTRL-j/k~  | Move up/down to the top/bottom of the *buffer*             |
+|-----------+----------------------------------------------------------|
 
 *Try it out!*
 #+begin_src
 
-Let's try moving around quicker. Ensure you are in normal mode. Jump into this box by pressing <SHIFT-j> or <SHIFT-k>. Once you're inside, navigate your cursor onto this line of text. Try using <SHIFT-h> and <SHIFT-l> to move forward/backwards quickly, then try to use <CTRL-h> and <CTRL-l> to jump to the beginning/end of lines.
+Ensure you are in normal mode. Jump into this box by pressing <SHIFT-j> or <SHIFT-k>. Once you're inside, navigate your cursor onto this line of text. Try using <SHIFT-h> and <SHIFT-l> to move forward/backwards quickly, then try to use <CTRL-h> and <CTRL-l> to jump to the beginning/end of lines.
   
 #+end_src
 
 
 Additionally, all of the previously mentioned motions can be prefixed with a number to repeat it multiple times. For instance, typing ~<4h>~ jumps the cursor back by 4 characters; ~<2j>~ jumps you down two lines; ~<3 SHIFT-j>~ jumps you down three paragraphs, etc.
 
-You might have noticed that the line numbers on the left hand side of the screen are a bit weird: that's because they are *relative* to the current line you are on. This allows you to quickly jump up/down a desired number of lines by using ~<[some number] k>~ or ~<[some number] j>~.
-
-
-*Try it out!*
-#+begin_src
-
-<=== What number is on the left of this line? Is this line above or below the cursor? Try jumping to this line by using the line number on the left and k/j to jump up/down. For instance, if this line is lower than your cursor and has number 19, press <19j>. Make sure you are in normal mode before using movement keys!
-
-Once you're inside this box, try using <hjkl> and <w>/<b> to move around, but with numbers in front to repeat the action multiple times! 
-
-#+end_src
-
 
 
 ** Copying and pasting
 Copying and pasting in Photon is different from other applications, since the usual ~<CTRL-c>~, ~<CTRL-v>~, and ~<CTRL-x>~ keybinds are not used. Instead, ~<y>~ is used to "yank" (copy) text, ~<p>~ is used to paste text, and ~<x>~ is used to cut text.
 
-*Note*: ~<p>~ (lowercase p) pastes _behind_ the cursor, whereas ~<P>~ (uppercase P) pastes _in front of_ the cursor.
+*Note*: ~<p>~ (lowercase p) pastes _behind_ the cursor, whereas ~<P>~ (uppercase P) pastes _in front of_ the cursor. This may seem like an insignificant distinction, but being able to use both variants of the paste command gives you much better fine-grained control.
 
 *Try it out!*
 #+begin_src
 
-Select part of this line, then press <y> to copy the selected region.
+Select part of this line by entering visual mode with <v> and moving left/right with <h>/<l>. Then, press <y> to copy the selected region.
 Now, move your cursor between the arrows below, and press <p> to paste!
 ----->                    <-----
 
@@ -132,11 +127,9 @@ Now, select part of the text below, and use <x> to cut it. Then paste where it s
 *Try it out!*
 #+begin_src
 
-Here's a practical example of why relative line numbers can be useful.
+Move your cursor onto the first bullet point below, and press <SHIFT-V> to enter line-wise visual mode. Note that last bullet is 2 lines below the selected line; thus, you can press <2j> to select all the bullets. Or, press <j> twice.
 
-Move your cursor onto the first bullet point below, and press <SHIFT-V> to enter line-wise visual mode. Note that last bullet is 2 lines below the selected line (the line number on the left of the final bullet is 2); thus, you can press <2j> to select all the bullets.
-
-When you have successfully selected the region, use <backspace> to delete it without cutting it. When you are done, press <ESCAPE> to return to normal mode!
+When you have successfully selected the region, use <backspace> to delete it without cutting it. When you are done, press <ESCAPE> to return to normal mode.
 
 - Here's the first point
 - Here's the second point
@@ -147,7 +140,7 @@ When you have successfully selected the region, use <backspace> to delete it wit
 
 
 ** Undo and redo
-Photon uses ~<u>~ to undo and ~<CTRL-r>~ to redo.
+It's simple! Press ~<u>~ to undo and ~<r>~ to redo.
 
 *Note*: sometimes it can be unpredictable how far back the undo command goes. If you are thinking of making a change that you may want to undo, you should *save* your file before making the change. When you manually save the file, it creates a point that you can undo back to.
 
@@ -156,7 +149,7 @@ Photon uses ~<u>~ to undo and ~<CTRL-r>~ to redo.
 
 1. Move your cursor onto the line below the instructions. Press <SHIFT-V> then <x> in Normal mode to cut the line.
 2. Press <u> to undo the deletion.
-3. Press <CTRL-r> to redo the deletion.
+3. Press <r> to redo the deletion.
 
 -----> Here is a line of text! <-----
 
@@ -164,6 +157,8 @@ Photon uses ~<u>~ to undo and ~<CTRL-r>~ to redo.
 
 
 ** [Advanced]: registers
+/Note: this is relatively advanced and is not crucial knowledge; you can skip it if you like. However, you may find it useful!/
+
 Technically, Photon doesn't have a singular clipboard that it copies to. Instead, it has a large number of "registers." By default, using ~<y>~, ~<x>~, etc. copies to register _0_. However, you can specify a register to use by pressing ~<">   <[register name]>   <[command]>~. I recommend using the keyboard letters ~<a-z>~ as register names (avoid using numbers as names or special characters).
 
 For example, if I wanted to copy some selected text into register _a_, I would type ~<" a y>~: (~<">~ shows that you are about to specify a register, ~<a>~ designating the register name, and ~<y>~ representing the copy action). Here's a demonstration of why this can be useful:
@@ -188,8 +183,31 @@ Copying to different registers can sometimes be useful if you are trying to copy
 
 
 
+** [Advanced]: find
+/Note: this is relatively advanced and is not crucial knowledge; you can skip it if you like. However, you may find it useful!/
+
+Photon has a command that allows you to quickly jump your cursor to any visible text on your screen (even if that text is in a different window! We'll cover windows later). You can execute the find command by pressing ~<f>~. The best way to demonstrate this command is through an example.
+
+*Try it out!*
+#+begin_src
+
+
+Let's try out the find command. We are going to try to jump our cursor to the word below; specifically to fix the misspelling. We want to add an "e" after the "i" in "Science", thus, let's jump to the "i".
+
+-----> Scince <-----
+
+Begin by pressing <f> (to start the command), and <i> (the character we want to jump to). Note that new characters have shown up over the above word (red and blue). Press those keys.
+
+Your cursor should have now jumped to the "i" in "Scince" above. Now, press <a> to enter insert mode with the cursor AFTER the "i". Add an "e", and press <ESC> to return to normal mode.
+
+Note: This may seem pointless for short movements around a document. To navigate around a sentence or paragraph, it is often faster to use <h/j/k/l> and their SHIFT-/CTRL- versions. However, when jumping from the top of your screen to the bottom, or between windows, it can be very fast when you get used to it; indeed, it can be much quicker than using the mouse to move your cursor.
+
+#+end_src
+
 ** Conclusion
-Congratulations! You now have a pretty good mastery of Photon's commands. This can be pretty overwhelming at first, but remember that you can always use the mouse to move around and select regions if you prefer: the best way to do things is the way that is most comfortable for you. However, if you're willing to give it a shot, slowly trying to use more keyboard-style movement will make you significantly faster and more efficient in the future. That was a lot, so let's summarize what we learned.
+Congratulations! You now have a pretty good mastery of Photon's basic modal commands. This can be pretty overwhelming at first, but can also massively improve your efficiency in the long run. Remember, the mouse still works - you can always use it to move around and select regions. However, I recommend slowly building up the muscle memory to use keyboard-style movement.
+
+That was a lot, so let's quickly summarize what we learned, and what parts of it were crucial to actually use Photon.
 
 
 
@@ -198,18 +216,19 @@ Before you move on to more interesting sections, here's a summary:
 
 *[Crucial to know]*:
 - *Normal mode* is for commands, *insert mode* is to edit text, *visual mode* is to select regions of text
-- Copying/cutting/pasting with ~<y>~ ~<x>~ ~<p>~
-- Undo/redo with ~<u>~ and ~<CTRL-r>~
-
-*Note*: it is easy to accidentally try to use Normal-mode commands in Visual mode, or use the uppercase variants of commands accidentally by having CAPS-LOCK on. If you find yourself making this mistake consistently, get used to quickly glancing at the top left corner to check what mode you're in.
+  - Check your current mode by looking in the top-left corner
+- Copy/cut/paste with ~<y>~ ~<x>~ ~<p>~
+- Undo/redo with ~<u>~ and ~<r>~
 
 *[Optional]*:
 - Moving with ~<h>~ ~<j>~ ~<k>~ ~<l>~ and their ~<SHIFT>/<CTRL>~ versions
 - Combining movement commands with numerical prefixes (e.g., ~<3h>~) to move multiple times
-  - Relative line numbers, a useful tool to quickly select multiple lines of text or move around vertically
 - Advanced copying/cutting into registers, and pasting from them with ~< " [register letter] [command] >~
+- The "find" command for jumping to a visible character with ~<f>~
 
 
-
-[[file:1.2 \[Tutorial\].org][Next >]]
-[[file:1.0 \[Tutorial\].org][< Previous]]
+|------------|
+| [[file:1.2 \[Tutorial\].org][Next >]]     |
+|------------|
+| [[file:1.0 \[Tutorial\].org][< Previous]] |
+|------------|

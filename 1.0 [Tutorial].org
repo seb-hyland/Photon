@@ -5,10 +5,14 @@
 
 * Welcome!
 
-Photon is an immensly capable and powerful software for every use case. To help you quickly get started working with Photon, this tutorial aims to acquaint you with the basics through quick explanations and interactive exercises. It has two parts: _Part 1_, which teaches the core of using Photon, and _Part 2_, which explains specific features and their realistic use cases. _Part 1_ should only take around 10-20 minutes to finish, depending on your speed.
+*Photon* is an immensely powerful integrated system that provides sleek, efficient tools for /every/ use case. The following is a simple tutorial to help you get started, complete with both concise explanations and interactive exercises.
 
-Although this software may seem daunting at first, it is unlike anything else you've used before and is jam packed with features that are both cool and extremely practical. It is perfect for note-taking, coding, writing papers, doing math, organizing your calendar... the list goes on and on. It has a steeper learning curve than many other pieces of software, but once you master the basics and start integrating Photon into your workflow, I trust that you will begin to realize the incredible efficiency and power that it offers.
+Learning to use Photon effectively may be more daunting than many of the applications that you are familiar with. However, in the long run, it allows you to do much more, and do it more efficiently.
 
 Let's get started with the tutorial. Good luck!
 
-[[file:1.1 \[Tutorial\].org][Next >]]
+
+/Click on the button below to proceed./
+|--------|
+| [[file:1.1 \[Tutorial\].org][Next >]] |
+|--------|

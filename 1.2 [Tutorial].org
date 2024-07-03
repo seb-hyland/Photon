@@ -4,7 +4,7 @@
 
 
 * Let's actually do some stuff
-You probably noticed by now that the Photon user interface is extremely simple, without any toolbars or menus to click on. This is because every command in Photon is carried out through a set of key presses rather than mouse clicks. However, Photon keychords are really quite intuitive, and this section of the tutorial will go over practical keychords that you will be using often, such as saving files, opening files, splitting your screen to open multiple files at once, etc.
+You probably noticed by now that the Photon user interface is extremely simple and minimalistic, without any toolbars or menus to click on. This is because every command in Photon is carried out through a set of key presses rather than mouse clicks. However, Photon keychords are really quite intuitive, and this section of the tutorial will go over practical keychords that you will be using often, such as saving files, opening files, splitting your screen to open multiple files at once, etc.
 
 ** The command window
 In Photon, ~<CTRL-SPACE>~ or ~<SPACE>~ open a command window which displays a menu of all available commands. ~<CTRL-SPACE>~ works in *every mode*, whereas ~<SPACE>~ works in *Normal and Visual modes, but not Insert mode*. This is because pressing ~<SPACE>~ obviously adds a space when you are editing text. To close the command window and cancel a key sequence, you can simply press ~<ESCAPE>~.
@@ -16,7 +16,7 @@ In Photon, ~<CTRL-SPACE>~ or ~<SPACE>~ open a command window which displays a me
 
 Ensure that you are in normal mode. Press <SPC> and notice the command window that pops up. This window contains short descriptions for each command along with its corresponding keybind. Some of the commands have a 󰁣 symbol before the description; this reminds the user that the command is bound to an uppercase key (for instance, "Save as..." is bound to S, which requires you to hold the <SHIFT> key).
 
-On the right of the menu, there is a section called "Keybind sets". Try pressing <w>, which opens the "Window management..." set. Note that this opens a new submenu for commands specific to window management. Due to the depth of Photon's functionality, many advanced commands are nested within one of these "Keybind sets."
+On the right of the menu, there is a section called "Keybind sets". Try pressing <w>, which opens the "Window settings..." set. Note that this opens a new submenu for commands specific to window management. Due to the depth of Photon's functionality, many advanced commands are nested within one of these "Keybind sets."
 
 Press <ESCAPE> now to close the window without executing a command.
 
@@ -32,7 +32,7 @@ To save a file, press ~<SPC s>~.
 *Try it out!*
 #+begin_src
 
-Enter Insert mode by pressing <i>, then add some text to the line below. Notice that the buffer name in the top left becomes red with two stars. Press <ESCAPE> to return to Normal mode. Now press <SPC s>. Notice that the buffer name returns to normal, signalling that the file's current state has been saved.
+Enter Insert mode by pressing <i>, then add some text to the line below. Notice that the buffer name in the top left becomes pink with two stars. Press <ESCAPE> to return to Normal mode. Now press <SPC s>. Notice that the buffer name returns to normal, signalling that the file's current state has been saved.
 -----> Add some text here:     <-----
 
 Now, add some text below, and try to save while in insert mode with <CTRL-SPC s>.
@@ -43,7 +43,7 @@ Now, add some text below, and try to save while in insert mode with <CTRL-SPC s>
 
 
 ** [Example]: Finding words in a document
-~<SPC f>~ is the Photon equivalent to the "find" function in other applications (typically ~<CTRL-f>~).
+~<SPC f>~ is the Photon equivalent to the "find text" function in other applications (typically ~<CTRL-f>~).
 
 In Photon, some commands are interactive (i.e., they accept input). These commands use a small window at the bottom of your screen called the *minibuffer*. ~<SPC f>~ is one of these commands.
 
@@ -52,13 +52,13 @@ In Photon, some commands are interactive (i.e., they accept input). These comman
 
 Press <SPC f> or <CTRL-SPC f>. Notice how a minibuffer window appears at the bottom of the screen with a list of possible options.
 
-Let's imagine we were searching a document for all instances of the word "watermellon".
+Let's imagine we were searching a document for all instances of the word "watermelon".
 
-Let's type in <wat>, the first few letters. Notice how we are presented in the minibuffer with multiple instances. You can navigate between the possible options by using <CTRL-k> and <CTRL-j>. Note that <j>/<k> are the same keys that you used earlier for movement!
+Let's type in <wat>, the first few letters. Notice how we are presented in the minibuffer with multiple instances. You can navigate between the possible options by using <CTRL-k> and <CTRL-j>. Note the common theme: <h/j/k/l> with various modifier keys are used for movement throughout Photon!
 
-Try moving between the different instances of "watermellon" using <CTRL-k> and <CTRL-j>, then selecting a desired option with <ENTER>. Your cursor will jump to the selected option.
+Try moving between the different instances of "watermelon" using <CTRL-k> and <CTRL-j>, then selecting a desired option with <ENTER>. Your cursor will jump to the selected option.
 
------> Watermellon! <-----
+-----> Watermelon! <-----
 
 Open up the find menu again with <SPC f>. Type in <wat> again and rotate through some of the options, then press <ESCAPE>. Note that this quits the command, and returns your cursor to its original location instead of jumping to one of the options. <ESCAPE> will always quit commands that require minibuffer input.
 
@@ -78,28 +78,11 @@ Pressing <ENTER> would open the file at that line, but let's press <ESC> to canc
 
 
 
-** [Example]: Cursor jumping
-Photon includes the ~<SPC j>~ and ~<SPC J>~ bindings to jump to a visible character or word, respectively. Let me show you how they work with an example:
+** [Example]: Multiple windows 
+Photon has the ability to split its frame into multiple windows displaying different information. The keybinding set ~<SPC w>~ deals with window management.
 
-*Try it!*
-#+begin_src
-Let's try out the jump to character function. We are going to try to jump our cursor to the word below; specifically to fix the misspelling. We want to add an "e" after the "i" in "Science", thus, let's jump to the "i". To do this, we will press <SPC j> <i>. This will highlight all instances of the "i" character that are currently visible and overlay new character(s) over them. If you see a red character where the "i" below used to be, press that key to jump to that location. If you see a red and blue character, press the red key then the blue one in succession.
-
------> Scince <-----
-
-Now that your point is over the "i", press <a> to enter insert mode with the cursor AFTER the "i". Add an "e", and press <ESC> when you are done.
-
-<SPC J> (uppercase) jumps to a word instead of character. It works very similarly; input the first character of the word that you want to jump to, then input the overlaid character(s) to jump to the start of the word. For instance, let's try <SPC J> <w> to try and jump the cursor to the start of the below word.
-
------> Watermelon <-----
-
-Note: This method of cursor jumping can be useful and quicker than picking up the mouse or moving with <h/j/k/l> in some scenarios; however, if you find it unecessarily complex, you can ignore it.
-#+end_src
-
-
-
-** [Example]: Multiple frames 
-Photon has the ability to split its frame into multiple windows displaying different buffers. The keybinding set ~<SPC w>~ deals with window management.
+As well, the movement commands ~<ALT-h/j/k/l>~ moves the cursor focus across windows. This is often faster than using the mouse to move between windows!
+/Note: on Mac, use OPTION instead of ALT/.
 
 *Try it out!*
 #+begin_src
@@ -110,15 +93,15 @@ Let's create a frame to the right of the current. If you are already in the <SPC
 
 ----->                    <-----
 
-Now, let's move the cursor over to that buffer. Although you can click your mouse to move between windows, it is often quicker to use a keybinding. <SPC w> followed by <h/j/k/l> will move your cursor to the next buffer on the left/bottom/top/right of the current one. Try using <SPC w l> to move to the new window. Note that the currently active window will auto-zoom to occupy more space in the frame.
+Now, let's move the cursor over to that buffer. Although you can click your mouse to move between windows, let's use a keybinding! <ALT l> will move the cursor right, towards the new window. Note that the currently active window auto-zooms to occupy more space in the frame.
 
-Let's now close this new window. This can be done with <SPC w x>, the command to close the currently active window. Note: this command will not do anything if there is only one window.
+Let's now close this new window. This can be done with <SPC w q>, the command to close the currently active window. Note: this command will not do anything if there is only one window open.
 
 #+end_src
 
 
 ** [Example]: Opening files
-Photon runs in Linux container separate from the rest of you filesystem. However, your home folder has been mounted to ~/Local/~ in the container. Thus, a file called ~foo.txt~ in your ~Downloads~ folder, for instance, can be found at ~/Local/Downloads/foo.txt~ in Photon. Similarly, a file named ~bar.org~ in your ~Documents~ folder can be found at ~/Local/Documents/bar.org~.
+Photon runs in a Linux container separate from the rest of you filesystem. However, your home folder has been mounted to ~/Local/~ in the container. Thus, a file called ~foo.txt~ in your ~Downloads~ folder, for instance, can be found at ~/Local/Downloads/foo.txt~ in Photon. Similarly, a file named ~bar.org~ in your ~Documents~ folder can be found at ~/Local/Documents/bar.org~.
 
 The ~<SPC o>~ command opens a minibuffer prompt to open a file; it usually has the directory of the current file already inputted.
 

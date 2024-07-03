@@ -1,3 +1,9 @@
+* Here is a level 1 heading
+
+** Here is a level 2 heading
+
+*** Here is a level 3 heading
+
 
 #+NAME: data
 |   | hello | yes! |
@@ -40,3 +46,8 @@
 [[file:/tmp/org-demo.png]]
 
 
+| hi                    | this is great   |
+|-----------------------+-----------------|
+| wow that's incredible | this works well |
+|                       |                 |
+|                       |                 |

@@ -1,3 +1,39 @@
+    FROM alpine AS emacs-builder
+
+    RUN apk update
+
+    RUN \
+    apk add --no-cache \
+    git \
+    cmake \
+    gcc \
+    build-base \
+    libgccjit-dev \
+    autoconf \
+    texinfo \
+    jansson-dev \
+    gtk+3.0-dev \
+    libx11-dev \
+    xorg-server-dev \
+    webkit2gtk-dev \
+    gnutls-dev
+
+
+    WORKDIR /tmp
+    RUN git clone --depth 1 https://git.savannah.gnu.org/git/emacs.git
+
+    WORKDIR /tmp/emacs
+     RUN ./autogen.sh \
+      && ./configure --build=x86_64-alpine-linux-musl --host=x86_64-alpine-linux-musl \
+    --prefix=/opt/emacs \
+    --sysconfdir=/opt/emacs/etc \
+    --libexecdir=/opt/emacs/libexec \
+    --localstatedir=/var/lib/emacs \
+    --with-pgtk --with-gpm --with-harfbuzz --with-json --with-xft --with-jpeg=yes --with-tiff=yes --with-native-compilation=aot --without-compress-install --with-xwidgets \
+    'CFLAGS=-Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -O2 -flto=auto' \
+    'LDFLAGS=-Wl,--as-needed,-O1,--sort-common -Wl,-z,pack-relative-relocs' \
+     && make
+
     FROM alpine AS vterm-builder
 
     RUN apk update
@@ -31,11 +67,10 @@
     RUN \
     apk update
 
-    # RUN apk add webkit2gtk-dev --repository=http://dl-cdn.alpinelinux.org/alpine/v3.17/community/
+    COPY --from=emacs-builder /opt/emacs /opt/emacs
 
     RUN \
     apk add --no-cache \
-    emacs-x11-nativecomp \
     #    glib \
     gcc \
     libgccjit \

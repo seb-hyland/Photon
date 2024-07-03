@@ -644,7 +644,7 @@
 		  (org-level-8 . 1.1)
 		  (org-document-title . 2.3)
 		  (org-document-info . 1.5)
-		  (org-meta-line . 1.3)))
+		  (org-meta-line . 1.15)))
     (set-face-attribute (car face) nil :height (cdr face)))
 
   (dolist (face '((org-level-1)
@@ -656,13 +656,14 @@
   (dolist (face '((org-level-3)
 		  (org-level-4)
 		  (org-document-info)
-		  (org-meta-line)))
+		  ))
     (set-face-attribute (car face) nil :weight 'bold))
 
   (dolist (face '((org-level-5)
 		  (org-level-6)
 		  (org-level-7)
 		  (org-level-8)
+		  (org-meta-line)
 		  ))
     (set-face-attribute (car face) nil :weight 'medium))
 
@@ -984,7 +985,7 @@
     (use-package org-modern
       :init
       (setq org-modern-hide-stars 't)
-      (setq org-modern-block-fringe 6))
+      (setq org-modern-block-fringe 2))
 
     (defun org-entities-show ()
       (interactive)
@@ -1101,12 +1102,6 @@
 		  ("b" "Create below" split-window-below)
 		  ("q" "Close current window" delete-window)
 		  ]
-		 ["󰆾  Move between windows"
-		  ("h" "Move left" windmove-left)
-		  ("j" "Move down" windmove-down)
-		  ("k" "Move up" windmove-up)
-		  ("l" "Move right" windmove-right)
-		  ]
 	    [
 	"󰏘 Visual settings"
 	("t" photon-theme-toggle
@@ -1182,9 +1177,9 @@
     (define-key map (kbd "C-j") 'evil-goto-line)      
     (define-key map (kbd "C-k") 'evil-goto-first-line)      
     (define-key map (kbd "C-l") 'evil-end-of-visual-line)
-    (define-key map (kbd "f") 'evil-avy-goto-char-2)
+    (define-key map (kbd "f") 'evil-avy-goto-char)
     (define-key map (kbd "F") 'evil-avy-goto-word-1)
-    ))
+    (define-key map (kbd "r") 'evil-redo)))
 
  (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon/main)
  (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/window)
