@@ -24,15 +24,13 @@
 
     WORKDIR /tmp/emacs
      RUN ./autogen.sh \
-      && ./configure --build=x86_64-alpine-linux-musl --host=x86_64-alpine-linux-musl \
+      && ./configure \
     --prefix=/opt/emacs \
-    --sysconfdir=/opt/emacs/etc \
-    --libexecdir=/opt/emacs/libexec \
-    --localstatedir=/var/lib/emacs \
-    --with-pgtk --with-gpm --with-harfbuzz --with-json --with-xft --with-jpeg=yes --with-tiff=yes --with-native-compilation=aot --without-compress-install --with-xwidgets \
-    'CFLAGS=-Os -fstack-clash-protection -Wformat -Werror=format-security -fno-plt -O2 -flto=auto' \
+    --with-json --with-native-compilation=aot --with-xwidgets --with-pgtk \
+    'CFLAGS=-O2' \
     'LDFLAGS=-Wl,--as-needed,-O1,--sort-common -Wl,-z,pack-relative-relocs' \
-     && make
+     && make \
+     && make install
 
     FROM alpine AS vterm-builder
 
@@ -68,6 +66,7 @@
     apk update
 
     COPY --from=emacs-builder /opt/emacs /opt/emacs
+    ENV PATH="$PATH:/opt/emacs/bin"
 
     RUN \
     apk add --no-cache \

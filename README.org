@@ -1391,6 +1391,7 @@ Custom functions
 	  (load-theme 'EngMACS-dark t)))
 
       (use-package org-modern
+	:load-path "~/.emacs.d/add-ons"
 	:init
 	(setq org-modern-hide-stars 't)
 	(setq org-modern-block-fringe 2))

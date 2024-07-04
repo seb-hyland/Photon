@@ -3,10 +3,10 @@
 #+SUBTITLE: 1.2 - The Photon Command Window
 
 
-* Let's actually do some stuff
+* A minimalist approach to complex commands
 You probably noticed by now that the Photon user interface is extremely simple and minimalistic, without any toolbars or menus to click on. This is because every command in Photon is carried out through a set of key presses rather than mouse clicks. However, Photon keychords are really quite intuitive, and this section of the tutorial will go over practical keychords that you will be using often, such as saving files, opening files, splitting your screen to open multiple files at once, etc.
 
-** The command window
+* The command window
 In Photon, ~<CTRL-SPACE>~ or ~<SPACE>~ open a command window which displays a menu of all available commands. ~<CTRL-SPACE>~ works in *every mode*, whereas ~<SPACE>~ works in *Normal and Visual modes, but not Insert mode*. This is because pressing ~<SPACE>~ obviously adds a space when you are editing text. To close the command window and cancel a key sequence, you can simply press ~<ESCAPE>~.
 
 *Note*: In this tutorial, I will usually describe keychords with ~<SPC [some key] [some key]...>~, where ~<SPC>~ is a shortened form of ~<SPACE>~. This is purely for simplicity's sake; both ~<SPACE>~ and ~<CTRL-SPACE>~ can be used to open the command menu.
@@ -26,7 +26,7 @@ Let's now work through some more concrete examples to better understand the comm
 
 
 
-** [Example]: Saving a file
+* [Example]: Saving a file
 To save a file, press ~<SPC s>~.
 
 *Try it out!*
@@ -42,7 +42,7 @@ Now, add some text below, and try to save while in insert mode with <CTRL-SPC s>
 
 
 
-** [Example]: Finding words in a document
+* [Example]: Finding words in a document
 ~<SPC f>~ is the Photon equivalent to the "find text" function in other applications (typically ~<CTRL-f>~).
 
 In Photon, some commands are interactive (i.e., they accept input). These commands use a small window at the bottom of your screen called the *minibuffer*. ~<SPC f>~ is one of these commands.
@@ -78,7 +78,7 @@ Pressing <ENTER> would open the file at that line, but let's press <ESC> to canc
 
 
 
-** [Example]: Multiple windows 
+* [Example]: Multiple windows 
 Photon has the ability to split its frame into multiple windows displaying different information. The keybinding set ~<SPC w>~ deals with window management.
 
 As well, the movement commands ~<ALT-h/j/k/l>~ moves the cursor focus across windows. This is often faster than using the mouse to move between windows!
@@ -100,24 +100,33 @@ Let's now close this new window. This can be done with <SPC w q>, the command to
 #+end_src
 
 
-** [Example]: Opening files
-Photon runs in a Linux container separate from the rest of you filesystem. However, your home folder has been mounted to ~/Local/~ in the container. Thus, a file called ~foo.txt~ in your ~Downloads~ folder, for instance, can be found at ~/Local/Downloads/foo.txt~ in Photon. Similarly, a file named ~bar.org~ in your ~Documents~ folder can be found at ~/Local/Documents/bar.org~.
+* [Example]: Opening files
 
-The ~<SPC o>~ command opens a minibuffer prompt to open a file; it usually has the directory of the current file already inputted.
+** A note on the Photon filesystem
+Photon runs in a container separate from the rest of your device's filesystem. However, your home folder has been mounted to ~/Local/~ in the container. Thus, a file called ~foo.txt~ in your ~Downloads~ folder, for instance, can be found at ~/Local/Downloads/foo.txt~ in Photon. Similarly, a file named ~bar.org~ in your ~Documents~ folder can be found at ~/Local/Documents/bar.org~.
+
+** The open file command
+The ~<SPC o>~ command opens a minibuffer prompt to open a file; it usually has the directory of the current file already inputted. To understand the ways that this command makes it easy to find and open files, let's try an example.
 
 *Try it out!*
 #+begin_src
 
-Let's work in a new window so that the tutorial remains visible. Create a window to the right with <SPC w r> and activate it with <SPC w l>.
+Let's work in a new window so that the tutorial remains visible. Create a window to the right with <SPC w r> and activate it with <ALT-l>.
 
-Press <SPC o> and note that a minibuffer prompt opens, with an initial input of "/Local/Documents/Photon/Tutorial" (the folder where this file is located) and a list of all files/folders inside this directory. Remember that you can use <CTRL-j> and <CTRL-k> to navigate the selections.
+Press <SPC o> and note that a minibuffer prompt opens, with an initial input of "/Local/" and a list of all files/folders inside your home directory. Remember that you can use <CTRL-j> and <CTRL-k> to navigate the selections; look for familiar folders like "Downloads", "Documents", etc.
 
-Press <BACKSPACE> and note that the input jumps back one level to "/Local/Documents/Photon". Begin typing "tut" and notice that the only selection available is the "Tutorial" folder (you can tell that this is a directory since it has a folder icon). Press <TAB>, and notice that the input re-includes this directory: "/Local/Documents/Photon/Tutorial". Note that you can open a selected file by pressing <ENTER>; let's not do that just yet.
+Begin typing "downl" and notice that the available selections filter. You should see your "Downloads" folder as an available option. If it is not already highlighted, move the selection to this folder by using <CTRL-j>/<CTRL-k>. Press <TAB>, and notice that the input now includes this directory ("/Local/Downloads/") and you can see the files in your Downloads folder. Now, press <Backspace>, and notice that the current directory shifts back one level ("/Local/").
 
-If you want to access Photon's full file manager, you can easily press <ENTER> when selecting a directory. Let's press <BACKSPACE> until our initial input just includes "/Local/". Now, begin typing "downl" to search for your Downloads folder; when it is the current selection, press <ENTER>. Notice that a file manager buffer opens showing all the files in your Downloads folder; you can open a file or directory with <ENTER>, and you can jump back one directory (e.g., from "/Local/Downloads" to "/Local/") by pressing "^". A dedicated explanation for how you can copy, delete, and modify files in these buffers (known as "Dired" buffers) is available in a later tutorial page.
-  
 #+end_src
 
+Let's recap the keybinds available for the find-file command:
+|-----------+------------------------------|
+| Keybind   | Function                     |
+|-----------+------------------------------|
+| TAB       | Move into selected folder    |
+| BACKSPACE | Move backward one directory  |
+| ENTER     | Open selected file or folder |
+|-----------+------------------------------|
 
 
 [[file:1.1 \[Tutorial\].org][Next ->]]
