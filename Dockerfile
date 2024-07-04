@@ -32,6 +32,9 @@
      && make \
      && make install
 
+
+
+
     FROM alpine AS vterm-builder
 
     RUN apk update
@@ -65,30 +68,54 @@
     RUN \
     apk update
 
+    RUN \
+    apk add --no-cache \
+    alsa-lib \
+    cairo \
+    dbus-libs \
+    desktop-file-utils \
+    fontconfig \
+    freetype \
+    gdk-pixbuf \
+    giflib \
+    glib \
+    gmp \
+    gnutls \
+    gtk+3.0 \
+    harfbuzz \
+    hicolor-icon-theme \
+    jansson \
+    libgccjit \
+    libjpeg-turbo \
+    libncursesw \
+    libpng \
+    libpng \
+    librsvg \
+    libwebpdecoder \
+    libwebpdemux \
+    libxml2 \
+    musl \
+    pango \
+    sqlite-libs \
+    tiff \
+    webkit2gtk \
+    zlib
+
     COPY --from=emacs-builder /opt/emacs /opt/emacs
     ENV PATH="$PATH:/opt/emacs/bin"
 
     RUN \
     apk add --no-cache \
-    #    glib \
     gcc \
     libgccjit \
     musl-dev \
-    #libtool \
-    #    gsettings-desktop-schemas \
     git \
     curl \
     cmake \
-    #    make \
     #    openssh \
     npm \
     bash \
-    fish \
-    firefox
-    #    perl \
-    #    wget
-
-
+    fish
 
     # Install language dependencies ====================
 
@@ -116,7 +143,6 @@
 
     RUN \
     apk add --no-cache \
-    #    chromium-swiftshader \
     tree-sitter \
     aspell \
     aspell-en \
@@ -146,10 +172,10 @@
     COPY add-ons/elpa-tree-sitter/tsc-20220212.1632 /root/.emacs.d/elpa/tsc-20220212.1632
     COPY config.fish /root/.config/fish/config.fish
     COPY starship.toml /root/.config/starship.toml
-    COPY chromium.conf /etc/chromium/chromium.conf
-
-    ENV CHROME_BIN=/usr/bin/chromium \
-    CHROME_PATH=/usr/lib/chromium/
+#    COPY chromium.conf /etc/chromium/chromium.conf
+#
+#    ENV CHROME_BIN=/usr/bin/chromium \
+#    CHROME_PATH=/usr/lib/chromium/
 
     ENV DISPLAY=host.docker.internal:0.0
 
