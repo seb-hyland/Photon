@@ -1,0 +1,81 @@
+#+TITLE: Tutorial
+#+SUBTITLE: 1.4 - Org Roam
+
+
+* Note-taking at its finest
+It can often be a struggle figuring out the best way to organise information when taking notes. On one hand, we want notes to be centralised to one location, but on the other, they should be easily searchable so information can be easily and rapidly retrieved. Photon provides the ultimate solution, a tool called *Org Roam*.
+
+
+* What is Org Roam?
+*Org Roam* is an organisational tool that manages notes like Wiki entries (each entry is called a "node"). Since these notes are Org files (hence the name), you have access to all of the features previously explained.
+Powerful features are provided for creating, searching, and visualising your nodes to navigate your information; in fact, Org Roam is so powerful it's often compared to having a second brain!
+
+
+* What can it do?
+We'll first cover the features that Org Roam provides, then look into how you can effectively use it to manage your notes. The primary functions offered by Org Roam are housed within the "Org document tools" set of keybinds. Press ~<SPC d>~ and observe the group of functions available under "Org Roam".
+
+To understand using Org Roam effectively, let's work through  a workflow for creating a basic set of notes.
+
+
+* Example
+** Create our first node
+Let's create our first node! We'll use ~<SPC d g>~, the "Goto node" function. This function provides a list of all the nodes that you have created, allowing you to quickly search for your notes on a specific topic. If you input a node that does not yet exist, it will be created.
+
+First, split your window with ~<SPC w r>~, and move to this new window with ~<ALT-l>~.
+Now, run "Goto node" with ~<SPC d g>~. Since you have no nodes yet, this list should be empty. Type in "Chemistry" and hit enter. Note how an Org file with the title "Chemistry" was created. This is a standard Org file with some special metadata (notice the :ID: string that identifies the node).
+When you initially create this node, notice how the window title is *Capture*. This is because you haven't technically created the file yet. To initially create the file, press ~<CTRL-ENTER>~. After the first time, you can save the file the regular way with ~<SPC s>~.
+
+
+** A second node
+Now that we've created our first "Chemistry" node, let's make a note for Entropy. With your cursor somewhere inside your Chemistry document, press ~<SPC d i>~; this runs the ~Insert node~ command.  This command provides you with a list of all current nodes, and inserts a link to the selected one. Again, if you input a node that does not yet exist, it will be created.
+
+Notice how the list shows "Chemistry", the node you previously created. Let's create a new node called "Entropy". Type this in and press ~<ENTER>~ to begin creating this node. Within your file, insert the definition of entropy:
+-----
+Entropy is a measure of how much the energy of atoms and molecules spread out in a process.
+-----
+Again, remember that to initially create the file, press ~<CTRL-ENTER>~. If you modify your node in the future, save it normally with ~<SPC s>~.
+
+
+** Make a node from header
+Now, we have two nodes: the parent "Chemistry" node and a child "Entropy" node.
+
+It is advisable to use the above method to create new nodes in cases where you are writing long, multi-paragraph notes. However, if you want to create a short note concerning a specific topic (e.g., defining a scientific concept in a few sentences), there is another method.
+
+Instead of making a new document, you can create a node from a header in an Org document. Let's try it out for the definition of "Enthalpy".
+
+Go back to your parent "Chemistry" node using ~<SPC d g>~. Make some new lines at the bottom of the document, and create a level 1 Org header called "Enthalpy". Remember that level one headers in Org are created by starting a line with a single asterisk. Thus, you should input "* Enthalpy". Directly under this header, input the definition of enthalpy. Let's be fancy and include some simple LaTeX for an equation.
+-----
+Enthalpy ($$H$$) is the sum of internal energy ($$U$$) and the product of pressure and volume ($$PV$$) given by the equation:
+\begin{equation}
+H = U + PV
+\end{equation}
+-----
+/Copy the content of the above definition under the Enthalpy header. Remember:/
+|---------------------------------+---------------|
+| Move left/right between windows | ~<ALT-h/ALT-l>~ |
+| Start linewise copying          | ~<SHIFT-V>~     |
+| Paste                           | ~<p>~           |
+|---------------------------------+---------------|
+
+Now you should have a section in your "Chemistry" file with the header "Enthalpy" and the definition of enthalpy underneath it. Let's turn this into a node! With your cursor over the "Enthalpy" header, execute ~<SPC d m>~, which makes a node from a header. Notice how an ":ID:" property is added to the header. Afterwards, press ~<SPC d g>~ and note that it lists nodes for Chemistry, Entropy, and Enthalpy.
+
+
+** Visualising your knowledge
+The killer feature of Org Roam is the ability to view your nodes and their connections in a visual, dynamic graph. To open the graph UI, press ~<SPC d u>~.
+
+Note how your graph shows the Chemistry node connected to both your Entropy and Enthalpy nodes. By clicking on the bubbles representing the nodes, you can read them (and you can even preview basic LaTeX)! As well, right clicking on a node allows you to open it, and as you navigate files, your graph will follow what you are looking at. This is a fantastic way to visualise the complex interconnections between topics and ideas; in fact, it is based on a learning principle called /Zettelkasten/, which leverages the scientifically-proven fact that creating connections between ideas is critical for memory and learning.
+
+
+** A note on organization
+For this example, we've created a hierarchical structure; the Chemistry node is clearly the parent, and it has links to "child" nodes for specific topics. However, there is no reason why you must follow this speicifc approach. You can create multi-level hierarchies if you like, with a top level for the course, a second level for the unit, another level for the lesson, another level for definitions... it's up to you on how you want to organize your thoughts.
+
+
+** Auto-linking
+Since the methodology of Org Roam is to highlight connections between ideas, Photon implements a system for automatic linking. Let's quickly try it out.
+
+As we previously did when making the entropy node, you can insert links to other nodes using ~<SPC d i>~. This is especially useful when creating a new child node. However, when linking an existing node, it is tedious to consistently call this function. Instead, if you begin typing the name of an existing node, it will be presented as an option for completion. Hitting ~<TAB>~ will then insert a link to the node and complete the name.
+
+Let's try it out! Navigate back to your "Entropy" node with ~<SPC d g>~. Then, begin typing the following: "The Gibbs free energy equation relates this concept to ent". Note that "ent" is the first few letters of "entropy"; as you begin typing this word, you should notice a popup box underneath your cursor with the text "Entropy [Node]". Hit ~<TAB>~, and notice how a link to the Entropy node was created.
+
+Press ~<SPC s>~ to save the file, and then press ~<SPC d u>~ to reopen the graph if you closed it. Note that the Entropy and Enthalpy nodes are now connected.
+

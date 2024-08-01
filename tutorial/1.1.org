@@ -4,7 +4,7 @@
 
 
 * Introduction
-Before we get to actually doing things in Photon, we need to understand the special way in which Photon deals with commands and text input.
+Before we begin learning the practical uses of Photon, we need to understand the special way in which it deals with commands and text input. Although this paradigm is different than most text editors, it enables rapid, mouse-free movement and functionality.
 
 
 
@@ -33,7 +33,7 @@ IMPORTANT NOTE: In general, keybinds are CASE-SENSITIVE. Make sure your CAPS LOC
 ** Insert mode
 Insert mode is used to *insert text*.
 
-You can easily tell when you are in insert mode, since the cursor shape changes from a square to a line. Note that when this tutorial refers to the "cursor", it is speaking about the blinking "text cursor," not your mouse pointer.
+You can easily tell when you are in insert mode, since the cursor shape changes from a rectangle to a line. Note that when this tutorial refers to the "cursor", it is speaking about the blinking "text cursor," not your mouse pointer.
 
 If you are currently in normal mode, pressing ~<i>~ will enter insert mode in front of the current character, and pressing ~<a>~ will enter insert mode with the cursor after the current character. Pressing ~<ESCAPE>~ returns you to Normal mode.
 
@@ -228,7 +228,7 @@ Before you move on to more interesting sections, here's a summary:
 
 
 |------------|
-| [[file:1.2 \[Tutorial\].org][Next >]]     |
+| [[file:1.2.org][Next >]]     |
 |------------|
-| [[file:1.0 \[Tutorial\].org][< Previous]] |
+| [[file:1.0.org][< Previous]] |
 |------------|

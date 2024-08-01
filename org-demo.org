@@ -22,6 +22,9 @@
    print(sum(processedTable)) 
 #+end_src
 
+#+RESULTS:
+: 21
+
 #+begin_src python  :results file  :file /tmp/org-demo.png
       import matplotlib 
       import matplotlib.pyplot as plt

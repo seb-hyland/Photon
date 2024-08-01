@@ -194,6 +194,7 @@
   (org-drawer                                    (:foreground springBlue :background winterBlue :height 0.8 :weight 'normal))
   (org-special-keyword                           (:background winterRed :foreground peachRed :height 0.8))
   (org-code                                      (:background sumiInk-0))
+  (org-verbatim                                  (:background roninYellow :foreground "black"))
   (org-meta-line                                 (:background winterGreen :foreground springGreen))
   (org-block                                     (:background sumiInk-0 :foreground sumiInk-6))
   (org-block-begin-line                          (:background winterBlue :foreground dragonBlue))

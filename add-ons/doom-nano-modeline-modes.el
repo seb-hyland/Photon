@@ -116,7 +116,7 @@
   (doom-nano-modeline--render
    `(("Capture" . doom-nano-modeline-major-mode-face)
      (,(concat " (" (org-capture-get :description) ")") . nil)
-     (" --- Finish: C-c C-c, refile: C-c C-w, cancel: C-c C-k" . font-lock-comment-face))
+     (" --- Finish: CTRL-ENTER" . font-lock-comment-face))
    nil))
 
 (defun doom-nano-modeline--org-capture-mode-turn-off-header-line ()

@@ -13,11 +13,36 @@
     texinfo \
     jansson-dev \
     gtk+3.0-dev \
-    libx11-dev \
-    xorg-server-dev \
     webkit2gtk-dev \
-    gnutls-dev
+    gnutls-dev \
+    tree-sitter-dev
 
+    RUN \
+    apk add --no-cache \
+    alsa-lib \
+    cairo \
+    dbus-libs \
+    desktop-file-utils \
+    fontconfig \
+    freetype \
+    gdk-pixbuf \
+    giflib \
+    glib \
+    gmp \
+    harfbuzz \
+    hicolor-icon-theme \
+    libjpeg-turbo \
+    libncursesw \
+    libpng \
+    librsvg \
+    libwebpdecoder \
+    libwebpdemux \
+    libxml2 \
+    musl \
+    pango \
+    sqlite-libs \
+    tiff \
+    zlib
 
     WORKDIR /tmp
     RUN git clone --depth 1 https://git.savannah.gnu.org/git/emacs.git
@@ -89,7 +114,6 @@
     libjpeg-turbo \
     libncursesw \
     libpng \
-    libpng \
     librsvg \
     libwebpdecoder \
     libwebpdemux \
@@ -107,15 +131,17 @@
     RUN \
     apk add --no-cache \
     gcc \
-    libgccjit \
     musl-dev \
     git \
     curl \
     cmake \
-    #    openssh \
+    openssh \
     npm \
     bash \
-    fish
+    fish \
+    mesa-vulkan-swrast
+    
+    RUN apk add simp1e-cursors-snow simp1e-cursors-dark --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/ && gsettings set org.gnome.desktop.interface cursor-theme 'simp1e-cursors-snow'
 
     # Install language dependencies ====================
 
@@ -168,15 +194,12 @@
     COPY add-ons /root/.emacs.d/add-ons
     COPY snippets /root/.emacs.d/snippets-core/
     COPY add-ons/elpa-tree-sitter/tree-sitter-20220212.1632 /root/.emacs.d/elpa/tree-sitter-20220212.1632
-    COPY add-ons/elpa-tree-sitter/tree-sitter-langs-20240602.731 /root/.emacs.d/elpa/tree-sitter-langs-20240602.731
+#    COPY add-ons/elpa-tree-sitter/tree-sitter-langs-20240602.731 /root/.emacs.d/elpa/tree-sitter-langs-20240602.731
     COPY add-ons/elpa-tree-sitter/tsc-20220212.1632 /root/.emacs.d/elpa/tsc-20220212.1632
     COPY config.fish /root/.config/fish/config.fish
     COPY starship.toml /root/.config/starship.toml
-#    COPY chromium.conf /etc/chromium/chromium.conf
-#
-#    ENV CHROME_BIN=/usr/bin/chromium \
-#    CHROME_PATH=/usr/lib/chromium/
 
     ENV DISPLAY=host.docker.internal:0.0
 
+    WORKDIR /Local
     # ENTRYPOINT ["emacs"]

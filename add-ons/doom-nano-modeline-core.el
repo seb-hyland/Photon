@@ -141,6 +141,7 @@ If HIDE-EVIL-MODE is nil, the Evil mode state is not shown in the modeline."
                           ((eq evil-state 'replace)  "R ")
                           ((eq evil-state 'operator) "O ")
                           ((eq evil-state 'visual) (cond ((eq evil-visual-selection 'line)  "L ")
+							 ((eq evil-visual-selection 'screen-line)  "L ")
                                                          ((eq evil-visual-selection 'block) "B ")
                                                          (t                                 "V ")))
                           (t "? ")))))
