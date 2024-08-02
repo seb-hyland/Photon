@@ -34,7 +34,7 @@
     libjpeg-turbo \
     libncursesw \
     libpng \
-    librsvg \
+    librsvg-dev \
     libwebpdecoder \
     libwebpdemux \
     libxml2 \
@@ -45,7 +45,7 @@
     zlib
 
     WORKDIR /tmp
-    RUN git clone --depth 1 https://git.savannah.gnu.org/git/emacs.git
+    RUN git clone --depth 1 -b emacs-30 https://git.savannah.gnu.org/git/emacs.git
 
     WORKDIR /tmp/emacs
      RUN ./autogen.sh \
@@ -54,7 +54,7 @@
     --with-json --with-native-compilation=aot --with-xwidgets --with-pgtk \
     'CFLAGS=-O2' \
     'LDFLAGS=-Wl,--as-needed,-O1,--sort-common -Wl,-z,pack-relative-relocs' \
-     && make \
+     && make NATIVE_FULL_AOT=1 -j$(nproc) \
      && make install
 
 
