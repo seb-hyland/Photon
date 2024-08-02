@@ -57,7 +57,6 @@
 (menu-bar--display-line-numbers-mode-visual)
 (add-hook 'prog-mode-hook (lambda () (electric-pair-local-mode t)))
 (setq split-width-threshold 1)
-(setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
 
 (add-hook 'emacs-startup-hook (lambda ()
 				(global-display-line-numbers-mode 1)
@@ -223,16 +222,24 @@
 (use-package vertico
   :bind (:map vertico-map
               ("<remap> <photon-C-j>" . vertico-next)
-              ("<remap> <photon-C-k>" . vertico-previous))
+              ("<remap> <photon-C-k>" . vertico-previous)
+              ("RET" . vertico-directory-enter)
+              ("DEL" . vertico-directory-delete-char)
+              ("M-DEL" . vertico-directory-delete-word)
+	      )
   :custom
+  (vertico-mode t)
   (vertico-cycle t)
-  (eldoc-mode t))
+  (eldoc-mode t)
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
 (use-package marginalia
+  :after vertico
   :custom
   (marginalia-mode t))
 
-(use-package consult)
+(use-package consult
+  :after vertico)
 
 (use-package orderless
   :custom
@@ -244,15 +251,6 @@
 	  (61 . orderless-literal) (94 . orderless-literal-prefix)
 	  (126 . orderless-flex))))
 
-(use-package vertico-directory
-  :after vertico
-  :bind (:map vertico-map
-              ("RET" . vertico-directory-enter)
-              ("DEL" . vertico-directory-delete-char)
-              ("M-DEL" . vertico-directory-delete-word)
-	      )
-  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
-
 (use-package ctrlf
   :defer t
   :custom
@@ -263,26 +261,26 @@
 	      ("<remap> <photon-C-k>" . ctrlf-backward-default)))
 
 (use-package corfu
-  :config
-  (setq corfu-auto t
-	corfu-auto-delay 0.1
-	corfu-auto-prefix 2)
-  :hook
-  (org-mode . (lambda () (photon-completion--check)))
-  :bind
-  (:map corfu-map
-	("<remap> <photon-C-j>" . corfu-next)
-	("<remap> <photon-C-k>" . corfu-previous)))
+    :config
+    (setq corfu-auto t
+  	corfu-auto-delay 0.1
+  	corfu-auto-prefix 2)
+    ;;  :hook
+    ;;  (org-mode . (lambda () (photon-completion--check)))
+    :bind
+    (:map corfu-map
+  	("<remap> <photon-C-j>" . corfu-next)
+  	("<remap> <photon-C-k>" . corfu-previous)))
 
-(defun photon-completion--check ()
-  (interactive)
-  (if (string-match-p (regexp-quote org-roam-directory)
-                      (buffer-file-name))
-      (progn
-	(corfu-mode t)
-	(setq-local completion-at-point-functions '(photon-completion)))))
+  (defun photon-completion--check ()
+    (interactive)
+    (if (string-match-p (regexp-quote org-roam-directory)
+                        (buffer-file-name))
+        (progn
+  	(corfu-mode t)
+  	(setq-local completion-at-point-functions '(photon-completion)))))
 
-(add-hook 'org-mode-hook 'photon-completion--check)
+;;  (add-hook 'org-mode-hook 'photon-completion--check)
 
 ;;  (use-package which-key
 ;;    :init (which-key-mode)
@@ -350,12 +348,15 @@
 
 (use-package magit
   :defer t
+  :init
+  (use-package transient)
   :diminish (magit-auto-revert-mode auto-revert-mode)
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 (defvar ssh-available nil)
-(if (file-directory-p "/Local/Documents/Photon/keychain/.ssh")
+(if (and (file-directory-p "/Local/Documents/Photon/keychain/.ssh")
+	 (not (file-directory-p "/root/.ssh")))
     (copy-directory "/Local/Documents/Photon/keychain/.ssh" "/root/.ssh")
   (setq ssh-available t)) 
 (defvar ssh-setup-buffer)
@@ -740,9 +741,9 @@
 (use-package org
   :config
   ;; (setq org-ellipsis " ▾")
-  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
   (delete-selection-mode t)
   (with-eval-after-load 'org
+    (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file)
     (org-babel-do-load-languages
      'org-babel-load-languages
      '((emacs-lisp . t)
@@ -778,9 +779,9 @@
   (add-hook 'markdown-mode-hook 'toc-org-mode)
   )
 
-(use-package org-appear
-  :config
-  (org-appear-mode t))
+;;  (use-package org-appear
+;;    :config
+;;    (org-appear-mode t))
 
 (use-package org-fragtog
   :load-path "~/.emacs.d/add-ons"
@@ -1156,8 +1157,9 @@ performs fuzzy matching with existing tags, and initiates capture."
         (define-key photon-keymap (kbd "C-SPC") 'photon-focus-main)
         (define-key evil-normal-state-map (kbd "SPC") 'photon-focus-main)
         (define-key evil-visual-state-map (kbd "SPC") 'photon-focus-main)
-        (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon-focus-main)
-        (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon-focus-main)
+	(with-eval-after-load 'dired
+          (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon-focus-main)
+          (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon-focus-main))
         )
     (progn
       (persp-switch photon-focus-init-persp)
@@ -1166,8 +1168,9 @@ performs fuzzy matching with existing tags, and initiates capture."
       (define-key photon-keymap (kbd "C-SPC") 'photon/main)
       (define-key evil-normal-state-map (kbd "SPC") 'photon/main)
       (define-key evil-visual-state-map (kbd "SPC") 'photon/main)
-      (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon/main)
-      (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/main)
+      (with-eval-after-load 'dired
+	(define-key dired-mode-map (kbd "<normal-state> SPC") 'photon/main)
+	(define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/main))
       )
     )
   )
@@ -1352,8 +1355,10 @@ performs fuzzy matching with existing tags, and initiates capture."
     (define-key map (kbd "F") 'evil-avy-goto-word-1)
     (define-key map (kbd "r") 'evil-redo)))
 
-(define-key dired-mode-map (kbd "<normal-state> SPC") 'photon/main)
-(define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/window)
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon/main)
+  (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/window))
+
 (define-key evil-visual-state-map (kbd "e") 'er/expand-region)
 (define-key evil-normal-state-map (kbd "e")
 	    (lambda ()
