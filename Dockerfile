@@ -139,6 +139,7 @@
     npm \
     bash \
     fish \
+    openssh \
     mesa-vulkan-swrast
     
     RUN apk add simp1e-cursors-snow simp1e-cursors-dark --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/ && gsettings set org.gnome.desktop.interface cursor-theme 'simp1e-cursors-snow'
