@@ -256,7 +256,11 @@
 	  (setq ssh-setup-status t)
 	  (async-shell-command "chmod 600 /Local/Documents/Photon/keychain/.ssh/id_ed25519 && ssh-agent > /dev/null 2>&1 && eval $(ssh-agent) > /dev/null 2>&1 && ssh-add /Local/Documents/Photon/keychain/.ssh/id_ed25519" "ssh-setup")))))
 
-(remove-hook 'magit-mode-hook #'ssh-setup)
+(add-hook 'magit-mode-hook #'ssh-setup)
+
+(unless (file-exists-p "/Local/Documents/Photon/keychain/.gitconfig")
+  (write-region "" nil "/Local/Documents/Photon/keychain/.gitconfig"))
+(f-symlink "/Local/Documents/Photon/keychain/.gitconfig" "~/.gitconfig")
 
 (use-package tree-sitter
   :defer t)
