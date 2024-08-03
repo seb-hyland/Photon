@@ -40,7 +40,7 @@
 
 ;;; Code:
 
-(require 'doom-themes)
+;; (require 'doom-themes)
 (require 'doom-nano-modeline-core)
 (require 'doom-nano-modeline-misc)
 (require 'doom-nano-modeline-modes)

@@ -256,11 +256,15 @@
 	  (setq ssh-setup-status t)
 	  (async-shell-command "chmod 600 /Local/Documents/Photon/keychain/.ssh/id_ed25519 && ssh-agent > /dev/null 2>&1 && eval $(ssh-agent) > /dev/null 2>&1 && ssh-add /Local/Documents/Photon/keychain/.ssh/id_ed25519" "ssh-setup")))))
 
-(add-hook 'magit-mode-hook #'ssh-setup)
+(add-hook 'magit-mode-hook 'ssh-setup)
 
 (unless (file-exists-p "/Local/Documents/Photon/keychain/.gitconfig")
   (write-region "" nil "/Local/Documents/Photon/keychain/.gitconfig"))
-(f-symlink "/Local/Documents/Photon/keychain/.gitconfig" "~/.gitconfig")
+
+(use-package f
+  :mode magit-mode
+  (unless (file-exists-p "~/.gitconfig")
+    (f-symlink "/Local/Documents/Photon/keychain/.gitconfig" "~/.gitconfig")))
 
 (use-package tree-sitter
   :defer t)
@@ -357,15 +361,18 @@
   ;; (doom-themes-visual-bell-config))
 
 (use-package doom-nano-modeline
+  :demand t
   :load-path addons-dir
   :config
   (doom-nano-modeline-mode t))
 
 (use-package hide-mode-line
+  :demand t
   :init
   (global-hide-mode-line-mode t))
 
 (use-package spacious-padding
+  :demand t
   :init
   (spacious-padding-mode))
 
