@@ -631,12 +631,6 @@
           (typst-to-latex)
           (goto-char region-start))))))
 
-(defun photon-org-typst-mode-hook ()
-  "Hook function for my-typst-mode."
-  (add-hook 'post-command-hook #'photon-org-typst-convert nil t)
-  (add-hook 'post-command-hook #'latex-to-typst nil t)
-  )
-
 (defun photon-org-typst-convert ()
   "Run typst-to-latex when leaving a #(...Typst code here...)# region."
   (let ((end-found (search-backward ")#" nil t)))
@@ -651,8 +645,13 @@
             (goto-char (+ (point) 1))
   	    (when (overlays-at (point))
   	      (progn
-  		(goto-char (+ (point) 1))
-  		))))))))
+  		(goto-char (+ (point) 1))))))))))
+
+(defun photon-org-typst-hooks ()
+  "Hook function for my-typst-mode."
+  (add-hook 'post-command-hook #'photon-org-typst-convert nil t)
+  (add-hook 'post-command-hook #'latex-to-typst nil t)
+  (add-hook 'before-save-hook #'typst-to-latex-all t))
 
 (define-minor-mode photon-org-typst-mode
   "Minor mode to run typst-to-latex when leaving a #(...Typst code here...)# region."
