@@ -300,6 +300,7 @@
   (flycheck-inline-error                         (:foreground peachRed :background winterRed :height 150 :italic t))
   (flycheck-inline-info                          (:foreground crystalBlue :background waveBlue-2 :height 150 :italic t))
   (flycheck-inline-warning                       (:foreground carpYellow :background winterYellow :height 150 :italic t))
+  (jinx-misspelled                               (:underline (:color roninYellow :style 'wave)))
 
   ;; indent dots
   (highlight-indent-guides-character-face        (:foreground sumiInk-3))

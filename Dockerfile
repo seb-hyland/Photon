@@ -171,8 +171,9 @@
     RUN \
     apk add --no-cache \
     tree-sitter \
-    aspell \
-    aspell-en \
+    enchant2-dev \
+    nuspell \
+    pandoc \
     ripgrep \
     starship 
 
@@ -195,10 +196,14 @@
     COPY add-ons /root/.emacs.d/add-ons
     COPY snippets /root/.emacs.d/snippets-core/
     COPY add-ons/elpa-tree-sitter/tree-sitter-20220212.1632 /root/.emacs.d/elpa/tree-sitter-20220212.1632
-#    COPY add-ons/elpa-tree-sitter/tree-sitter-langs-20240602.731 /root/.emacs.d/elpa/tree-sitter-langs-20240602.731
     COPY add-ons/elpa-tree-sitter/tsc-20220212.1632 /root/.emacs.d/elpa/tsc-20220212.1632
     COPY config.fish /root/.config/fish/config.fish
     COPY starship.toml /root/.config/starship.toml
+    COPY dictionaries/en_CA.aff /root/.config/enchant/nuspell/en_CA.aff
+    COPY dictionaries/en_CA.dic /root/.config/enchant/nuspell/en_CA.dic
+
+    RUN ln -s /Local/Documents/Photon/keychain/.gitconfig /root/.gitconfig && \
+    	ln -s /Local/Documents/Photon/sys/dictionary.dic /root/.config/enchant/en_CA.dic && \
 
     ENV DISPLAY=host.docker.internal:0.0
 
