@@ -1211,6 +1211,7 @@ Handles both regular buffers and org-roam capture buffers."
     ("d" " 󰈙  Org document tools..." photon/org)
     ("n" "   Org Roam..." photon/node)
     ("c" "   Coding tools..." photon/coding)
+    ("g" " 󰊢  Magit..." photon/magit)
     ]]
   )
 
@@ -1231,17 +1232,17 @@ Handles both regular buffers and org-roam capture buffers."
   [" "
    ["󱂬  Manage windows"
     ("r" "Create on right" (lambda ()
-				  (interactive)
-				  (split-window-right) 
-				  (balance-windows)))
+  			     (interactive)
+  			     (split-window-right) 
+  			     (balance-windows)))
     ("b" "Create below" (lambda ()
-				  (interactive)
-				  (delete-window)
-				  (split-window-below)))
+  			  (interactive)
+  			  (delete-window)
+  			  (split-window-below)))
     ("q" "Close current window" (lambda ()
-				  (interactive)
-				  (delete-window) 
-				  (balance-windows)))
+  				  (interactive)
+  				  (delete-window) 
+  				  (balance-windows)))
     ("=" "Rebalance window sizes" balance-windows)
     ]
    [
@@ -1273,8 +1274,8 @@ Handles both regular buffers and org-roam capture buffers."
      :description
      (lambda ()
        (format "Toggle LaTeX auto-preview [%s]" (if org-fragtog-mode
-  						    (propertize "ACTIVE" 'face 'photon-transient-dynamic-face)
-  						  (propertize "INACTIVE" 'face 'photon-transient-dynamic-face))))
+    						    (propertize "ACTIVE" 'face 'photon-transient-dynamic-face)
+    						  (propertize "INACTIVE" 'face 'photon-transient-dynamic-face))))
      )
     ("a" "Preview all LaTeX fragments" math-preview-all)
     ("x" "Clear all LaTeX fragments" math-preview-clear-all)
@@ -1296,6 +1297,27 @@ Handles both regular buffers and org-roam capture buffers."
     ("d" "Select graph tag" photon-orui-selected-tag)
     ]
    ])
+
+(transient-define-prefix photon/magit ()
+  [""
+   ["󰓾 Core functions"
+    ("s" "Status" magit-status)
+    ("f" "Fetch upstream" magit-fetch-from-upstream)
+    ("u" "Push upstream" magit-push-current-to-upstream)
+    ("p" "Pull from upstream" magit-pull-from-upstream)
+    ]
+   [
+    " Other functions"
+    ("b" "Branches..." magit-branch)
+    ("c" "Commit" magit-commit-create)
+    ("d" "Diff" magit-diff-dwim)
+    ]
+   [
+    ""
+    ("F" "Fetch..." magit-fetch)
+    ("U" "Push..." magit-push)
+    ("P" "Pull..." magit-pull)
+   ]])
 
 (define-minor-mode photon-mode
   "Minor mode for my personal keybindings."
