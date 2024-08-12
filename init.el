@@ -264,12 +264,16 @@
 (defun ssh-setup ()
   (interactive)
   (if (ssh-available-p)
-      (unless ssh-setup-status
-        (let* ((display-buffer-alist '(((lambda (bufname _action)
-					  ((string= bufname "ssh-setup")))
-					display-buffer-no-window (allow-no-window . t)))))
-	  (setq ssh-setup-status t)
-	  (async-shell-command (concat "chmod 600 " photon-dir "keychain/.ssh/id_ed25519 && ssh-agent > /dev/null 2>&1 && eval $(ssh-agent) > /dev/null 2>&1 && ssh-add " photon-dir "keychain/.ssh/id_ed25519") "ssh-setup")))))
+      (if ssh-setup-status
+	  (if (get-buffer "*ssh-setup*")
+	      (progn
+		(kill-process "*ssh-setup*")
+		(kill-buffer "*ssh-setup*")))
+	(let ((init-buffer (current-buffer)))
+	  (shell "*ssh-setup*")
+	  (process-send-string "*ssh-setup*" (concat "chmod 600 " photon-dir "keychain/.ssh/id_ed25519 && ssh-agent > /dev/null 2>&1 && eval $(ssh-agent) > /dev/null 2>&1 && ssh-add " photon-dir "keychain/.ssh/id_ed25519 \n"))
+	  (switch-to-buffer init-buffer)
+	  (setq ssh-setup-status t)))))
 
 (add-hook 'magit-mode-hook 'ssh-setup)
 
@@ -1310,9 +1314,9 @@ Handles both regular buffers and org-roam capture buffers."
    		   ("M-l" . windmove-right)
    		   ("C-j" . photon-C-j)
    		   ("C-k" . photon-C-k)
-   		   ("C-? k" . helpful-key)
-   		   ("C-? f" . helpful-function)
-   		   ("C-? v" . helpful-variable)
+   		   ("C-/ k" . helpful-key)
+   		   ("C-/ f" . helpful-function)
+   		   ("C-/ v" . helpful-variable)
    		   ("C-<return>" . photon-C-c)
    		   ))
   (define-key photon-keymap (kbd (car binding)) (cdr binding)))
