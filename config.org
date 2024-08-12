@@ -143,6 +143,10 @@ Define Photon directories and create them
                  "keychain/"
   	       "sys/trash/"))
     (photon-check-dir (concat photon-dir dir)))
+
+  (defvar photon-keymap (make-keymap)
+    "Keymap for Photon general bindings")
+
   #+end_src
 
 Clean up the window and set basic properties
@@ -155,7 +159,8 @@ Clean up the window and set basic properties
           display-line-numbers-type 'relative
           split-width-threshold 1
           delete-by-moving-to-trash t
-          trash-directory (concat photon-dir "sys/trash"))
+          trash-directory (concat photon-dir "sys/trash")
+          create-lockfiles nil)
 
     (scroll-bar-mode -1)   		        
     (tool-bar-mode -1)     		        
@@ -813,7 +818,7 @@ Set up bracket colouring in programming buffers
     (jinx-languages "en_CA" t)
     :bind (
     	 :map photon-keymap
-    	 ("M-<return>" . jinx-correct))
+    	 ("S-<return>" . jinx-correct))
     :hook (org-mode . jinx-mode)
     :config
     (unless (file-exists-p (concat photon-dir "sys/dictionary.dic"))
@@ -876,8 +881,9 @@ Set up bracket colouring in programming buffers
     	      (goto-char (+ trimmed-beg 2)))
     	  (let* ((command (format "echo \"%s\" | pandoc -f latex -t typst" latex-code))
     		 (output (shell-command-to-string command))
-    		 (typst (concat "#(" (substring output 1 (- (length output) 2)) ")#")))
-  	    (add-to-typst-cache output latex-code)
+  		 (output-formatted (substring output 1 (- (length output) 2)))
+    		 (typst (concat "#(" output-formatted ")#")))
+  	    (add-to-typst-cache output-formatted latex-code)
               (delete-region trimmed-beg trimmed-end)
     	    (insert typst)
     	    (goto-char (+ trimmed-beg 2))
@@ -913,18 +919,23 @@ Set up bracket colouring in programming buffers
     		(goto-char (+ (point) 1))))))))))
 
   (defun photon-org-typst-hooks ()
-    "Hook function for my-typst-mode."
+    "Hook function for photon-org-typst-mode."
     (add-hook 'post-command-hook #'photon-org-typst-convert nil t)
     (add-hook 'post-command-hook #'latex-to-typst nil t)
-    (add-hook 'before-save-hook #'typst-to-latex-all t))
+    (add-hook 'before-save-hook #'typst-to-latex-all nil t))
+
+  (defun photon-org-typst-hooks--rm ()
+    "Hook removal function for photon-org-typst-mode."
+    (remove-hook 'post-command-hook #'photon-org-typst-convert t)
+    (remove-hook 'post-command-hook #'latex-to-typst t)
+    (remove-hook 'before-save-hook #'typst-to-latex-all t))
 
   (define-minor-mode photon-org-typst-mode
-    "Minor mode to run typst-to-latex when leaving a #(...Typst code here...)# region."
+    "Minor mode to manage Typst as a math input system in Org-mode."
     :lighter " Typst"
     (if photon-org-typst-mode
-        (photon-org-typst-mode-hook)
-      (remove-hook 'post-command-hook #'photon-org-typst-convert t)
-      (remove-hook 'post-command-hook #'latex-to-typst t)
+        (photon-org-typst-hooks)
+      (photon-org-typst-hooks--rm)
       ))
 #+end_src
 
@@ -942,19 +953,20 @@ Set up bracket colouring in programming buffers
               (setcdr existing-entry (append (cdr existing-entry) (list new-pair)))
             (push (cons filename (list new-pair)) photon-typst-cache))))))
 
-  (defun search-typst-cache (search-term &optional search-cdr)
-    "Search the `photon-typst-cache` for the current buffer's filename and search term.
-    Returns the complementary string of the matching pair.
-    If `search-cdr` is non-nil, search the cdr of the pairs and return the car.
-    Otherwise, search the car of the pairs and return the cdr."
-    (let ((filename (buffer-file-name)))
-      (when filename
-        (let ((entry (assoc filename photon-typst-cache)))
-          (when entry
-            (let ((pairs (cdr entry)))
-              (if search-cdr
-                  (car (cl-find-if (lambda (pair) (string-match search-term (cdr pair))) pairs))
-                (cdr (cl-find-if (lambda (pair) (string-match search-term (car pair))) pairs)))))))))
+(defun search-typst-cache (search-term &optional search-cdr)
+  "Search the `photon-typst-cache` for the current buffer's filename and search term.
+Returns the complementary string of the matching pair.
+If `search-cdr` is non-nil, search the cdr of the pairs and return the car.
+Otherwise, search the car of the pairs and return the cdr."
+  (let ((filename (buffer-file-name)))
+    (when filename
+      (let ((entry (assoc filename photon-typst-cache)))
+        (when entry
+          (let ((pairs (cdr entry))
+                (escaped-search-term (regexp-quote search-term))) ; Escape special chars
+            (if search-cdr
+                (car (cl-find-if (lambda (pair) (string-match escaped-search-term (cdr pair))) pairs))
+              (cdr (cl-find-if (lambda (pair) (string-match escaped-search-term (car pair))) pairs)))))))))
 #+end_src
 
 
@@ -1262,7 +1274,7 @@ Set up bracket colouring in programming buffers
         (progn
           (setq photon-orui-tag (string-trim completion-tag "  ")))))
     (if (websocket-openp org-roam-ui-ws-socket)
-        (org-roam-ui--send-graphdata))))
+        (org-roam-ui--send-graphdata)))
 #+end_src
 
 
@@ -1322,159 +1334,160 @@ Set up bracket colouring in programming buffers
 
 ** Custom functions
 #+BEGIN_SRC emacs-lisp
-  (defface photon-transient-dynamic-face
-    '((t (:foreground "#7FB4CA" :weight bold)))
-    "Face for dynamic transients")
+    (defface photon-transient-dynamic-face
+      '((t (:foreground "#7FB4CA" :weight bold)))
+      "Face for dynamic transients")
 
 
-  (defun photon-find-file ()
-    "Open find-file with specific behavior based on context."
-    (interactive)
-    (cond ((eq major-mode 'dired-mode)
-           (call-interactively 'find-file))
-          ((and (buffer-file-name) 
-                (string-match "/Local/" (buffer-file-name)))
-           (call-interactively 'find-file)) 
-          (t 
-           (let ((default-directory "/Local/"))
-             (call-interactively 'find-file))))) 
+    (defun photon-find-file ()
+      "Open find-file with specific behavior based on context."
+      (interactive)
+      (cond ((eq major-mode 'dired-mode)
+             (call-interactively 'find-file))
+            ((and (buffer-file-name) 
+                  (string-match "/Local/" (buffer-file-name)))
+             (call-interactively 'find-file)) 
+            (t 
+             (let ((default-directory "/Local/"))
+               (call-interactively 'find-file))))) 
 
 
-  (defun photon-C-j ()
-    (interactive)
-    (when (and (eq evil-state 'visual)
-               (eq evil-visual-selection 'screen-line))
-      (execute-kbd-macro "G"))
-    (end-of-buffer))
+    (defun photon-C-j ()
+      (interactive)
+      (when (and (eq evil-state 'visual)
+                 (eq evil-visual-selection 'screen-line))
+        (execute-kbd-macro "G"))
+      (end-of-buffer))
 
-  (defun photon-C-k ()
-    (interactive)
-    (when (and (eq evil-state 'visual)
-               (eq evil-visual-selection 'screen-line))
-      (execute-kbd-macro "gg"))
-    (beginning-of-buffer))
-
-
-  (transient-define-suffix global-scale-inc ()
-    :transient t
-    :key "]"
-    :description "Increase globally"
-    (interactive)
-    (global-text-scale-adjust 2) (kbd "<escape>"))
-
-  (transient-define-suffix global-scale-dec ()
-    :transient t
-    :key "["
-    :description "Decrease globally"
-    (interactive)
-    (global-text-scale-adjust -2) (kbd "<escape>"))
+    (defun photon-C-k ()
+      (interactive)
+      (when (and (eq evil-state 'visual)
+                 (eq evil-visual-selection 'screen-line))
+        (execute-kbd-macro "gg"))
+      (beginning-of-buffer))
 
 
-  (defun org-entities-show ()
-    (interactive)
-    (setq org-hide-emphasis-markers nil)
-    (global-org-modern-mode -1)
-    (dolist (buf (match-buffers '(major-mode . org-mode)))
-      (with-current-buffer buf
-        (display-line-numbers-mode t)))
-    (remove-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1))))
+    (transient-define-suffix global-scale-inc ()
+      :transient t
+      :key "]"
+      :description "Increase globally"
+      (interactive)
+      (global-text-scale-adjust 2) (kbd "<escape>"))
 
-  (defun org-entities-hide ()
-    (interactive)
-    (setq org-hide-emphasis-markers t)
-    (global-org-modern-mode t)
-    (dolist (buf (match-buffers '(major-mode . org-mode)))
-      (with-current-buffer buf
-        (display-line-numbers-mode -1)))
-    (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1))))
+    (transient-define-suffix global-scale-dec ()
+      :transient t
+      :key "["
+      :description "Decrease globally"
+      (interactive)
+      (global-text-scale-adjust -2) (kbd "<escape>"))
 
-  (defvar org-entities-state "HIDDEN")
 
-  (defun org-entities-toggle ()
-    (interactive)
-    (if (equal org-entities-state "HIDDEN")
+    (defun org-entities-show ()
+      (interactive)
+      (setq org-hide-emphasis-markers nil)
+      (global-org-modern-mode -1)
+      (dolist (buf (match-buffers '(major-mode . org-mode)))
+        (with-current-buffer buf
+          (display-line-numbers-mode t)))
+      (remove-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1))))
+
+    (defun org-entities-hide ()
+      (interactive)
+      (setq org-hide-emphasis-markers t)
+      (global-org-modern-mode t)
+      (dolist (buf (match-buffers '(major-mode . org-mode)))
+        (with-current-buffer buf
+          (display-line-numbers-mode -1)))
+      (add-hook 'org-mode-hook (lambda () (display-line-numbers-mode -1))))
+
+    (defvar org-entities-state "HIDDEN")
+
+    (defun org-entities-toggle ()
+      (interactive)
+      (if (equal org-entities-state "HIDDEN")
+          (progn
+            (org-entities-show)
+            (setq org-entities-state "VISIBLE"))
         (progn
-          (org-entities-show)
-          (setq org-entities-state "VISIBLE"))
-      (progn
-        (org-entities-hide)
-        (setq org-entities-state "HIDDEN"))))
+          (org-entities-hide)
+          (setq org-entities-state "HIDDEN"))))
 
-  (org-entities-hide)
+    (org-entities-hide)
 
 
-  (defun photon-face-selection ()
-    "Presents the user with options to set the variable-pitch font face."
-    (interactive)
-    (let* ((font-choices '("Sans-serif" "Serif" "Monospace"))
-           (choice (completing-read "Choose typeface class: " font-choices nil t))
-           (font-mapping '(("Sans-serif" . "SF Pro Text")
-                		 ("Serif" . "Lora")
-                		 ("Monospace" . "Liga SFMono Nerd Font")))
-           (selected-font (cdr (assoc choice font-mapping))))
-      (set-face-attribute 'variable-pitch nil :family selected-font)))
+    (defun photon-face-selection ()
+      "Presents the user with options to set the variable-pitch font face."
+      (interactive)
+      (let* ((font-choices '("Sans-serif" "Serif" "Monospace"))
+             (choice (completing-read "Choose typeface class: " font-choices nil t))
+             (font-mapping '(("Sans-serif" . "SF Pro Text")
+                  		 ("Serif" . "Lora")
+                  		 ("Monospace" . "Liga SFMono Nerd Font")))
+             (selected-font (cdr (assoc choice font-mapping))))
+        (set-face-attribute 'variable-pitch nil :family selected-font)))
 
 
-  (defvar photon-opp-theme "light")
+    (defvar photon-opp-theme "light")
 
-  (defun photon-theme-toggle ()
-    (interactive)
-    (if (equal (car custom-enabled-themes) 'photon-dark)
-        (progn (load-theme 'photon-light t) (setq photon-opp-theme "dark"))
-      (progn (load-theme 'photon-dark t) (setq photon-opp-theme "light")))
-    (org-font-setup))
+    (defun photon-theme-toggle ()
+      (interactive)
+      (if (equal (car custom-enabled-themes) 'photon-dark)
+          (progn (load-theme 'photon-light t) (setq photon-opp-theme "dark"))
+        (progn (load-theme 'photon-dark t) (setq photon-opp-theme "light")))
+      (org-font-setup))
 
 
-  (defvar photon-focus-init-buf)
+    (defvar photon-focus-init-buf)
 
-  (defvar photon-focus-init-persp)
+    (defvar photon-focus-init-persp)
 
-  (defvar photon-focus-state nil)
+    (defvar photon-focus-state nil)
 
-  (defun photon-focus-main ()
-    (interactive)
-    (photon-focus-buffer)
-    (photon/main))
+    (defun photon-focus-main ()
+      (interactive)
+      (photon-focus-buffer)
+      (photon/main))
 
-  (defun photon-focus-buffer ()
-    (interactive)
-    (if (equal photon-focus-state nil)
+    (defun photon-focus-buffer ()
+      (interactive)
+      (if (equal photon-focus-state nil)
+          (progn
+            (setq photon-focus-init-buf (current-buffer))
+            (setq photon-focus-init-persp (persp-current-name))
+            (persp-switch "*FOCUS*")
+            (persp-add-buffer photon-focus-init-buf)
+            (persp-switch-to-buffer* photon-focus-init-buf)
+            (setq photon-focus-state t)
+            (define-key photon-keymap (kbd "C-SPC") 'photon-focus-main)
+            (define-key evil-normal-state-map (kbd "SPC") 'photon-focus-main)
+            (define-key evil-visual-state-map (kbd "SPC") 'photon-focus-main)
+     	(with-eval-after-load 'dired
+              (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon-focus-main)
+              (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon-focus-main))
+            )
         (progn
-          (setq photon-focus-init-buf (current-buffer))
-          (setq photon-focus-init-persp (persp-current-name))
-          (persp-switch "*FOCUS*")
-          (persp-add-buffer photon-focus-init-buf)
-          (persp-switch-to-buffer* photon-focus-init-buf)
-          (setq photon-focus-state t)
-          (define-key photon-keymap (kbd "C-SPC") 'photon-focus-main)
-          (define-key evil-normal-state-map (kbd "SPC") 'photon-focus-main)
-          (define-key evil-visual-state-map (kbd "SPC") 'photon-focus-main)
-   	(with-eval-after-load 'dired
-            (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon-focus-main)
-            (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon-focus-main))
-          )
-      (progn
-        (persp-switch photon-focus-init-persp)
-        (persp-kill "*FOCUS*")
-        (setq photon-focus-state nil)
-        (define-key photon-keymap (kbd "C-SPC") 'photon/main)
-        (define-key evil-normal-state-map (kbd "SPC") 'photon/main)
-        (define-key evil-visual-state-map (kbd "SPC") 'photon/main)
-        (with-eval-after-load 'dired
-   	(define-key dired-mode-map (kbd "<normal-state> SPC") 'photon/main)
-   	(define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/main)))))
+          (persp-switch photon-focus-init-persp)
+          (persp-kill "*FOCUS*")
+          (setq photon-focus-state nil)
+          (define-key photon-keymap (kbd "C-SPC") 'photon/main)
+          (define-key evil-normal-state-map (kbd "SPC") 'photon/main)
+          (define-key evil-visual-state-map (kbd "SPC") 'photon/main)
+          (with-eval-after-load 'dired
+     	(define-key dired-mode-map (kbd "<normal-state> SPC") 'photon/main)
+     	(define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/main)))))
 
 
-  (defun photon-C-c ()
-    (interactive)
-    (execute-kbd-macro (kbd "C-c C-c")))
+    (defun photon-C-c ()
+      (interactive)
+      (execute-kbd-macro (kbd "C-c C-c")))
 
 
-  (defun photon-kill-buffer-and-window ()
-    (interactive)
-    (kill-current-buffer)
-    (unless (equal 1 (length (mapcar #'window-buffer (window-list))))
-      (delete-window)))
+    (defun photon-kill-buffer-and-window ()
+      (interactive)
+      (kill-current-buffer)
+      (unless (equal 1 (length (mapcar #'window-buffer (window-list))))
+        (delete-window)
+        (balance-windows)))
 #+END_SRC
 
 
@@ -1534,9 +1547,19 @@ Set up bracket colouring in programming buffers
   (transient-define-prefix photon/window ()
     [" "
      ["󱂬  Manage windows"
-      ("r" "Create on right" split-window-right)
-      ("b" "Create below" split-window-below)
-      ("q" "Close current window" delete-window)
+      ("r" "Create on right" (lambda ()
+  				  (interactive)
+  				  (split-window-right) 
+  				  (balance-windows)))
+      ("b" "Create below" (lambda ()
+  				  (interactive)
+  				  (delete-window)
+  				  (split-window-below)))
+      ("q" "Close current window" (lambda ()
+  				  (interactive)
+  				  (delete-window) 
+  				  (balance-windows)))
+      ("=" "Rebalance window sizes" balance-windows)
       ]
      [
       "󰏘 Visual settings"
@@ -1586,11 +1609,7 @@ Set up bracket colouring in programming buffers
       ]
      [
       "󱁊 UI tools"
-      ("u" "Open graph UI" (lambda ()
-  			    (interactive)
-  			    (org-roam-ui-open)
-  			    (photon/node)
-  			    (run-with-timer 1 nil (lambda () (execute-kbd-macro "<escape>")))))
+      ("u" "Open graph UI" org-roam-ui-open :transient t)
       ("d" "Select graph tag" photon-orui-selected-tag)
       ]
      ])
@@ -1599,9 +1618,6 @@ Set up bracket colouring in programming buffers
 
 ** Photon keymap
 #+BEGIN_SRC emacs-lisp
-  (defvar photon-keymap (make-keymap)
-    "Keymap for Photon general bindings")
-
   (define-minor-mode photon-mode
     "Minor mode for my personal keybindings."
     :init-value t

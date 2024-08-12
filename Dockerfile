@@ -203,7 +203,7 @@
     COPY dictionaries/en_CA.dic /root/.config/enchant/nuspell/en_CA.dic
 
     RUN ln -s /Local/Documents/Photon/keychain/.gitconfig /root/.gitconfig && \
-    	ln -s /Local/Documents/Photon/sys/dictionary.dic /root/.config/enchant/en_CA.dic && \
+    	ln -s /Local/Documents/Photon/sys/dictionary.dic /root/.config/enchant/en_CA.dic
 
     ENV DISPLAY=host.docker.internal:0.0
 

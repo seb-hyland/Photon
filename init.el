@@ -55,6 +55,9 @@
 	       "sys/trash/"))
   (photon-check-dir (concat photon-dir dir)))
 
+(defvar photon-keymap (make-keymap)
+  "Keymap for Photon general bindings")
+
 (setq inhibit-startup-message t
       visible-bell t
       frame-title-format nil
@@ -63,7 +66,8 @@
       display-line-numbers-type 'relative
       split-width-threshold 1
       delete-by-moving-to-trash t
-      trash-directory (concat photon-dir "sys/trash"))
+      trash-directory (concat photon-dir "sys/trash")
+      create-lockfiles nil)
 
 (scroll-bar-mode -1)   		        
 (tool-bar-mode -1)     		        
@@ -556,7 +560,7 @@
   (jinx-languages "en_CA" t)
   :bind (
   	 :map photon-keymap
-  	 ("M-<return>" . jinx-correct))
+  	 ("S-<return>" . jinx-correct))
   :hook (org-mode . jinx-mode)
   :config
   (unless (file-exists-p (concat photon-dir "sys/dictionary.dic"))
@@ -611,8 +615,9 @@
   	      (goto-char (+ trimmed-beg 2)))
   	  (let* ((command (format "echo \"%s\" | pandoc -f latex -t typst" latex-code))
   		 (output (shell-command-to-string command))
-  		 (typst (concat "#(" (substring output 1 (- (length output) 2)) ")#")))
-	    (add-to-typst-cache output latex-code)
+		 (output-formatted (substring output 1 (- (length output) 2)))
+  		 (typst (concat "#(" output-formatted ")#")))
+	    (add-to-typst-cache output-formatted latex-code)
             (delete-region trimmed-beg trimmed-end)
   	    (insert typst)
   	    (goto-char (+ trimmed-beg 2))
@@ -648,46 +653,52 @@
   		(goto-char (+ (point) 1))))))))))
 
 (defun photon-org-typst-hooks ()
-  "Hook function for my-typst-mode."
+  "Hook function for photon-org-typst-mode."
   (add-hook 'post-command-hook #'photon-org-typst-convert nil t)
   (add-hook 'post-command-hook #'latex-to-typst nil t)
-  (add-hook 'before-save-hook #'typst-to-latex-all t))
+  (add-hook 'before-save-hook #'typst-to-latex-all nil t))
+
+(defun photon-org-typst-hooks--rm ()
+  "Hook removal function for photon-org-typst-mode."
+  (remove-hook 'post-command-hook #'photon-org-typst-convert t)
+  (remove-hook 'post-command-hook #'latex-to-typst t)
+  (remove-hook 'before-save-hook #'typst-to-latex-all t))
 
 (define-minor-mode photon-org-typst-mode
-  "Minor mode to run typst-to-latex when leaving a #(...Typst code here...)# region."
+  "Minor mode to manage Typst as a math input system in Org-mode."
   :lighter " Typst"
   (if photon-org-typst-mode
-      (photon-org-typst-mode-hook)
-    (remove-hook 'post-command-hook #'photon-org-typst-convert t)
-    (remove-hook 'post-command-hook #'latex-to-typst t)
+      (photon-org-typst-hooks)
+    (photon-org-typst-hooks--rm)
     ))
 
 (defvar photon-typst-cache nil
-  "Cache for storing string pairs associated with filenames.")
+    "Cache for storing string pairs associated with filenames.")
 
-(defun add-to-typst-cache (string1 string2)
-  "Add a string pair to the `photon-typst-cache` for the current buffer's filename."
-  (let ((filename (buffer-file-name)))
-    (when filename
-      (let* ((existing-entry (assoc filename photon-typst-cache))
-             (new-pair (cons string1 string2)))
-        (if existing-entry
-            (setcdr existing-entry (append (cdr existing-entry) (list new-pair)))
-          (push (cons filename (list new-pair)) photon-typst-cache))))))
+  (defun add-to-typst-cache (string1 string2)
+    "Add a string pair to the `photon-typst-cache` for the current buffer's filename."
+    (let ((filename (buffer-file-name)))
+      (when filename
+        (let* ((existing-entry (assoc filename photon-typst-cache))
+               (new-pair (cons string1 string2)))
+          (if existing-entry
+              (setcdr existing-entry (append (cdr existing-entry) (list new-pair)))
+            (push (cons filename (list new-pair)) photon-typst-cache))))))
 
 (defun search-typst-cache (search-term &optional search-cdr)
   "Search the `photon-typst-cache` for the current buffer's filename and search term.
-  Returns the complementary string of the matching pair.
-  If `search-cdr` is non-nil, search the cdr of the pairs and return the car.
-  Otherwise, search the car of the pairs and return the cdr."
+Returns the complementary string of the matching pair.
+If `search-cdr` is non-nil, search the cdr of the pairs and return the car.
+Otherwise, search the car of the pairs and return the cdr."
   (let ((filename (buffer-file-name)))
     (when filename
       (let ((entry (assoc filename photon-typst-cache)))
         (when entry
-          (let ((pairs (cdr entry)))
+          (let ((pairs (cdr entry))
+                (escaped-search-term (regexp-quote search-term))) ; Escape special chars
             (if search-cdr
-                (car (cl-find-if (lambda (pair) (string-match search-term (cdr pair))) pairs))
-              (cdr (cl-find-if (lambda (pair) (string-match search-term (car pair))) pairs)))))))))
+                (car (cl-find-if (lambda (pair) (string-match escaped-search-term (cdr pair))) pairs))
+              (cdr (cl-find-if (lambda (pair) (string-match escaped-search-term (car pair))) pairs)))))))))
 
 (use-package org-roam
   :commands
@@ -972,7 +983,7 @@ Handles both regular buffers and org-roam capture buffers."
         (progn
           (setq photon-orui-tag (string-trim completion-tag "  ")))))
     (if (websocket-openp org-roam-ui-ws-socket)
-        (org-roam-ui--send-graphdata))))
+        (org-roam-ui--send-graphdata)))
 
 ;;  (use-package org-transclusion
 ;;    :diminish
@@ -1158,7 +1169,8 @@ Handles both regular buffers and org-roam capture buffers."
   (interactive)
   (kill-current-buffer)
   (unless (equal 1 (length (mapcar #'window-buffer (window-list))))
-    (delete-window)))
+    (delete-window)
+    (balance-windows)))
 
 (transient-define-prefix photon/main ()
   [:description
@@ -1214,9 +1226,19 @@ Handles both regular buffers and org-roam capture buffers."
 (transient-define-prefix photon/window ()
   [" "
    ["󱂬  Manage windows"
-    ("r" "Create on right" split-window-right)
-    ("b" "Create below" split-window-below)
-    ("q" "Close current window" delete-window)
+    ("r" "Create on right" (lambda ()
+				  (interactive)
+				  (split-window-right) 
+				  (balance-windows)))
+    ("b" "Create below" (lambda ()
+				  (interactive)
+				  (delete-window)
+				  (split-window-below)))
+    ("q" "Close current window" (lambda ()
+				  (interactive)
+				  (delete-window) 
+				  (balance-windows)))
+    ("=" "Rebalance window sizes" balance-windows)
     ]
    [
     "󰏘 Visual settings"
@@ -1266,17 +1288,10 @@ Handles both regular buffers and org-roam capture buffers."
     ]
    [
     "󱁊 UI tools"
-    ("u" "Open graph UI" (lambda ()
-			    (interactive)
-			    (org-roam-ui-open)
-			    (photon/node)
-			    (run-with-timer 1 nil (lambda () (execute-kbd-macro "<escape>")))))
+    ("u" "Open graph UI" org-roam-ui-open :transient t)
     ("d" "Select graph tag" photon-orui-selected-tag)
     ]
    ])
-
-(defvar photon-keymap (make-keymap)
-  "Keymap for Photon general bindings")
 
 (define-minor-mode photon-mode
   "Minor mode for my personal keybindings."
