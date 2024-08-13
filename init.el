@@ -47,6 +47,8 @@
                "sys/var/"
 	       "sys/persp/"
 	       "sys/trash/"
+	       "sys/packages/"
+	       "sys/custom-packages/"
                "org-roam/"
   	       "org-roam/quicknotes/"
                "snippets/"
@@ -111,7 +113,7 @@
 	(with-temp-buffer
           (insert-file-contents var-file)
           (let ((loaded-value (read (current-buffer))))
-            (setq name loaded-value))))))
+            (set name loaded-value))))))
 
 (recentf-mode t)
 (setq recentf-save-file (concat photon-dir "sys/recentf"))
@@ -286,10 +288,18 @@
 ;;  		  (unless (file-exists-p "~/.gitconfig")
 ;;  		    (f-symlink (concat photon-dir "keychain/.gitconfig") "~/.gitconfig")))))
 
-(use-package tree-sitter
-  :defer t)
-(use-package tree-sitter-langs
-  :defer t)
+;;  (use-package tree-sitter
+;;    :defer t)
+;;  (use-package tree-sitter-langs
+;;    :defer t)
+
+(use-package treesit-auto
+  :init
+  (treesit-auto-install-all)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
+
 (add-hook 'rustic-mode-hook #'tree-sitter-hl-mode)
 
 ;; (use-package auctex
@@ -660,13 +670,15 @@
   "Hook function for photon-org-typst-mode."
   (add-hook 'post-command-hook #'photon-org-typst-convert nil t)
   (add-hook 'post-command-hook #'latex-to-typst nil t)
-  (add-hook 'before-save-hook #'typst-to-latex-all nil t))
+  (add-hook 'before-save-hook #'typst-to-latex-all nil t)
+  (add-hook 'before-save-hook #'photon-typst-cache-backup nil t))
 
 (defun photon-org-typst-hooks--rm ()
   "Hook removal function for photon-org-typst-mode."
   (remove-hook 'post-command-hook #'photon-org-typst-convert t)
   (remove-hook 'post-command-hook #'latex-to-typst t)
-  (remove-hook 'before-save-hook #'typst-to-latex-all t))
+  (remove-hook 'before-save-hook #'typst-to-latex-all t)
+  (remove-hook 'before-save-hook #'photon-typst-cache-backup t))
 
 (define-minor-mode photon-org-typst-mode
   "Minor mode to manage Typst as a math input system in Org-mode."
@@ -677,17 +689,19 @@
     ))
 
 (defvar photon-typst-cache nil
-    "Cache for storing string pairs associated with filenames.")
+  "Cache for storing string pairs associated with filenames.")
 
-  (defun add-to-typst-cache (string1 string2)
-    "Add a string pair to the `photon-typst-cache` for the current buffer's filename."
-    (let ((filename (buffer-file-name)))
-      (when filename
-        (let* ((existing-entry (assoc filename photon-typst-cache))
-               (new-pair (cons string1 string2)))
-          (if existing-entry
-              (setcdr existing-entry (append (cdr existing-entry) (list new-pair)))
-            (push (cons filename (list new-pair)) photon-typst-cache))))))
+(photon-loadvar 'photon-typst-cache)
+
+(defun add-to-typst-cache (string1 string2)
+  "Add a string pair to the `photon-typst-cache` for the current buffer's filename."
+  (let ((filename (buffer-file-name)))
+    (when filename
+      (let* ((existing-entry (assoc filename photon-typst-cache))
+             (new-pair (cons string1 string2)))
+        (if existing-entry
+            (setcdr existing-entry (append (cdr existing-entry) (list new-pair)))
+          (push (cons filename (list new-pair)) photon-typst-cache))))))
 
 (defun search-typst-cache (search-term &optional search-cdr)
   "Search the `photon-typst-cache` for the current buffer's filename and search term.
@@ -699,10 +713,14 @@ Otherwise, search the car of the pairs and return the cdr."
       (let ((entry (assoc filename photon-typst-cache)))
         (when entry
           (let ((pairs (cdr entry))
-                (escaped-search-term (regexp-quote search-term))) ; Escape special chars
+                (escaped-search-term (regexp-quote search-term)))
             (if search-cdr
                 (car (cl-find-if (lambda (pair) (string-match escaped-search-term (cdr pair))) pairs))
               (cdr (cl-find-if (lambda (pair) (string-match escaped-search-term (car pair))) pairs)))))))))
+
+(defun photon-typst-cache-backup ()
+  (interactive)
+  (photon-defvar photon-typst-cache photon-typst-cache))
 
 (use-package org-roam
   :commands
@@ -961,7 +979,7 @@ Handles both regular buffers and org-roam capture buffers."
     	 nodes)
         nodes)))
 
-  (advice-add 'org-roam-ui--get-nodes :override #'photon-orui--get-nodes)
+  (advice-add 'org-roam-ui--get-nodes :override #'photon-orui--get-nodes))
 
   (defun photon-orui-current-tag ()
     (interactive)
@@ -1009,11 +1027,11 @@ Handles both regular buffers and org-roam capture buffers."
   :custom
   (gptel-model "gemini-1.5-pro-latest")
   (gptel-default-mode 'org-mode)
-  (gptel--system-message "")
   :config
   (setq gptel-backend (gptel-make-gemini "Gemini"
-		   :key (get-gemini-key)
-		   :stream t)))
+			:key (get-gemini-key)
+			:stream t))
+  (setq gptel--system-message ""))
 
 (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
 (setq org-confirm-babel-evaluate nil)
@@ -1364,3 +1382,15 @@ Handles both regular buffers and org-roam capture buffers."
   (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/window))
 
 (setq gc-cons-threshold (expt 2 23))
+
+(unless (file-exists-p (concat photon-dir "custom.el"))
+  (write-region "" nil (concat photon-dir "custom.el")))
+
+(unless (equal (with-temp-buffer
+		 (insert-file-contents (concat photon-dir "custom.el"))
+		 (string-trim (buffer-string))) "")
+  (progn
+    (add-to-list 'load-path (concat photon-dir "sys/packages"))
+    (add-to-list 'load-path (concat photon-dir "sys/custom-packages"))
+    (setq package-user-dir (concat photon-dir "sys/packages"))
+    (load-file (concat photon-dir "custom.el"))))

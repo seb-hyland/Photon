@@ -70,6 +70,7 @@
   - [[#transients][Transients]]
   - [[#photon-keymap][Photon keymap]]
   - [[#reset-garbage-collection][Reset Garbage collection]]
+  - [[#load-custom-file][Load Custom file]]
 
 * Setup use-package
 Set up the MELPA, ELPA, and Org package archives, as well as the add-ons folder
@@ -136,6 +137,8 @@ Define Photon directories and create them
                  "sys/var/"
   	       "sys/persp/"
   	       "sys/trash/"
+  	       "sys/packages/"
+  	       "sys/custom-packages/"
                  "org-roam/"
     	       "org-roam/quicknotes/"
                  "snippets/"
@@ -210,7 +213,7 @@ Define persistant variables
   	(with-temp-buffer
             (insert-file-contents var-file)
             (let ((loaded-value (read (current-buffer))))
-              (setq name loaded-value))))))
+              (set name loaded-value))))))
 #+end_src
 
 recentf
@@ -435,10 +438,18 @@ Set up .gitconfig
 ** Treesitter
 Set up tree-sitter integration
 #+BEGIN_SRC emacs-lisp
-  (use-package tree-sitter
-    :defer t)
-  (use-package tree-sitter-langs
-    :defer t)
+  ;;  (use-package tree-sitter
+  ;;    :defer t)
+  ;;  (use-package tree-sitter-langs
+  ;;    :defer t)
+
+  (use-package treesit-auto
+    :init
+    (treesit-auto-install-all)
+    :config
+    (treesit-auto-add-to-auto-mode-alist 'all)
+    (global-treesit-auto-mode))
+
   (add-hook 'rustic-mode-hook #'tree-sitter-hl-mode)
 #+END_SRC
 
@@ -926,13 +937,15 @@ Set up bracket colouring in programming buffers
     "Hook function for photon-org-typst-mode."
     (add-hook 'post-command-hook #'photon-org-typst-convert nil t)
     (add-hook 'post-command-hook #'latex-to-typst nil t)
-    (add-hook 'before-save-hook #'typst-to-latex-all nil t))
+    (add-hook 'before-save-hook #'typst-to-latex-all nil t)
+    (add-hook 'before-save-hook #'photon-typst-cache-backup nil t))
 
   (defun photon-org-typst-hooks--rm ()
     "Hook removal function for photon-org-typst-mode."
     (remove-hook 'post-command-hook #'photon-org-typst-convert t)
     (remove-hook 'post-command-hook #'latex-to-typst t)
-    (remove-hook 'before-save-hook #'typst-to-latex-all t))
+    (remove-hook 'before-save-hook #'typst-to-latex-all t)
+    (remove-hook 'before-save-hook #'photon-typst-cache-backup t))
 
   (define-minor-mode photon-org-typst-mode
     "Minor mode to manage Typst as a math input system in Org-mode."
@@ -947,6 +960,8 @@ Set up bracket colouring in programming buffers
   (defvar photon-typst-cache nil
     "Cache for storing string pairs associated with filenames.")
 
+  (photon-loadvar 'photon-typst-cache)
+
   (defun add-to-typst-cache (string1 string2)
     "Add a string pair to the `photon-typst-cache` for the current buffer's filename."
     (let ((filename (buffer-file-name)))
@@ -957,20 +972,24 @@ Set up bracket colouring in programming buffers
               (setcdr existing-entry (append (cdr existing-entry) (list new-pair)))
             (push (cons filename (list new-pair)) photon-typst-cache))))))
 
-(defun search-typst-cache (search-term &optional search-cdr)
-  "Search the `photon-typst-cache` for the current buffer's filename and search term.
-Returns the complementary string of the matching pair.
-If `search-cdr` is non-nil, search the cdr of the pairs and return the car.
-Otherwise, search the car of the pairs and return the cdr."
-  (let ((filename (buffer-file-name)))
-    (when filename
-      (let ((entry (assoc filename photon-typst-cache)))
-        (when entry
-          (let ((pairs (cdr entry))
-                (escaped-search-term (regexp-quote search-term))) ; Escape special chars
-            (if search-cdr
-                (car (cl-find-if (lambda (pair) (string-match escaped-search-term (cdr pair))) pairs))
-              (cdr (cl-find-if (lambda (pair) (string-match escaped-search-term (car pair))) pairs)))))))))
+  (defun search-typst-cache (search-term &optional search-cdr)
+    "Search the `photon-typst-cache` for the current buffer's filename and search term.
+  Returns the complementary string of the matching pair.
+  If `search-cdr` is non-nil, search the cdr of the pairs and return the car.
+  Otherwise, search the car of the pairs and return the cdr."
+    (let ((filename (buffer-file-name)))
+      (when filename
+        (let ((entry (assoc filename photon-typst-cache)))
+          (when entry
+            (let ((pairs (cdr entry))
+                  (escaped-search-term (regexp-quote search-term)))
+              (if search-cdr
+                  (car (cl-find-if (lambda (pair) (string-match escaped-search-term (cdr pair))) pairs))
+                (cdr (cl-find-if (lambda (pair) (string-match escaped-search-term (car pair))) pairs)))))))))
+
+  (defun photon-typst-cache-backup ()
+    (interactive)
+    (photon-defvar photon-typst-cache photon-typst-cache))
 #+end_src
 
 
@@ -1252,7 +1271,7 @@ Otherwise, search the car of the pairs and return the cdr."
     	 nodes)
         nodes)))
 
-  (advice-add 'org-roam-ui--get-nodes :override #'photon-orui--get-nodes)
+  (advice-add 'org-roam-ui--get-nodes :override #'photon-orui--get-nodes))
 
   (defun photon-orui-current-tag ()
     (interactive)
@@ -1292,27 +1311,27 @@ Otherwise, search the car of the pairs and return the cdr."
 
 ** GPTel
 #+BEGIN_SRC emacs-lisp
-    (unless (file-exists-p (concat photon-dir "keychain/gemini"))
-      (write-region "" nil (concat photon-dir "keychain/gemini")))
+  (unless (file-exists-p (concat photon-dir "keychain/gemini"))
+    (write-region "" nil (concat photon-dir "keychain/gemini")))
 
-    (defun get-gemini-key ()
-      (with-temp-buffer
-        (insert-file-contents (concat photon-dir "keychain/gemini"))
-        (string-trim (buffer-string))))
+  (defun get-gemini-key ()
+    (with-temp-buffer
+      (insert-file-contents (concat photon-dir "keychain/gemini"))
+      (string-trim (buffer-string))))
 
-    (use-package gptel
-      :defer t
-      :commands
-      (gptel
-       gptel-menu) 
-      :custom
-      (gptel-model "gemini-1.5-pro-latest")
-      (gptel-default-mode 'org-mode)
-      (gptel--system-message "")
-      :config
-      (setq gptel-backend (gptel-make-gemini "Gemini"
-    		   :key (get-gemini-key)
-    		   :stream t)))
+  (use-package gptel
+    :defer t
+    :commands
+    (gptel
+     gptel-menu) 
+    :custom
+    (gptel-model "gemini-1.5-pro-latest")
+    (gptel-default-mode 'org-mode)
+    :config
+    (setq gptel-backend (gptel-make-gemini "Gemini"
+  			:key (get-gemini-key)
+  			:stream t))
+    (setq gptel--system-message ""))
 #+END_SRC
 
 
@@ -1693,4 +1712,20 @@ Otherwise, search the car of the pairs and return the cdr."
 ** Reset Garbage collection
 #+BEGIN_SRC emacs-lisp
   (setq gc-cons-threshold (expt 2 23))
-#+END_SRC
+#+end_src
+
+
+** Load Custom file
+#+begin_src emacs-lisp
+  (unless (file-exists-p (concat photon-dir "custom.el"))
+    (write-region "" nil (concat photon-dir "custom.el")))
+
+  (unless (equal (with-temp-buffer
+  		 (insert-file-contents (concat photon-dir "custom.el"))
+  		 (string-trim (buffer-string))) "")
+    (progn
+      (add-to-list 'load-path (concat photon-dir "sys/packages"))
+      (add-to-list 'load-path (concat photon-dir "sys/custom-packages"))
+      (setq package-user-dir (concat photon-dir "sys/packages"))
+      (load-file (concat photon-dir "custom.el"))))
+#+end_src

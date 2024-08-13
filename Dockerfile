@@ -195,8 +195,8 @@
     COPY init.el /root/.emacs.d/init.el
     COPY add-ons /root/.emacs.d/add-ons
     COPY snippets /root/.emacs.d/snippets-core/
-    COPY add-ons/elpa-tree-sitter/tree-sitter-20220212.1632 /root/.emacs.d/elpa/tree-sitter-20220212.1632
-    COPY add-ons/elpa-tree-sitter/tsc-20220212.1632 /root/.emacs.d/elpa/tsc-20220212.1632
+#    COPY add-ons/elpa-tree-sitter/tree-sitter-20220212.1632 /root/.emacs.d/elpa/tree-sitter-20220212.1632
+#    COPY add-ons/elpa-tree-sitter/tsc-20220212.1632 /root/.emacs.d/elpa/tsc-20220212.1632
     COPY config.fish /root/.config/fish/config.fish
     COPY starship.toml /root/.config/starship.toml
     COPY dictionaries/en_CA.aff /root/.config/enchant/nuspell/en_CA.aff
