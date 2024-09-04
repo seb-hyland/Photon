@@ -51,7 +51,7 @@
      RUN ./autogen.sh \
       && ./configure \
     --prefix=/opt/emacs \
-    --with-json --with-native-compilation=aot --with-xwidgets --with-pgtk \
+    --with-native-compilation=aot --with-xwidgets --with-pgtk \
     'CFLAGS=-O2' \
     'LDFLAGS=-Wl,--as-needed,-O1,--sort-common -Wl,-z,pack-relative-relocs' \
      && make NATIVE_FULL_AOT=1 -j$(nproc) \
@@ -151,22 +151,6 @@
     python3 \
     py3-pip \
     octave 
-    #    rust \
-    #    cargo \
-    #    rustfmt \
-    #    rust-analyzer \
-    #    alpine-sdk \
-    ##   webkit2gtk-dev \
-    #    openssl-dev \
-    #    file \
-    #    gtk+3.0-dev \
-    #    libayatana-appindicator-dev \
-    #    librsvg-dev \
-    #    vips-dev
-    #
-    #RUN apk add tauri-cli --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing/
-    #RUN apk add libappindicator-dev --repository=http://dl-cdn.alpinelinux.org/alpine/v3.17/community/
-
 
     RUN \
     apk add --no-cache \
@@ -195,8 +179,6 @@
     COPY init.el /root/.emacs.d/init.el
     COPY add-ons /root/.emacs.d/add-ons
     COPY snippets /root/.emacs.d/snippets-core/
-#    COPY add-ons/elpa-tree-sitter/tree-sitter-20220212.1632 /root/.emacs.d/elpa/tree-sitter-20220212.1632
-#    COPY add-ons/elpa-tree-sitter/tsc-20220212.1632 /root/.emacs.d/elpa/tsc-20220212.1632
     COPY config.fish /root/.config/fish/config.fish
     COPY starship.toml /root/.config/starship.toml
     COPY dictionaries/en_CA.aff /root/.config/enchant/nuspell/en_CA.aff

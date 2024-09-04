@@ -257,9 +257,7 @@
     	 ("<escape>" . transient-quit-all)))
 
 (defun ssh-available-p ()
-  (if (file-directory-p (concat photon-dir "keychain/.ssh"))
-      t
-    nil))
+  (file-directory-p (concat photon-dir "keychain/.ssh")))
 
 (defvar ssh-setup-status nil)
 
@@ -288,19 +286,12 @@
 ;;  		  (unless (file-exists-p "~/.gitconfig")
 ;;  		    (f-symlink (concat photon-dir "keychain/.gitconfig") "~/.gitconfig")))))
 
-;;  (use-package tree-sitter
-;;    :defer t)
-;;  (use-package tree-sitter-langs
-;;    :defer t)
-
 (use-package treesit-auto
   :init
   (treesit-auto-install-all)
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
-
-(add-hook 'rustic-mode-hook #'tree-sitter-hl-mode)
 
 ;; (use-package auctex
 ;;   :defer t
@@ -309,21 +300,24 @@
 ;; ;; (add-hook 'org-mode-hook (lambda () (org-auctex-mode 1)))
 ;; (setq preview-auto-cache-preamble t)
 
-(use-package yasnippet
-  :custom
-  (yas-snippet-dirs (list (concat photon-dir "snippets")))
-  :config
-  (yas-global-mode t)
-  (append yas-snippet-dirs '("/root/.emacs.d/snippets-core/")))
+(use-package tempel
+  :bind (
+	 :map tempel-map
+	 ("<remap> <photon-C-j>" . tempel-next)
+	 ("<remap> <photon-C-k>" . tempel-previous)))
 
 (use-package vterm
   :defer t
-  :load-path "~/.emacs.d/vterm")
+  :load-path "~/.emacs.d/vterm"
+  :bind (
+	 :map vterm-mode-map
+	 ("<normal-state> SPC" . photon/main))
+  :custom
+  (vterm-shell "fish"))
 
 (use-package vterm-toggle
   :custom
   (vterm-toggle-fullscreen-p nil)
-  (vterm-shell "fish")
   :config
   (add-to-list 'display-buffer-alist
 	       '((lambda (buffer-or-name _)
@@ -350,7 +344,8 @@
     (persp-state-save persp-file)))
 
 (add-hook 'kill-emacs-hook (lambda ()
-           		     (photon-persp-save (concat "autosave-" (format-time-string "%I:%M:%S%p-%d-%m-%Y")))))
+           		     (photon-persp-save (concat "autosave-" (format-time-string "%I:%M:%S%p-%d-%m-%Y")))
+			     (photon-persp-cleanup)))
 
 (defun photon-persp-load (filename)
   (if (file-exists-p filename)
@@ -434,10 +429,12 @@
   (nerd-icons-completion-mode)
   (nerd-icons-completion-marginalia-setup))
 
+;;  (eval-after-load 'dired
+;;    '(progn
+;;       (use-package joseph-single-dired
+;;         :load-path addons-dir)))
 (eval-after-load 'dired
-  '(progn
-     (use-package joseph-single-dired
-       :load-path addons-dir)))
+  (setq dired-kill-when-opening-new-dired-buffer t))
 
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 
@@ -449,11 +446,32 @@
   ;; doom-themes-enable-italic t)
   ;; (doom-themes-visual-bell-config))
 
-(use-package doom-nano-modeline
-  :demand t
-  :load-path addons-dir
+(use-package photon-modeline
+  :vc (:url "https://github.com/seb-hyland/photon-modeline.git")
   :config
-  (doom-nano-modeline-mode t))
+  (photon-modeline-mode t)
+  :custom
+  (photon-modeline--buffer-transform-function
+   (lambda ()
+     (cond
+      ((org-roam-buffer-p) (concat (org-get-title) " <" (car (org-roam-node-tags (org-roam-node-at-point))) ">"))
+      ((derived-mode-p 'dired-mode) default-directory)
+      )))
+  (photon-modeline--minibuffer-transform-function
+   (lambda (command)
+     (cond ((equal command "photon-find-file") "Open file...")
+  	   ((equal command "persp-switch-to-buffer*") (concat "Switch to buffer... [" (persp-current-name) "]"))
+  	   ((equal command "persp-switch") "Switch perspective...")
+  	   ((equal command "photon-nf") "Find node...")
+	   ((equal command "ctrlf-forward-default") (concat "Finding: \"" (if (minibufferp) (minibuffer-contents)) "\""))
+	   ))))
+
+(use-package dimmer
+  :custom
+  (dimmer-fraction 0.35)
+  :config
+  (add-to-list 'dimmer-buffer-exclusion-regexps "\\*transient\\*")
+  (dimmer-mode))
 
 (use-package hide-mode-line
   :demand t
@@ -481,54 +499,53 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (defun org-font-setup ()
-  (interactive)
-  "Customizes Org mode fonts for headings and list hyphens."
-  ;; Replace list hyphen with dot
-  (font-lock-add-keywords 'org-mode
-			  '(("^ *\\([-]\\) "
-			     (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
-  (dolist (face '((org-level-1 . 1.9)
-		  (org-level-2 . 1.6)
-		  (org-level-3 . 1.35)
-		  (org-level-4 . 1.15)
-		  (org-level-5 . 1.1)
-		  (org-level-6 . 1.1)
-		  (org-level-7 . 1.1)
-		  (org-level-8 . 1.1)
-		  (org-document-title . 2.3)
-		  (org-document-info . 1.5)
-		  (org-meta-line . 1.15)))
-    (set-face-attribute (car face) nil :height (cdr face)))
+    (interactive)
+    "Customizes Org mode fonts for headings and list hyphens."
+    (dolist (face '((org-level-1 . 1.9)
+  		  (org-level-2 . 1.6)
+  		  (org-level-3 . 1.35)
+  		  (org-level-4 . 1.15)
+  		  (org-level-5 . 1.1)
+  		  (org-level-6 . 1.1)
+  		  (org-level-7 . 1.1)
+  		  (org-level-8 . 1.1)
+  		  (org-document-title . 2.3)
+  		  (org-document-info . 1.5)
+  		  (org-meta-line . 1.15)))
+      (set-face-attribute (car face) nil :height (cdr face)))
 
-  (dolist (face '((org-level-1)
-		  (org-level-2)
-		  (org-document-title)
-		  ))
-    (set-face-attribute (car face) nil :weight 'extrabold))
+    (dolist (face '((org-level-1)
+  		  (org-level-2)
+  		  (org-document-title)
+  		  ))
+      (set-face-attribute (car face) nil :weight 'extrabold))
 
-  (dolist (face '((org-level-3)
-		  (org-level-4)
-		  (org-document-info)
-		  ))
-    (set-face-attribute (car face) nil :weight 'bold))
+    (dolist (face '((org-level-3)
+  		  (org-level-4)
+  		  (org-document-info)
+  		  ))
+      (set-face-attribute (car face) nil :weight 'bold))
 
-  (dolist (face '((org-level-5)
-		  (org-level-6)
-		  (org-level-7)
-		  (org-level-8)
-		  (org-meta-line)
-		  ))
-    (set-face-attribute (car face) nil :weight 'medium))
+    (dolist (face '((org-level-5)
+  		  (org-level-6)
+  		  (org-level-7)
+  		  (org-level-8)
+  		  (org-meta-line)
+  		  ))
+      (set-face-attribute (car face) nil :weight 'medium))
 
-  (set-face-attribute 'org-block nil :family "Liga SFMono Nerd Font")
-  (set-face-attribute 'org-table nil :family "Liga SFMono Nerd Font")
-  (set-face-attribute 'org-code nil :family "Liga SFMono Nerd Font"))
+(dolist (face '((org-block)
+  (org-table)
+  (org-code)
+  (org-block-begin-line)
+  (org-block-end-line)))
+  (set-face-attribute (car face) nil :family "Liga SFMono Nerd font")))
 
-(add-hook 'org-mode-hook
-	  (lambda ()
-	    (variable-pitch-mode t)))
-(add-hook 'org-mode-hook 'org-font-setup)
-(set-face-attribute 'variable-pitch nil :family "Lora")
+  (add-hook 'org-mode-hook
+  	  (lambda ()
+  	    (variable-pitch-mode t)))
+  (add-hook 'org-mode-hook 'org-font-setup)
+  (set-face-attribute 'variable-pitch nil :family "Lora")
 
 (use-package org
   :config
@@ -547,7 +564,9 @@
   :init
   (setq org-modern-hide-stars t
 	org-modern-block-fringe 2
-	org-ellipsis "...")
+	org-ellipsis "..."
+	org-modern-table-horizontal 0.1
+	org-modern-table-vertical 4)
   :custom
   (org-catch-invisible-edits 'show-and-error)
   (org-insert-heading-respect-content t)
@@ -1380,6 +1399,57 @@ Handles both regular buffers and org-roam capture buffers."
 (with-eval-after-load 'dired
   (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon/main)
   (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/window))
+
+(define-minor-mode photon-tutorial-mode
+    "A minor mode to provide a navigation header to tutorial files."
+    :global nil
+    (if photon-tutorial-mode
+        (photon-tutorial-mode-on)
+      (photon-tutorial-mode-off)))
+
+  (defun photon-tutorial-mode-on ()
+    (setq header-line-format (format-mode-line photon-tutorial-header-format)))
+
+  (defun photon-tutorial-mode-off ()
+    (setq header-line-format nil))
+
+  (defun photon-tutorial-prev-file ()
+    (let* ((base (file-name-base (buffer-file-name)))
+    	 (num (string-to-number (car (string-split base "-"))))
+    	 (prev-num (- num 1))
+    	 (prev-file (car (find-lisp-find-files (file-name-directory (buffer-file-name)) (concat (prin1-to-string prev-num) "-")))))
+      (if (file-exists-p prev-file)
+    	prev-file
+        nil)))
+
+  (defun photon-tutorial-next-file ()
+    (let* ((base (file-name-base (buffer-file-name)))
+    	 (num (string-to-number (car (string-split base "-"))))
+    	 (next-num (+ num 1))
+    	 (next-file (car (find-lisp-find-files (file-name-directory (buffer-file-name)) (concat (prin1-to-string next-num) "-")))))
+      (if (file-exists-p next-file)
+    	next-file
+        nil)))
+
+(defun photon-tutorial-count-files ()
+  (let ((count -2))
+    (dolist (file (directory-files (file-name-directory (buffer-file-name))))
+      (setq count (1+ count)))
+    count))
+    
+(defvar photon-tutorial-header-format
+  '("  "
+    (:eval (if (photon-tutorial-prev-file) (propertize (buttonize " Previous" (lambda (&rest _) (interactive) (find-file (photon-tutorial-prev-file)))) 'face 'link 'mouse-face 'highlight 'help-echo "Go to previous file")))
+    (:eval (propertize " " 'display '(space :align-to (- center 3))))
+    (:eval (propertize (concat "[" (car (string-split (file-name-base (buffer-file-name)) "-")) "/" (prin1-to-string (photon-tutorial-count-files)) "]") 'face 'bold))
+    (:eval (propertize " " 'display '(space :align-to (- right 8))))
+    (:eval (if (photon-tutorial-next-file) (propertize (buttonize "Next " (lambda (&rest _) (interactive) (find-file (photon-tutorial-next-file)))) 'face 'link 'mouse-face 'highlight 'help-echo "Go to next file")))))
+
+  (defun photon-tutorial-setup ()
+  (org-mode)
+  (photon-tutorial-mode t))
+
+  (add-to-list 'auto-mode-alist '("\\.tutorial\\'" . photon-tutorial-setup))
 
 (setq gc-cons-threshold (expt 2 23))
 

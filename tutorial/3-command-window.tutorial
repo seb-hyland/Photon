@@ -1,0 +1,145 @@
+
+#+TITLE: The Photon Command Window
+#+SUBTITLE: Tutorial
+
+
+* A minimalist approach to complex commands
+You probably noticed by now that the Photon user interface is extremely simple and minimalistic, without any toolbars or menus to click on. This is because every command in Photon is carried out through a set of key presses rather than mouse clicks. However, Photon keychords are really quite intuitive, and this section of the tutorial will go over practical keychords that you will be using often, such as saving files, opening files, splitting your screen to open multiple files at once, etc.
+
+* The command window
+In Photon, ~<CTRL-SPACE>~ or ~<SPACE>~ open a command window which displays a menu of all available commands. ~<CTRL-SPACE>~ works in *every mode*, whereas ~<SPACE>~ works in *Normal and Visual modes, but not Insert mode*. This is because pressing ~<SPACE>~ obviously adds a space when you are editing text. To close the command window and cancel a key sequence, you can simply press ~<ESCAPE>~.
+
+*Note*: In this tutorial, I will usually describe keychords with ~<SPC [some key] [some key]...>~, where ~<SPC>~ is a shortened form of ~<SPACE>~. This is purely for simplicity's sake; both ~<SPACE>~ and ~<CTRL-SPACE>~ can be used to open the command menu.
+
+*Try it out!*
+#+begin_src
+
+Ensure that you are in normal mode. Press <SPC> and notice the command window that pops up. This window contains short descriptions for each command along with its corresponding keybind. Some of the commands have a 󰁣 symbol before the description; this reminds the user that the command is bound to an uppercase key (for instance, "Save as..." is bound to S, which requires you to hold the <SHIFT> key).
+
+On the right of the menu, there is a section called "Keybind sets". Try pressing <w>, which opens the "Window settings..." set. Note that this opens a new submenu for commands specific to window management. Due to the depth of Photon's functionality, many advanced commands are nested within one of these "Keybind sets."
+
+Press <ESCAPE> now to close the window without executing a command.
+
+#+end_src
+
+Let's now work through some more concrete examples to better understand the common commands that you will use in Photon.
+
+
+
+* [Example]: Saving a file
+
+#+begin_quote
+/"While any text editor can save your files, only Emacs can save your soul."/
+
+Forgotten cultist,
+Church of rms
+#+end_quote
+
+
+To save a file, press ~<SPC s>~.
+
+*Try it out!*
+#+begin_src
+
+Enter Insert mode by pressing <i>, then add some text to the line below. Notice that the buffer name in the top left becomes pink with two stars. Press <ESCAPE> to return to Normal mode. Now press <SPC s>. Notice that the buffer name returns to normal, signalling that the file's current state has been saved.
+-----> Add some text here:     <-----
+
+Now, add some text below, and try to save while in insert mode with <CTRL-SPC s>.
+-----> Add some text here:     <-----
+
+#+end_src
+
+
+
+* [Example]: Finding words in a document
+~<SPC f>~ is the Photon equivalent to the "find text" function in other applications (typically ~<CTRL-f>~).
+
+In Photon, some commands are interactive (i.e., they accept input). These commands use a small window at the bottom of your screen called the *minibuffer*. ~<SPC f>~ is one of these commands.
+
+*Try it out!*
+#+begin_src
+
+Press <SPC f> or <CTRL-SPC f>. Notice how a minibuffer window appears at the bottom of the screen with a list of possible options.
+
+Let's imagine we were searching a document for all instances of the word "watermelon".
+
+Let's type in <wat>, the first few letters. Notice how we are presented in the minibuffer with multiple instances. You can navigate between the possible options by using <CTRL-k> and <CTRL-j>. Note the common theme: <h/j/k/l> with various modifier keys are used for movement throughout Photon!
+
+Try moving between the different instances of "watermelon" using <CTRL-k> and <CTRL-j>, then selecting a desired option with <ENTER>. Your cursor will jump to the selected option.
+
+-----> Watermelon! <-----
+
+Open up the find menu again with <SPC f>. Type in <wat> again and rotate through some of the options, then press <ESCAPE>. Note that this quits the command, and returns your cursor to its original location instead of jumping to one of the options. <ESCAPE> will always quit commands that require minibuffer input.
+
+#+end_src
+
+
+Photon also has another powerful search feature: it can search all the documents in a folder! This works quite similarly to ~<SPC f>~, but is instead bound to the uppercase (~<SPC F>~). Executing this command will search all files within the working directory (e.g., if you are currently working on a file in your Downloads folder, ~<SPC F>~ will search ALL files in your Downloads folder).
+
+*Try it out!*
+#+begin_src
+
+Execute <SPC F>. Note that it requires a search string that is minimum 3 characters in length. Type "fin" and notice that results display the file in which the string was found, the line where the string is located, and a brief preview of the line.
+
+Pressing <ENTER> would open the file at that line, but let's press <ESC> to cancel the search.
+  
+#+end_src
+
+
+
+* [Example]: Multiple windows 
+Photon has the ability to split its frame into multiple windows displaying different information. The keybinding set ~<SPC w>~ deals with window management.
+
+As well, the movement commands ~<ALT-h/j/k/l>~ moves the cursor focus across windows. This is often faster than using the mouse to move between windows!
+/Note: on Mac, use OPTION instead of ALT/.
+
+*Try it out!*
+#+begin_src
+
+Press <SPC w>, and briefly look over the available commands.
+
+Let's create a frame to the right of the current. If you are already in the <SPC w> menu, press <r> to do so. Notice how by default, the new window opens displaying the same buffer that you are currently working in. If you want, make an edit to the line below; note that the buffer in the right will update in real time.
+
+----->                    <-----
+
+Now, let's move the cursor over to that buffer. Although you can click your mouse to move between windows, let's use a keybinding! <ALT l> will move the cursor right, towards the new window. Note that the currently active window auto-zooms to occupy more space in the frame.
+
+Let's now close this new window. This can be done with <SPC w q>, the command to close the currently active window. Note: this command will not do anything if there is only one window open.
+
+#+end_src
+
+
+* [Example]: Opening files
+
+** A note on the Photon filesystem
+Photon runs in a container separate from the rest of your device's filesystem. However, your home folder has been mounted to ~/Local/~ in the container. Thus, a file called ~foo.txt~ in your ~Downloads~ folder, for instance, can be found at ~/Local/Downloads/foo.txt~ in Photon. Similarly, a file named ~bar.org~ in your ~Documents~ folder can be found at ~/Local/Documents/bar.org~.
+
+** The open file command
+The ~<SPC o>~ command opens a minibuffer prompt to open a file; it usually has the directory of the current file already inputted. To understand the ways that this command makes it easy to find and open files, let's try an example.
+
+*Try it out!*
+#+begin_src
+
+Let's work in a new window so that the tutorial remains visible. Create a window to the right with <SPC w r> and activate it with <ALT-l>.
+
+Press <SPC o> and note that a minibuffer prompt opens, with an initial input of "/Local/" and a list of all files/folders inside your home directory. Remember that you can use <CTRL-j> and <CTRL-k> to navigate the selections; look for familiar folders like "Downloads", "Documents", etc.
+
+Begin typing "downl" and notice that the available selections filter. You should see your "Downloads" folder as an available option. If it is not already highlighted, move the selection to this folder by using <CTRL-j>/<CTRL-k>. Press <TAB>, and notice that the input now includes this directory ("/Local/Downloads/") and you can see the files in your Downloads folder. Now, press <Backspace>, and notice that the current directory shifts back one level ("/Local/").
+
+#+end_src
+
+Let's recap the keybinds available for the find-file command:
+|-----------+------------------------------|
+| Keybind   | Function                     |
+|-----------+------------------------------|
+| TAB       | Move into selected folder    |
+| BACKSPACE | Move backward one directory  |
+| ENTER     | Open selected file or folder |
+|-----------+------------------------------|
+
+
+|------------|
+| [[file:1.3.org][Next >]]     |
+|------------|
+| [[file:1.1.org][< Previous]] |
+|------------|
