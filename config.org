@@ -39,7 +39,7 @@
   - [[#zoom][Zoom]]
   - [[#expand-region][Expand-region]]
   - [[#find-and-replace][Find and replace]]
-  - [[#good-scroll][Good-scroll]]
+  - [[#improved-scrolling][Improved scrolling]]
 - [[#visual-packages][Visual packages]]
   - [[#autothemer][Autothemer]]
   - [[#nerd-icons-and-all-the-icons][Nerd-Icons and All-The-Icons]]
@@ -299,24 +299,80 @@ Expansion packages
     :bind (
     	 :map corfu-map
     	 ("<remap> <photon-C-j>" . corfu-next)
-    	 ("<remap> <photon-C-k>" . corfu-previous))
+    	 ("<remap> <photon-C-k>" . corfu-previous)
+  	 ("RET" . nil))
     :custom
     (corfu-auto t)
     (corfu-auto-delay 0.1)
-    (corfu-auto-prefix 2))
+    (corfu-auto-prefix 2)
+    (completion-ignore-case t))
+
+  (use-package corfu-candidate-overlay
+    :bind (
+  	 :map org-mode-map
+  	 ("TAB" . photon-tab))
+    :config
+    (corfu-candidate-overlay-mode t)
+    (advice-add 'corfu-candidate-overlay--show :override #'photon-corfu-overlay-show))
 
   (defun photon-completion--check ()
     "Check if photon completion should be active."
     (interactive)
     (when-let ((file-name (buffer-file-name)))
-      (if (or (string-match-p (regexp-quote org-roam-directory) file-name)
-              (org-roam-capture-p))
+      (if (and (or (string-match-p (regexp-quote org-roam-directory) file-name)
+  		 (org-roam-capture-p))
+  	     (not (string-match-p (car (org-roam-node-tags (org-roam-node-at-point))) "quicknotes")))
           (progn
-            (corfu-mode t)
+  	  (setq-local corfu-auto nil)
             (setq-local completion-at-point-functions '(photon-completion))
-  	  (photon-orui-current-tag)))))
-
+  	  (photon-orui-current-tag)
+            (corfu-mode t)))))
   (add-hook 'org-mode-hook #'photon-completion--check)
+
+
+  (defun photon-tab ()
+    (interactive)
+    (if (completion-at-point)
+        (completion-at-point)
+      (org-cycle)))
+
+  (defun photon-corfu-overlay-show ()
+    "Overrides `corfu-candidate-overlay--show'. Adds case insensitivity. See the original function for documentation."
+    (let ((value (while-no-input
+  		 (run-hook-wrapped 'completion-at-point-functions #'corfu--capf-wrapper))))
+      (if (not value)
+  	(corfu-candidate-overlay--hide)
+        (pcase value
+  	(`(,fun ,beg ,end ,table . ,plist)
+  	 (let ((completion-in-region-mode-predicate
+  		(lambda ()
+                    (when-let (newbeg (car-safe (funcall fun)))
+                      (= newbeg beg))))
+                 (completion-extra-properties plist))
+             (setq completion-in-region--data
+  		 (list (if (markerp beg) beg (copy-marker beg))
+                         (copy-marker end t)
+                         table
+                         (plist-get plist :predicate)))
+             (when (>= (- end beg) corfu-auto-prefix) 
+               (corfu--update)
+               (if corfu--candidates
+  		 (let* ((candidate           (car corfu--candidates))
+  			(how-many-candidates (length corfu--candidates))
+  			(len                 (- end beg))
+  			(prefix              (buffer-substring-no-properties beg end))
+  			(suffix              (substring candidate len)))
+  		   (if (and
+  			candidate
+  			(not (string= prefix ""))
+  			(string-prefix-p (downcase prefix) (downcase candidate)))
+                         (corfu-candidate-overlay--update
+  			end
+  			prefix
+  			suffix
+  			how-many-candidates)
+                       (corfu-candidate-overlay--hide)))
+                 (corfu-candidate-overlay--hide)))))))))
 #+end_SRC
 
 ** Which-key
@@ -413,8 +469,15 @@ Set up SSH
   		(kill-process "*ssh-setup*")
   		(kill-buffer "*ssh-setup*")))
   	(let ((init-buffer (current-buffer)))
+  	  (unless (file-directory-p "~/.ssh")
+  	    (make-directory "~/.ssh"))
+  	  (dolist (file '("id_ed25519"
+  			  "id_ed25519.pub"
+  			  "known_hosts"))
+  	    (if (file-exists-p (concat photon-dir "keychain/.ssh" file))
+  		(copy-file (concat photon-dir "keychain/.ssh/" file) (concat "~/.ssh/" file) t)))
   	  (shell "*ssh-setup*")
-  	  (process-send-string "*ssh-setup*" (concat "chmod 600 " photon-dir "keychain/.ssh/id_ed25519 && ssh-agent > /dev/null 2>&1 && eval $(ssh-agent) > /dev/null 2>&1 && ssh-add " photon-dir "keychain/.ssh/id_ed25519 \n"))
+  	  (process-send-string "*ssh-setup*" (concat "chmod 600 " "~/.ssh/id_ed25519 && ssh-agent > /dev/null 2>&1 && eval $(ssh-agent) > /dev/null 2>&1 && ssh-add ~/.ssh/id_ed25519 \n"))
   	  (switch-to-buffer init-buffer)
   	  (setq ssh-setup-status t)))))
 
@@ -439,7 +502,9 @@ Set up tree-sitter integration
 #+BEGIN_SRC emacs-lisp
   (use-package treesit-auto
     :init
-    (treesit-auto-install-all)
+  (unless (file-exists-p "~/.emacs.d/tree-sitter/libtree-sitter-java.so")
+    (let ((treesit-auto-install t))
+(treesit-auto-install-all)))
     :config
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
@@ -462,10 +527,21 @@ Set up LaTeX tools
 Set up auto-completions
 #+begin_SRC emacs-lisp
   (use-package tempel
+    :custom
+    (tempel-path "~/.emacs.d/add-ons/templates")
     :bind (
-  	 :map tempel-map
-  	 ("<remap> <photon-C-j>" . tempel-next)
-  	 ("<remap> <photon-C-k>" . tempel-previous)))
+    	 :map tempel-map
+    	 ("<remap> <photon-C-j>" . tempel-next)
+    	 ("TAB" . tempel-next)
+    	 ("<remap> <photon-C-k>" . tempel-previous)
+    	 :map photon-keymap
+    	 ("C-e" . photon-expand)))
+
+  (defun photon-expand ()
+    (interactive)
+    (if (tempel-expand)
+        (tempel-expand t)
+      (tempel-complete t)))
 #+end_SRC
 
 
@@ -601,11 +677,9 @@ Zoom current window
 #+END_SRC
 
 
-** Good-scroll
+** Improved scrolling
 #+begin_SRC emacs-lisp
-  (use-package good-scroll
-    :config
-    (good-scroll-mode t))
+  (pixel-scroll-precision-mode t)
 #+end_SRC
 
 
@@ -668,31 +742,32 @@ Set up Dired file management
 ** Photon Mode-line
 Get and install Photon mode-line from GitHub.
 #+begin_SRC emacs-lisp
-  (use-package photon-modeline
-    :vc (:url "https://github.com/seb-hyland/photon-modeline.git")
-    :config
-    (photon-modeline-mode t)
-    :custom
-    (photon-modeline--buffer-transform-function
-     (lambda ()
-       (cond
-        ((org-roam-buffer-p) (concat (org-get-title) " <" (car (org-roam-node-tags (org-roam-node-at-point))) ">"))
-        ((derived-mode-p 'dired-mode) default-directory)
-        )))
-    (photon-modeline--minibuffer-transform-function
-     (lambda (command)
-       (cond ((equal command "photon-find-file") "Open file...")
-    	   ((equal command "persp-switch-to-buffer*") (concat "Switch to buffer... [" (persp-current-name) "]"))
-    	   ((equal command "persp-switch") "Switch perspective...")
-    	   ((equal command "photon-nf") "Find node...")
-  	   ((equal command "ctrlf-forward-default") (concat "Finding: \"" (if (minibufferp) (minibuffer-contents)) "\""))
-  	   ))))
+  (add-hook 'emacs-startup-hook (lambda () (use-package photon-modeline
+  					      :vc (:url "https://github.com/seb-hyland/photon-modeline.git")
+  					      :config
+  					      (photon-modeline-mode t)
+  					      :custom
+  					      (photon-modeline--buffer-transform-function
+  					       (lambda ()
+  						 (cond
+  						  ((org-roam-buffer-p) (concat (org-get-title) " <" (car (org-roam-node-tags (org-roam-node-at-point))) ">"))
+  						  ((derived-mode-p 'dired-mode) default-directory)
+  						  )))
+  					      (photon-modeline--minibuffer-transform-function
+  					       (lambda (command)
+  						 (cond ((equal command "photon-find-file") "Open file...")
+    						       ((equal command "persp-switch-to-buffer*") (concat "Switch to buffer... [" (persp-current-name) "]"))
+    						       ((equal command "persp-switch") "Switch perspective...")
+    						       ((equal command "photon-nf") "Find node...")
+  						       ((equal command "ctrlf-forward-default") (concat "Finding: \"" (if (minibufferp) (minibuffer-contents)) "\""))
+  						       ))))))
 
   (use-package dimmer
     :custom
-    (dimmer-fraction 0.35)
+    (dimmer-fraction 0.6)
     :config
     (add-to-list 'dimmer-buffer-exclusion-regexps "\\*transient\\*")
+    (add-to-list 'dimmer-buffer-exclusion-regexps "\\*corfu\\*")
     (dimmer-mode))
 
   (use-package hide-mode-line
@@ -868,7 +943,10 @@ Set up bracket colouring in programming buffers
   (setq org-latex-pdf-process
         '("tectonic %f"))
   (use-package math-preview
-    :config (math-preview-start-process))
+    :config (math-preview-start-process)
+    :bind (
+  	 :map math-preview-map
+  	 ("SPC" . nil)))
 #+end_SRC
 
 
@@ -1100,7 +1178,8 @@ Set up bracket colouring in programming buffers
   	  (if (string-match-p "^[[:alnum:]_-]+$" tag)
   	      (let* ((new-dir (concat photon-dir "org-roam/" tag "/"))
   		     (org-roam-directory new-dir))
-  		(make-directory new-dir)
+  		(unless (file-directory-p new-dir)
+  		  (make-directory new-dir))
   		(org-roam-capture- :node new-node
   				   :props `((:finalize find-file) (:tags ,tag))))
   	    (message "Error: your tag name contains invalid characters or whitespace")))))))
@@ -1115,7 +1194,8 @@ Set up bracket colouring in programming buffers
   	 (tag (read-string "Stack: " stack-search))
   	 (tag-dir (concat photon-dir "org-roam/" tag "/"))
   	 (org-roam-directory tag-dir))
-      (make-directory tag-dir)
+      (unless (file-directory-p tag-dir)
+        (make-directory tag-dir))
       (org-roam-capture-
        :node new-node
        :props `((:finalize find-file) (:tags ,tag)))))
@@ -1650,7 +1730,10 @@ Set up bracket colouring in programming buffers
      [" Node tools"
       ("f" "Find node..." photon-nf)
       ("i" "Insert node..." photon-nl)
-      ("m" "Make node from header" org-id-get-create)
+      ("m" "Make node from header" (lambda ()
+  				   (interactive)
+  				   (org-id-get-create)
+  				   (org-roam-db-sync)))
       ("q" "Quicknote..." photon-qn)
       ]
      [
@@ -1705,6 +1788,7 @@ Set up bracket colouring in programming buffers
      		   ("C-/ k" . helpful-key)
      		   ("C-/ f" . helpful-function)
      		   ("C-/ v" . helpful-variable)
+  		   ("C-a" . mark-whole-buffer) 
      		   ("C-<return>" . photon-C-c)
      		   ))
     (define-key photon-keymap (kbd (car binding)) (cdr binding)))
