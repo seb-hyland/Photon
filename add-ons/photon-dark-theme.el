@@ -25,7 +25,7 @@
   (sumiInk              "#090c12" "#13131a")
   (sumiInk-0		"#00010D" "#000000")
   (sumiInk-1b		"#1c1c24" "#000000")
-  (sumiInk-1		"#111114" "#080808")
+  (sumiInk-1		"#18181c" "#080808")
   (sumiInk-2		"#2d2d30" "#121212")
   (sumiInk-3		"#2e2e57" "#303030")
   (sumiInk-4		"#545485" "#303030")
@@ -103,7 +103,7 @@
 
   ;; Font lock
   (font-lock-keyword-face                        (:foreground springBlue :weight 'semi-bold))
-  (font-lock-type-face                           (:foreground waveAqua2 :weight 'normal))
+  (font-lock-type-face                           (:foreground sakuraPink :weight 'normal))
   (font-lock-warning-face                        (:foreground roninYellow))
   (font-lock-string-face                         (:foreground springGreen :italic t))
   (font-lock-builtin-face                        (:foreground springViolet1))
