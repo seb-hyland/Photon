@@ -1,0 +1,202 @@
+(use-package vertico
+  :demand t
+  :bind (
+         :map vertico-map
+         ("<remap> <photon-C-j>" . vertico-next)
+         ("<remap> <photon-C-k>" . vertico-previous)
+         ("RET" . vertico-directory-enter)
+         ("DEL" . vertico-directory-delete-char)
+         ("M-DEL" . vertico-directory-delete-word))
+  :config
+  (vertico-mode t)
+  (eldoc-mode t)
+  :custom
+  (vertico-cycle t)
+  :hook
+  (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+
+(use-package marginalia
+  :after vertico
+  :config
+  (marginalia-mode t))
+
+
+(use-package consult
+  :after vertico)
+
+
+(use-package orderless
+  :after vertico
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+
+(use-package ctrlf
+  :defer t
+  :bind (
+         :map ctrlf-minibuffer-mode-map
+         ("<escape>" . minibuffer-keyboard-quit)
+         ("<remap> <photon-C-j>" . ctrlf-forward-default)
+         ("<remap> <photon-C-k>" . ctrlf-backward-default))
+  :config
+  (ctrlf-mode t))
+
+
+(use-package corfu
+  :demand t
+  :bind (
+    	 :map corfu-map
+    	 ("<remap> <photon-C-j>" . corfu-next)
+    	 ("<remap> <photon-C-k>" . corfu-previous)
+         ("RET" . nil))
+  :custom
+  (corfu-auto t)
+  (corfu-auto-delay 0.1)
+  (corfu-auto-prefix 2)
+  (completion-ignore-case t)
+  (global-corfu-mode t))
+
+
+(use-package evil
+  :demand t
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-respect-visual-line-mode t)
+  :bind (
+         :map evil-motion-state-map
+         ("j" . evil-next-visual-line)
+         ("k" . evil-previous-visual-line))
+  :config
+  (evil-mode t)
+  (evil-set-undo-system 'undo-redo))
+
+
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
+
+
+(use-package helpful
+  :defer t)
+
+
+(use-package magit
+  :defer t
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+
+(use-package transient
+  :demand t
+  :bind (
+      	 :map transient-base-map
+      	 ("<escape>" . transient-quit-all)))
+
+
+(use-package treesit-auto
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode)
+  (add-to-list 'auto-mode-alist '("\\.ino$" . c++-ts-mode)))
+
+
+(use-package vterm
+  :defer t
+  :bind (
+         :map vterm-mode-map
+         ("<normal-state> SPC" . photon/main))
+  :custom
+  (vterm-shell "fish"))
+
+
+(use-package vterm-toggle
+  :custom
+  (vterm-toggle-fullscreen-p nil)
+  :config
+  (add-to-list 'display-buffer-alist
+  	     '((lambda (buffer-or-name _)
+  		 (let ((buffer (get-buffer buffer-or-name)))
+  		   (with-current-buffer buffer
+  		     (or (equal major-mode 'vterm-mode)
+  			 (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
+                 (display-buffer-reuse-window display-buffer-at-bottom)
+                 (reusable-frames . visible)
+                 (window-height . 0.35))))
+
+
+(use-package perspective
+  :demand t
+  :init
+  (setq persp-suppress-no-prefix-key-warning t)
+  :config
+  (persp-mode t))
+
+
+(use-package avy
+  :defer t)
+
+
+(pixel-scroll-precision-mode t)
+
+
+(use-package autothemer
+  :config
+  (add-to-list 'custom-theme-load-path addons-dir))
+
+
+(use-package nerd-icons
+  :custom
+  (nerd-icons-color-icons t)
+  (nerd-icons-scale-factor 1))
+
+(use-package nerd-icons-dired
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
+
+(use-package nerd-icons-completion
+  :hook (dired-mode . dired-hide-details-mode)
+  :config
+  (nerd-icons-completion-mode)
+  (nerd-icons-completion-marginalia-setup)
+  (eval-after-load 'dired
+    (setq dired-kill-when-opening-new-dired-buffer t)))
+
+(use-package nerd-icons-corfu
+  :after corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+
+
+(use-package spacious-padding
+  :demand t
+  :init
+  (spacious-padding-mode))
+
+
+(use-package dashboard
+  :custom
+  (nerd-icons-font-family "Symbols Nerd Font Mono")
+  :config
+  (dashboard-setup-startup-hook))
+
+(load-file (concat addons-dir "photon-dashboard.el"))
+(add-hook 'window-setup-hook (lambda ()
+			       (dashboard-open)))
+(add-hook 'window-setup-hook (lambda()
+			       (set-face-attribute 'dashboard-heading nil :family "JetBrainsMono Nerd Font")))
+
+
+(use-package rainbow-delimiters
+  :defer t
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+
+(use-package org
+  :config
+  (delete-selection-mode t)
+  (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file))
