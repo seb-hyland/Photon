@@ -18,8 +18,11 @@
      		   ("C-/ k" . helpful-key)
      		   ("C-/ f" . helpful-function)
      		   ("C-/ v" . helpful-variable)
-  		 ("C-a" . mark-whole-buffer) 
-     		   ("C-<return>" . photon-C-c)
+  		   ("C-a" . mark-whole-buffer)
+		   ("M-<return>" . eglot-find-declaration)
+		   ("S-<return>" . eldoc-doc-buffer)
+     		   ("C-<return>" . photon-toggle)
+		   ("M-<backspace>" . photon-delete)
      		   ))
   (define-key photon-keymap (kbd (car binding)) (cdr binding)))
 

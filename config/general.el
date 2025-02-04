@@ -25,7 +25,8 @@
 (global-visual-line-mode t)
 (menu-bar--display-line-numbers-mode-visual)
 (electric-pair-local-mode t)
-(setq make-backup-files nil)
+(setq make-backup-files nil
+      create-lockfiles nil)
 
 (add-hook 'emacs-startup-hook (lambda ()
                                 (global-display-line-numbers-mode t)

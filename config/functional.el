@@ -104,29 +104,19 @@
   (add-to-list 'auto-mode-alist '("\\.ino$" . c++-ts-mode)))
 
 
-(use-package vterm
-  :defer t
-  :bind (
-         :map vterm-mode-map
-         ("<normal-state> SPC" . photon/main))
-  :custom
-  (vterm-shell "fish"))
+(use-package eat
+  :demand t
+  :vc (:url "https://codeberg.org/akib/emacs-eat.git"))
 
 
-(use-package vterm-toggle
+(use-package popper
+  :after eat
   :custom
-  (vterm-toggle-fullscreen-p nil)
+  (popper-reference-buffers '(eat-mode))
   :config
-  (add-to-list 'display-buffer-alist
-  	     '((lambda (buffer-or-name _)
-  		 (let ((buffer (get-buffer buffer-or-name)))
-  		   (with-current-buffer buffer
-  		     (or (equal major-mode 'vterm-mode)
-  			 (string-prefix-p vterm-buffer-name (buffer-name buffer))))))
-                 (display-buffer-reuse-window display-buffer-at-bottom)
-                 (reusable-frames . visible)
-                 (window-height . 0.35))))
-
+  (popper-mode t)
+  (popper-echo-mode t))
+  
 
 (use-package perspective
   :demand t
@@ -149,18 +139,21 @@
 
 
 (use-package nerd-icons
+  :demand t
   :custom
   (nerd-icons-color-icons t)
   (nerd-icons-scale-factor 1))
 
 (use-package nerd-icons-dired
+  :after nerd-icons
   :hook
-  (dired-mode . nerd-icons-dired-mode))
+  (dired-mode . nerd-icons-dired-mode)
+  (dired-mode . dired-hide-details-mode))
 
 (use-package nerd-icons-completion
-  :hook (dired-mode . dired-hide-details-mode)
+  :after nerd-icons
   :config
-  (nerd-icons-completion-mode)
+  (nerd-icons-completion-mode t)
   (nerd-icons-completion-marginalia-setup)
   (eval-after-load 'dired
     (setq dired-kill-when-opening-new-dired-buffer t)))

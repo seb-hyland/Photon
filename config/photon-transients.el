@@ -19,6 +19,20 @@
   (beginning-of-buffer))
 
 
+(defun photon-toggle ()
+  (interactive)
+  (if (equal (buffer-name) "*eat*")
+      (funcall-interactively 'popper-close-latest)
+    (eat)))
+
+
+(defun photon-delete ()
+  (interactive)
+  (if (minibufferp)
+      (call-interactively 'backward-kill-word)
+    (kill-region (point) (line-beginning-position))))
+
+
 (transient-define-suffix global-scale-inc ()
   :transient t
   :key "]"
@@ -73,11 +87,6 @@
      	(define-key dired-mode-map (kbd "<visual-state> SPC") 'photon/main)))))
 
 
-(defun photon-C-c ()
-  (interactive)
-  (execute-kbd-macro (kbd "C-c C-c")))
-
-
 (defun photon-reindent-buffer ()
   "Indent the entire buffer using tree-sitter's builtin indentation."
   (interactive)
@@ -122,9 +131,6 @@
 
 (transient-define-prefix photon/coding ()
   [" "
-   ["  Terminal tools"
-    ("<return>" "Toggle popup terminal" vterm-toggle)
-    ]
    ["󰖟  Language server tools"
     ("a" "Activate LSP" eglot)
     ("r" "Rename symbol" eglot-rename)

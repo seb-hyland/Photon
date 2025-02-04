@@ -1,3 +1,9 @@
+(use-package eglot
+  :defer t
+  :bind (:map eglot-mode-map
+	      ("<normal-state> K" . nil)))
+
+
 (use-package rustic
   :defer t
   :custom
