@@ -4,3 +4,4 @@ elpa/*
 tree-sitter/*
 projects
 transient/*
+debug-adapters/*

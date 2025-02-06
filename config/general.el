@@ -9,7 +9,7 @@
       default-frame-alist '((width . 200)
 			    (height . 35)
 			    (undecorated . t)
-			    (alpha-background . 95)
+			    (alpha-background . 98)
 			    (drag-internal-border . t)
 			    (internal-border-width . 4)
 			    (drag-with-mode-line . t))
