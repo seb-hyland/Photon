@@ -2,13 +2,17 @@
   :defer t
   :bind (:map eglot-mode-map
 	      ("<normal-state> K" . nil))
+  :custom
+  (project-vc-extra-root-markers '("Cargo.toml"))
   :config
   (add-to-list 'eglot-server-programs
 	     '((rustic-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
 
 
 (use-package dape
-  :after eglot)
+  :after eglot
+  :init
+  (setq dape-buffer-window-arrangement 'right))
 
 
 ;; Zig

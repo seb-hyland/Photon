@@ -74,4 +74,16 @@
 		    :background (face-background 'default)
 		    :foreground "DarkGrey"
 		    :box `(:line-width 6 :color ,(face-background 'default))
+		    :weight 'extra-light
+		    :overline "#3A3B3C")
+
+(set-face-attribute 'header-line nil
+		    :background (face-background 'default)
+		    :box nil
+		    :overline "#3A3B3C")
+
+(set-face-attribute 'header-line-inactive nil
+		    :background (face-background 'default)
+		    :box nil
+		    :weight 'medium
 		    :overline "#3A3B3C")
