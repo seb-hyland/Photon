@@ -131,7 +131,14 @@
   :defer t)
 
 
-(pixel-scroll-precision-mode t)
+(use-package ultra-scroll
+  :demand t
+  :vc (:url "https://github.com/jdtsmith/ultra-scroll.git")
+  :init
+  (setq scroll-conservatively 101
+        scroll-margin 0)
+  :config
+  (ultra-scroll-mode t))
 
 
 (use-package autothemer
@@ -181,8 +188,6 @@
 (load-file (concat addons-dir "photon-dashboard.el"))
 (add-hook 'window-setup-hook (lambda ()
 			       (dashboard-open)))
-(add-hook 'window-setup-hook (lambda()
-			       (set-face-attribute 'dashboard-heading nil :family "JetBrainsMono Nerd Font")))
 
 
 (use-package rainbow-delimiters

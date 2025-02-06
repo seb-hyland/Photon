@@ -20,7 +20,7 @@
 (global-auto-revert-mode t)
 (column-number-mode t)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-(set-face-attribute 'default nil :family "JetBrainsMono Nerd Font" :height 135)
+(set-face-attribute 'default nil :family "JetBrainsMono Nerd Font" :height 125)
 (prefer-coding-system 'utf-8)
 (global-visual-line-mode t)
 (menu-bar--display-line-numbers-mode-visual)

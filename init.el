@@ -48,5 +48,8 @@
 ;; Load Photon keybinds 
 (load "photon-keys")
 
+;; Load modeline
+(add-hook 'window-setup-hook (lambda () (load "modeline")))
+
 
 (setq gc-cons-threshold (expt 2 23))
