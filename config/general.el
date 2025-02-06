@@ -6,8 +6,13 @@
 (setq inhibit-startup-message t
       visible-bell t
       frame-title-format nil
-      default-frame-alist
-      '((width . 150) (height . 45))
+      default-frame-alist '((width . 200)
+			    (height . 35)
+			    (undecorated . t)
+			    (alpha-background . 95)
+			    (drag-internal-border . t)
+			    (internal-border-width . 4)
+			    (drag-with-mode-line . t))
       display-line-numbers-type 'relative
       split-width-threshold 1
       delete-by-moving-to-trash t
