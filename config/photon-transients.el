@@ -33,6 +33,23 @@
     (kill-region (point) (line-beginning-position))))
 
 
+(defun photon-dape ()
+  (interactive)
+  (let ((program 
+	 (cond ((eq major-mode 'zig-mode)
+		(concat "zig-out/bin/" (file-name-nondirectory (directory-file-name (project-root (project-current))))))
+	       ((eq major-mode 'rust-ts-mode)
+		(concat "target/debug/" (file-name-nondirectory (directory-file-name (project-root (project-current))))))
+	       (t nil))))
+    (if (eq program nil)
+	(call-interactively 'dape)
+      (minibuffer-with-setup-hook
+	  (lambda ()
+	    (delete-minibuffer-contents)
+	    (insert (concat "gdb :program \"" program "\"")))
+	    (call-interactively #'dape)))))
+
+
 (transient-define-suffix global-scale-inc ()
   :transient t
   :key "]"
@@ -119,40 +136,41 @@
     ("h" "Previous buffer" previous-buffer :transient t)
     ""
     ("z" "Focus current buffer" photon-focus-buffer)
+    ("q" "Close current window" (lambda () (interactive) (delete-window) (balance-windows)))
     ("u" "Update current buffer" revert-buffer-quick)
     ]
    ["  Keybind sets"
     ("w" "   Window settings..." photon/window)
-    ("c" "   Coding tools..." photon/coding)
+    ("RET" "   Coding tools..." photon/coding)
     ("g" " 󰊢  Magit..." photon/magit)
-    ]]
-  )
+    ]])
 
 
 (transient-define-prefix photon/coding ()
   [" "
-   ["󰖟  Language server tools"
-    ("a" "Activate LSP" eglot)
+   ["󰖟  LSP tools"
+    ("e" "Activate LSP" eglot)
     ("r" "Rename symbol" eglot-rename)
     ("f" "Find declaration" eglot-find-declaration)
     ("<tab>" "Reindent buffer" photon-reindent-buffer)
+    ]
+   [
+    "  Debugger tools"
+    ("i" "Initialize all" (lambda () (interactive) (call-interactively 'eglot) (photon-dape) (revert-buffer-quick))) 
+    ("d" "Begin debugging" photon-dape)
+    ("b" "Insert breakpoint at point" dape-breakpoint-toggle)
+    ("c" "Insert conditional break at point" dape-breakpoint-expression)
     ]])
+
 
 (transient-define-prefix photon/window ()
   [" "
    ["󱂬  Manage windows"
-    ("r" "Create on right" (lambda ()
-      			     (interactive)
-      			     (split-window-right) 
-      			     (balance-windows)))
+    ("r" "Create on right" (lambda () (interactive) (split-window-right) (balance-windows)))
     ("b" "Create below" (lambda ()
       			  (interactive)
       			  (split-window-below)
       			  (balance-windows)))
-    ("q" "Close current window" (lambda ()
-      				  (interactive)
-      				  (delete-window) 
-      				  (balance-windows)))
     ("=" "Rebalance window sizes" balance-windows)
     ]
    ["  Text scaling"

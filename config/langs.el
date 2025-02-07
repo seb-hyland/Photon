@@ -3,7 +3,7 @@
   :bind (:map eglot-mode-map
 	      ("<normal-state> K" . nil))
   :custom
-  (project-vc-extra-root-markers '("Cargo.toml"))
+  (project-vc-extra-root-markers '("Cargo.toml" "build.zig"))
   :config
   (add-to-list 'eglot-server-programs
 	     '((rustic-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
