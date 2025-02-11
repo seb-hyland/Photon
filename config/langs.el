@@ -6,7 +6,7 @@
   (project-vc-extra-root-markers '("Cargo.toml" "build.zig"))
   :config
   (add-to-list 'eglot-server-programs
-	     '((rustic-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
+	       '((rust-ts-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
 
 (use-package dape
   :after eglot
@@ -24,9 +24,11 @@
   (prog-mode . corfu-mode)
   :custom
   (corfu-auto t)
-  (corfu-auto-delay 0.01)
+  (corfu-auto-delay 0.1)
   (corfu-auto-prefix 2)
-  (completion-ignore-case t))
+  (completion-ignore-case t)
+  (corfu-popupinfo-mode t)
+  (corfu-popupinfo-delay '(0.0 . 1.0)))
 
 (use-package eglot-tempel
   :after eglot
@@ -45,3 +47,8 @@
 (use-package typst-ts-mode
   :defer t
   :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
+
+
+;; Python
+(use-package pyvenv
+  :after python-ts-mode)
