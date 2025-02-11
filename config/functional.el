@@ -44,22 +44,6 @@
   (ctrlf-mode t))
 
 
-(use-package corfu
-  :demand t
-  :bind (
-    	 :map corfu-map
-    	 ("<remap> <photon-C-j>" . corfu-next)
-    	 ("<remap> <photon-C-k>" . corfu-previous)
-         ("RET" . nil))
-  :hook
-  (prog-mode . corfu-mode)
-  :custom
-  (corfu-auto t)
-  (corfu-auto-delay 0.1)
-  (corfu-auto-prefix 2)
-  (completion-ignore-case t))
-
-
 (use-package evil
   :demand t
   :init

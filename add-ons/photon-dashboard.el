@@ -6,7 +6,8 @@
 
 ;;; Code:
 
-(setq dashboard-center-content t)
+(setq dashboard-center-content t
+      dashboard-vertically-center-content t)
 
 ;; Movement keys like doom.
 ;; (bind-keys
@@ -116,7 +117,11 @@
                                     ;; dashboard-insert-items
                                     dashboard-insert-newline
                                     dashboard-insert-newline
-                                    dashboard-insert-init-info))
+                                    dashboard-insert-init-info
+                                    dashboard-insert-newline
+                                    dashboard-insert-newline
+                                    dashboard-insert-newline
+                                    dashboard-insert-newline))
                                     ;; dashboard-insert-newline
                                     ;; dashboard-insert-newline
                                     ;; dashboard-insert-homepage-footer)
