@@ -35,20 +35,50 @@
 
 (defun photon-dape ()
   (interactive)
-  (let ((program 
-	 (cond ((eq major-mode 'zig-mode)
-		(concat "zig-out/bin/" (file-name-nondirectory (directory-file-name (project-root (project-current))))))
-	       ((eq major-mode 'rust-ts-mode)
-		(concat "target/debug/" (file-name-nondirectory (directory-file-name (project-root (project-current))))))
-	       (t nil))))
-    (if (eq program nil)
-	(call-interactively 'dape)
-      (minibuffer-with-setup-hook
-	  (lambda ()
-	    (delete-minibuffer-contents)
-	    (insert (concat "gdb :program \"" program "\"")))
-	    (call-interactively #'dape)))))
+  (let* ((project-name (file-name-nondirectory (directory-file-name (project-root (project-current)))))
+	 (executable 
+	  (cond ((eq major-mode 'zig-mode)
+		 (concat "zig-out/bin/" project-name))
+		((eq major-mode 'rust-ts-mode)
+		 (concat "target/debug/" project-name))
+		(t nil)))
+	 (adapter
+	  (cond ((eq major-mode 'zig-mode) "gdb")
+		((eq major-mode 'rust-ts-mode) "gdb")
+		((eq major-mode 'python-ts-mode) "debugpy")
+		(t nil))))
+    (progn
+      (if (eq major-mode 'python-ts-mode)
+	  (photon-venv t))
+      (if (not adapter)
+	  (call-interactively 'dape)
+	(minibuffer-with-setup-hook
+	    (lambda ()
+	      (delete-minibuffer-contents)
+	      (insert (if executable
+			  (concat adapter " :program \"" executable "\"")
+			adapter)))
+	  (call-interactively #'dape))))))
 
+
+(defun photon-eglot ()
+  (interactive)
+  (if (eq major-mode 'python-ts-mode)
+      (photon-venv t))
+  (call-interactively 'eglot))
+
+
+(defun photon-venv (&optional silent)
+  (interactive)
+  (let ((venv-dir (concat default-directory ".venv")))
+    (if (file-directory-p venv-dir)
+	(progn
+	  (pyvenv-activate venv-dir)
+	  (message (concat "The virtual environment at " venv-dir " was activated")))
+      (if silent
+	  (message "WARNING: No virtual environment was automatically detected.")
+	(call-interactively 'pyvenv-activate)))))
+  
 
 (transient-define-suffix global-scale-inc ()
   :transient t
@@ -149,7 +179,7 @@
 (transient-define-prefix photon/coding ()
   [" "
    ["󰖟  LSP tools"
-    ("e" "Activate LSP" eglot)
+    ("e" "Activate LSP" photon-eglot)
     ("r" "Rename symbol" eglot-rename)
     ("f" "Find declaration" eglot-find-declaration)
     ("<tab>" "Reindent buffer" photon-reindent-buffer)
@@ -160,6 +190,11 @@
     ("d" "Begin debugging" photon-dape)
     ("b" "Insert breakpoint at point" dape-breakpoint-toggle)
     ("c" "Insert conditional break at point" dape-breakpoint-expression)
+    ]
+   [
+    "󰣪  Build tools"
+    ("RET" "Compile" compile)
+    ("v" "Activate virtual environment..." photon-venv)
     ]])
 
 

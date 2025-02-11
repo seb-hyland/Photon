@@ -6,7 +6,7 @@
   (project-vc-extra-root-markers '("Cargo.toml" "build.zig"))
   :config
   (add-to-list 'eglot-server-programs
-	     '((rustic-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
+	       '((rust-ts-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
 
 
 (use-package dape
@@ -26,3 +26,8 @@
 (use-package typst-ts-mode
   :defer t
   :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
+
+
+;; Python
+(use-package pyvenv
+  :after python-ts-mode)

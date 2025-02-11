@@ -57,7 +57,9 @@
   (corfu-auto t)
   (corfu-auto-delay 0.1)
   (corfu-auto-prefix 2)
-  (completion-ignore-case t))
+  (completion-ignore-case t)
+  (corfu-popupinfo-mode t)
+  (corfu-popupinfo-delay '(0.0 . 1.0)))
 
 
 (use-package evil
