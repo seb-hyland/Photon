@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (defface photon-transient-dynamic-face
   '((t (:foreground "#7FB4CA" :weight bold)))
   "Face for dynamic transients")

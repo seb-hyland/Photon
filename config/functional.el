@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (use-package vertico
   :demand t
   :bind (
@@ -72,7 +74,8 @@
 (use-package magit
   :defer t
   :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
+  (magit-format-file-function #'magit-format-file-nerd-icons))
 
 
 (use-package transient

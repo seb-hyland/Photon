@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (defvar photon-keymap (make-keymap)
   "Keymap for Photon general bindings")
 

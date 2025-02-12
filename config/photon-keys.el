@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (define-minor-mode photon-mode
   "Minor mode for my personal keybindings."
   :init-value t

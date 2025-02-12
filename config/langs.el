@@ -1,5 +1,7 @@
+;; -*- lexical-binding: t; -*-
+
 (use-package eglot
-  :defer t
+  :after prog-mode
   :bind (:map eglot-mode-map
 	      ("<normal-state> K" . nil))
   :custom

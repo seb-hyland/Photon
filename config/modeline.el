@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (defun photon-modeline-modification ()
   (cond (buffer-file-name
 	 (if (buffer-modified-p)
