@@ -5,3 +5,4 @@ tree-sitter/*
 projects
 transient/*
 debug-adapters/*
+tramp
