@@ -8,7 +8,9 @@
   (project-vc-extra-root-markers '("Cargo.toml" "build.zig"))
   :config
   (add-to-list 'eglot-server-programs
-	       '((rust-ts-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
+	       '((rust-mode rust-ts-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
+  (setq-default eglot-workspace-configuration
+		'(:basedpyright (:typeCheckingMode "standard"))))
 
 (use-package dape
   :after eglot
@@ -36,6 +38,11 @@
   :after eglot
   :init
   (eglot-tempel-mode t))
+
+(use-package markdown-mode
+  :after eglot
+  :config
+  (set-face-attribute 'markdown-code-face nil :family "JetBrainsMono Nerd Font"))
 
 
 ;; Zig
