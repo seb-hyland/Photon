@@ -16,10 +16,11 @@
 			    (internal-border-width . 4)
 			    (drag-with-mode-line . t))
       display-line-numbers-type 'relative
-      display-line-numbers-width 3
       split-width-threshold 1
       delete-by-moving-to-trash t
       create-lockfiles nil)
+(setq-default display-line-numbers-width 3
+	      display-fill-column-indicator-column 90)
 
 (scroll-bar-mode -1)   		        
 (tool-bar-mode -1)     		        
@@ -41,4 +42,6 @@
                                 (display-line-numbers-mode -1)
                                 (load-theme 'photon-dark t)))
 
-(add-hook 'prog-mode-hook #'electric-pair-mode)
+(add-hook 'prog-mode-hook (lambda ()
+			    (electric-pair-mode t)
+			    (display-fill-column-indicator-mode)))
