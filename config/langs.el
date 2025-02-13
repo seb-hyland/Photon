@@ -31,7 +31,7 @@
   (corfu-auto-delay 0.1)
   (corfu-auto-prefix 2)
   (completion-ignore-case t)
-  (corfu-popupinfo-delay '(0.0 . 1.0))
+  (corfu-popupinfo-delay '(0.1 . 0.1))
   (corfu-popupinfo-mode t))
 
 (use-package eglot-tempel
