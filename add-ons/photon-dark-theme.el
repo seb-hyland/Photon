@@ -1,8 +1,3 @@
-;;; package: --- A theme inspired by the colors of the famous painting by Katsushika Hokusa
-
-;;; Commentary: Original theme created by rebelot see: https://github.com/rebelot/kanagawa.nvim
-;;; Code:
-
 (eval-when-compile
   (require 'cl-lib))
 
@@ -134,48 +129,6 @@
   (trailing-whitespace                           (:background comet))
   (mode-line                                     (:background sumiInk-0 :foreground fujiWhite :bold t))
 
-  ;; Doom Nano Modeline
-  (doom-nano-modeline-active-face                (:foreground fujiWhite :bold t))
-  (doom-nano-modeline-active-modified-face       (:foreground sakuraPink :bold t))
-  (doom-nano-modeline-evil-emacs-state-face      (:background oniViolet :foreground "black" :box oniViolet :bold t))
-  (doom-nano-modeline-evil-normal-state-face     (:background springGreen :foreground "black" :box springGreen :bold t))
-  (doom-nano-modeline-evil-insert-state-face     (:background dragonBlue :foreground "black" :box dragonBlue :bold t))
-  (doom-nano-modeline-evil-visual-state-face     (:background samuraiRed :foreground "black" :box samuraiRed :bold t))
-  (doom-nano-modeline-evil-replace-state-face    (:background oniViolet :foreground "black" :box oniViolet :bold t))
-
-  ;; Battery colors
-  (doom-modeline-battery-critical                (:foreground peachRed))
-  (doom-modeline-battery-warning                 (:foreground springGreen))
-  (doom-modeline-battery-charging                (:foreground fujiGray))
-  (doom-modeline-battery-error                   (:foreground peachRed))
-  (doom-modeline-battery-normal                  (:foreground springViolet1))
-  (doom-modeline-battery-full                    (:foreground waveAqua2))
-  
-  ;; Doom visual state
-  (doom-modeline-evil-motion-state               (:foreground waveAqua2))
-  (doom-modeline-evil-emacs-state                (:foreground crystalBlue))
-  (doom-modeline-evil-insert-state               (:foreground peachRed))
-  (doom-modeline-evil-normal-state               (:foreground waveAqua2))
-  (doom-modeline-evil-visual-state               (:foreground springGreen))
-  (doom-modeline-evil-replace-state              (:foreground roninYellow))
-  (doom-modeline-evil-operator-state             (:foreground crystalBlue))
-
-  (doom-modeline-project-dir                     (:bold t :foreground waveAqua2))
-  (doom-modeline-buffer-path                     (:inherit 'bold :foreground waveAqua2))
-  (doom-modeline-buffer-file                     (:inherit 'bold :foreground oniViolet))
-  (doom-modeline-buffer-modified                 (:inherit 'bold :foreground carpYellow))
-  (doom-modeline-error                           (:background peachRed))
-  (doom-modeline-buffer-major-mode               (:foreground waveAqua2 :bold t))
-  (doom-modeline-info                            (:bold t :foreground waveAqua2))
-  (doom-modeline-project-dir                     (:bold t :foreground surimiOrange))
-  (doom-modeline-bar                             (:bold t :background springViolet1))
-  (doom-modeline-panel                           (:inherit 'bold :background boatYellow2 :foreground sumiInk-2))
-  (doom-themes-visual-bell                       (:background autumnRed))
-
-  ;; elfeed
-  (elfeed-search-feed-face                       (:foreground springViolet1))
-  (elfeed-search-tag-face                        (:foreground waveAqua2))
-
   ;; message colors
   (message-header-name                           (:foreground sumiInk-4))
   (message-header-other                          (:foreground surimiOrange))
@@ -222,26 +175,6 @@
   (org-modern-statistics                         (:foreground crystalBlue :background winterBlue :height 0.8 :weight 'normal))
   (org-modern-tag                                (:foreground sumiInk-4 :background winterBlue :height 0.8 :weight 'semi-bold))
 
-  ;; which-key
-  (which-key-key-face                            (:inherit 'font-lock-variable-name-face))
-  (which-func                                    (:inherit 'font-lock-function-name-face :bold t))
-  (which-key-group-description-face              (:foreground peachRed))
-  (which-key-command-description-face            (:foreground crystalBlue))
-  (which-key-local-map-description-face          (:foreground carpYellow))
-  (which-key-posframe                            (:background waveBlue-1))
-  (which-key-posframe-border	                 (:background waveBlue-1))
-
-  ;; swiper
-  (swiper-line-face                              (:foreground carpYellow))
-  (swiper-background-match-face-1                (:background surimiOrange :foreground sumiInk-0))
-  (swiper-background-match-face-2                (:background crystalBlue :foreground sumiInk-0))
-  (swiper-background-match-face-3                (:background boatYellow2 :foreground sumiInk-0))
-  (swiper-background-match-face-4                (:background peachRed :foreground sumiInk-0))
-  (swiper-match-face-1                           (:inherit 'swiper-background-match-face-1))
-  (swiper-match-face-2                           (:inherit 'swiper-background-match-face-2))
-  (swiper-match-face-3                           (:inherit 'swiper-background-match-face-3))
-  (swiper-match-face-4                           (:inherit 'swiper-background-match-face-4))
-
   (counsel-outline-default                       (:foreground carpYellow))
   (info-header-xref                              (:foreground carpYellow))
   (xref-file-header                              (:foreground carpYellow))
@@ -269,32 +202,8 @@
   (show-paren-mismatch                           (:background peachRed :foreground old-white))
 
   (tooltip                                       (:foreground sumiInk :background carpYellow))
-  ;; company-box
-  (company-tooltip                               (:background sumiInk-2))
-  (company-tooltip-common                        (:foreground autumnYellow))
-  (company-tooltip-quick-access                  (:foreground springViolet2))
-  (company-tooltip-scrollbar-thumb               (:background autumnRed))
-  (company-tooltip-scrollbar-track               (:background sumiInk-2))
-  (company-tooltip-search                        (:background carpYellow :foreground sumiInk-0 :distant-foreground fujiWhite))
-  (company-tooltip-selection                     (:background peachRed :foreground winterRed :bold t))
-  (company-tooltip-mouse                         (:background sumiInk-2 :foreground sumiInk-0 :distant-foreground fujiWhite))
-  (company-tooltip-annotation                    (:foreground peachRed :distant-foreground sumiInk-1))
-  (company-scrollbar-bg                          (:inherit 'tooltip))
-  (company-scrollbar-fg                          (:background peachRed))
-  (company-preview                               (:foreground carpYellow))
-  (company-preview-common                        (:foreground peachRed :bold t))
-  (company-preview-search                        (:inherit 'company-tooltip-search))
-  (company-template-field                        (:inherit 'match))
 
   (consult-file (:foreground springViolet2))
-
-  ;; (flycheck-error-list-error (:box (:color winterRed :line-width 2) :foreground peachRed :background winterRed :height 140 :weight 'bold))
-  ;; (flycheck-error-list-warning (:box (:color winterYellow :line-width 2) :foreground carpYellow :background winterYellow :height 140 :weight 'bold))
-  ;; (flycheck-error-list-info (:box (:color winterBlue :line-width 2) :foreground crystalBlue :background winterBlue :height 140 :weight 'bold))
-
-  ;; (flycheck-error                     (:box (:color winterRed :line-width 2) :foreground peachRed :background winterRed :height 140 :weight 'bold))
-  ;; (flycheck-warning                   (:box (:color winterYellow :line-width 2) :foreground carpYellow :background winterYellow :height 140 :weight 'bold))
-  ;; (flycheck-info                      (:box (:color winterBlue :line-width 2) :foreground crystalBlue :background winterBlue :height 140 :weight 'bold))
 
   (flycheck-inline-error                         (:foreground peachRed :background winterRed :height 150 :italic t))
   (flycheck-inline-info                          (:foreground crystalBlue :background waveBlue-2 :height 150 :italic t))
@@ -318,55 +227,6 @@
   (highlight-numbers-face                        (:foreground sakuraPink))
   (highlight-symbol-face                         (:background winterBlue :foreground springBlue :weight 'normal))
   
-  ;; ivy
-  (ivy-current-match                             (:background crystalBlue :foreground sumiInk-0 :bold t))
-  (ivy-action                                    (:foreground fujiWhite))
-  (ivy-grep-line-number                          (:foreground springGreen))
-  (ivy-minibuffer-match-face-1                   (:foreground peachRed))
-  (ivy-minibuffer-match-face-2                   (:foreground springGreen))
-  (ivy-minibuffer-match-highlight                (:foreground waveAqua2))
-  (ivy-grep-info                                 (:foreground waveAqua2))
-  (ivy-grep-line-number                          (:foreground springViolet2))
-  (ivy-confirm-face                              (:foreground waveAqua2))
-
-  ;; posframe's
-  (ivy-posframe                                  (:background sumiInk-2))
-  (ivy-posframe-border                           (:background sumiInk-3))
-
-  ;;treemacs
-  (treemacs-directory-collapsed-face             (:foreground sumiInk-5 :weight 'normal))
-  (treemacs-window-background-face               (:background sumiInk-1b))
-  (treemacs-directory-face                       (:foreground sumiInk-5 :weight 'normal))
-  (treemacs-file-face                            (:foreground sumiInk-5 :weight 'thin))
-  (treemacs-nerd-icons-file-face                 (:inherit 'treemacs-file-face))
-  (treemacs-nerd-icons-root-face                 (:inherit 'treemacs-directory-face))
-
-  (treemacs-git-added-face                       (:foreground surimiOrange :weight 'normal))
-  (treemacs-git-renamed-face                     (:foreground springGreen :weight 'normal))
-  (treemacs-git-ignored-face                     (:foreground sumiInk-4 :italic t :weight 'thin))
-  (treemacs-git-unmodified-face                  (:foreground sumiInk-5 :weight 'thin))
-  (treemacs-git-untracked-face                   (:foreground fujiGray :weight 'normal))
-  (treemacs-git-renamed-face                     (:foreground carpYellow :weight 'normal))
-  (treemacs-git-modified-face                    (:foreground springBlue :weight 'normal))
-
-  ;; lsp and lsp-ui
-  (lsp-headerline-breadcrumb-path-error-face     (:underline (:color springGreen :style 'wave) :foreground sumiInk-4 :background sumiInk-0))
-  (lsp-headerline-breadcrumb-path-face           (:background sumiInk-0))
-  (lsp-headerline-breadcrumb-path-hint-face      (:background sumiInk-0))
-  (lsp-headerline-breadcrumb-path-info-face      (:background sumiInk-0))
-  (lsp-headerline-breadcrumb-separator-face      (:background sumiInk-0))
-  (lsp-headerline-breadcrumb-symbols-face        (:background sumiInk-0))
-  (lsp-headerline-breadcrumb-project-prefix-face (:background sumiInk-0))
-  (lsp-headerline-breadcrumb-symbols-error-face  (:foreground peachRed))
-
-  (lsp-ui-doc-background                         (:background sumiInk-0 :foreground peachRed))
-  (lsp-ui-doc-header                             (:background sumiInk-0 :foreground peachRed))
-  (lsp-ui-doc-border                             (:foreground nil))
-  (lsp-ui-peek-filename                          (:foreground waveAqua2))
-  (lsp-ui-sideline-code-action                   (:foreground carpYellow))
-  (lsp-ui-sideline-current-symbol                (:foreground springBlue))
-  (lsp-ui-sideline-symbol                        (:foreground dragonBlue))
-
   (eldoc-highlight-function-argument (:foreground carpYellow :background winterYellow))
 
   ;; dashboard
@@ -376,12 +236,6 @@
   (dashboard-no-items-face                       (:foreground sumiInk-4))
   (dashboard-text-heading                        (:foreground crystalBlue))
   (dashboard-text-banner                         (:foreground crystalBlue))
-
-  ;; all-the-icons
-  (all-the-icons-dgreen                          (:foreground waveAqua2))
-  (all-the-icons-green                           (:foreground waveAqua2))
-  (all-the-icons-dpurple                         (:foreground springViolet2))
-  (all-the-icons-purple                          (:foreground springViolet2))
 
   ;; evil
   (evil-ex-lazy-highlight                        (:foreground winterRed :background sakuraPink :bold t))
@@ -412,16 +266,6 @@
   (popup-face                                    (:inherit 'tooltip))
   (popup-selection-face                          (:inherit 'tooltip))
   (popup-tip-face                                (:inherit 'tooltip))
-
-  ;; anzu
-  (anzu-match-1                                  (:foreground waveAqua2 :background sumiInk-2))
-  (anzu-match-2                                  (:foreground carpYellow :background sumiInk-2))
-  (anzu-match-3                                  (:foreground waveAqua2 :background sumiInk-2))
-
-  (anzu-mode-line                                (:foreground sumiInk-0 :background springViolet2))
-  (anzu-mode-no-match	                         (:foreground fujiWhite :background peachRed))
-  (anzu-replace-to                               (:foreground springBlue :background winterBlue))
-  (anzu-replace-highlight                        (:foreground peachRed :background winterRed :strike-through t))
 
   ;; ace
   (ace-jump-face-background                      (:foreground waveBlue-2))
@@ -454,31 +298,6 @@
   (corfu-default                                 (:background sumiInk-1 :foreground fujiWhite))
   (corfu-border                                  (:background waveBlue-2))
   (corfu-popupinfo                               (:background sumiInk :foreground springBlue :box (:line-width 2 :color sumiInk)))
-
-  ;; hydra
-  (hydra-face-amaranth                           (:foreground autumnRed))
-  (hydra-face-blue                               (:foreground springBlue))
-  (hydra-face-pink                               (:foreground sakuraPink))
-  (hydra-face-red                                (:foreground peachRed))
-  (hydra-face-teal                               (:foreground waveAqua2))
-
-  ;; centaur-tabs
-  (centaur-tabs-active-bar-face                  (:background springBlue :foreground fujiWhite))
-  (centaur-tabs-selected                         (:background sumiInk-1b :foreground fujiWhite :bold t))
-  (centaur-tabs-selected-modified                (:background sumiInk-1b :foreground fujiWhite))
-  (centaur-tabs-modified-marker-selected         (:background sumiInk-1b :foreground autumnYellow))
-  (centaur-tabs-close-selected                   (:inherit 'centaur-tabs-selected))
-  (tab-line                                      (:background sumiInk-0))
-
-  (centaur-tabs-unselected                       (:background sumiInk-0 :foreground sumiInk-4))
-  (centaur-tabs-default                          (:background sumiInk-0 :foreground sumiInk-4))
-  (centaur-tabs-unselected-modified              (:background sumiInk-0 :foreground peachRed))
-  (centaur-tabs-modified-marker-unselected       (:background sumiInk-0 :foreground sumiInk-4))
-  (centaur-tabs-close-unselected                 (:background sumiInk-0 :foreground sumiInk-4))
-
-  (centaur-tabs-close-mouse-face                 (:background nil :foreground peachRed))
-  (centaur-tabs-default                          (:background roninYellow ))
-  (centaur-tabs-name-mouse-face                  (:foreground springBlue :bold t))
 
   (git-gutter:added                              (:foreground autumnGreen))
   (git-gutter:deleted                            (:foreground peachRed))
@@ -567,29 +386,11 @@
 
   (minimap-active-region-background (:background sumiInk-3))
 
-  ;; (magit-filename (:foreground crystalBlue))
   (magit-diff-file-heading (:foreground fujiWhite :weight 'normal))
-
-  (copilot-overlay-face (:background sumiInk-3 :foreground springViolet2))
 
   (transient-key (:foreground peachRed :bold t))
   (transient-key-stay (:foreground springBlue :backgroud winterBlue :bold t))
   (transient-key-exit (:foreground peachRed :background winterRed :bold t))
-
-  ;; (magit-section-heading (:foreground carpYellow :background winterYellow :weight 'normal))
-
-  ;; (magit-diff-base (:foreground crystalBlue :background winterBlue))
-  ;; (magit-diff-base-highlight (:foreground crystalBlue :background winterBlue))
-
-  ;; (magit-diff-added (:foreground autumnGreen :background winterGreen))
-  ;; (magit-diff-added-highlight (:foreground springGreen :background winterGreen))
-
-  ;; (magit-our-added (:background winterRed))
-  ;; (magit-our-added-highlight (:background winterRed))
-
-  ;; (magit-removed-added (:background winterRed))
-  ;; (magit-removed-added-highlight (:background winterRed))
-
  ))
 
 ;;;###autoload
@@ -600,4 +401,3 @@
                    (file-name-directory load-file-name))))
 
 (provide-theme 'photon-dark)
-;;; kanagawa-theme.el ends here

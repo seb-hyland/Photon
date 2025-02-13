@@ -196,6 +196,7 @@
    [
     "󰣪  Build tools"
     ("RET" "Compile" compile)
+    ("S-<return>" "Recompile" recompile)
     ("v" "Activate virtual environment..." photon-venv)
     ]])
 
