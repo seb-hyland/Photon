@@ -34,8 +34,14 @@
   (corfu-popupinfo-delay '(0.1 . 0.1))
   (corfu-popupinfo-mode t))
 
-(use-package eglot-tempel
+(use-package tempel
   :after eglot
+  :bind (:map tempel-map
+	      ("<remap> <photon-C-j>" . tempel-next)
+	      ("<remap> <photon-C-k>" . tempel-previous)))
+
+(use-package eglot-tempel
+  :after tempel 
   :init
   (eglot-tempel-mode t))
 
