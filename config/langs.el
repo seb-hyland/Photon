@@ -45,6 +45,12 @@
   (set-face-attribute 'markdown-code-face nil :family "JetBrainsMono Nerd Font"))
 
 
+;; Rust
+(add-to-list 'compilation-error-regexp-alist 'rust)
+(add-to-list 'compilation-error-regexp-alist-alist
+             '(rust "^[[:space:]]*-->[[:space:]]*\\([^:\n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3))
+
+
 ;; Zig
 (use-package zig-mode
   :defer t

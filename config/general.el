@@ -44,4 +44,7 @@
 
 (add-hook 'prog-mode-hook (lambda ()
 			    (electric-pair-mode t)
-			    (display-fill-column-indicator-mode)))
+			    (display-fill-column-indicator-mode)
+			    (visual-line-mode -1)
+			    (setq truncate-lines t)
+			    (setq flymake-show-diagnostics-at-end-of-line t)))

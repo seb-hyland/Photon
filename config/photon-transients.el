@@ -80,6 +80,22 @@
       (if silent
 	  (message "WARNING: No virtual environment was automatically detected.")
 	(call-interactively 'pyvenv-activate)))))
+
+(defun photon-compile ()
+  (interactive)
+  (let* ((command (cl-case major-mode
+			((rust-mode rust-ts-mode) "cargo run")
+			((python-mode python-ts-mode) "python ")
+			(t "")))
+	 (root (cl-case major-mode
+		 ((rust-mode rust-ts-mode) (project-root (project-current)))
+		 (t nil)))
+	 (default-directory (if root root default-directory))
+	 (setup (minibuffer-with-setup-hook
+		    (lambda ()
+		      (delete-minibuffer-contents)
+		      (insert command))
+		  (call-interactively 'compile))))))
   
 
 (transient-define-suffix global-scale-inc ()
@@ -122,8 +138,7 @@
         (define-key evil-visual-state-map (kbd "SPC") 'photon-focus-main)
      	(with-eval-after-load 'dired
           (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon-focus-main)
-          (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon-focus-main))
-        )
+          (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon-focus-main)))
     (progn
       (persp-switch photon-focus-init-persp)
       (persp-kill "*FOCUS*")
@@ -183,8 +198,13 @@
    ["󰖟  LSP tools"
     ("e" "Activate LSP" photon-eglot)
     ("r" "Rename symbol" eglot-rename)
-    ("f" "Find declaration" eglot-find-declaration)
     ("<tab>" "Reindent buffer" photon-reindent-buffer)
+    ]
+   [""
+    ("m" "Analyze file structure" consult-imenu)
+    ("M" "Analyze project structure" consult-imenu-multi)
+    ("f" "Find error..." consult-flymake)
+    ("j" "Jump to compilation error..." consult-compile-error)
     ]
    [
     "  Debugger tools"
@@ -195,8 +215,7 @@
     ]
    [
     "󰣪  Build tools"
-    ("RET" "Compile" compile)
-    ("S-<return>" "Recompile" recompile)
+    ("RET" "Compile" photon-compile)
     ("v" "Activate virtual environment..." photon-venv)
     ]])
 
