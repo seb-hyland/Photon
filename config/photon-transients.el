@@ -7,18 +7,16 @@
 
 (defun photon-C-j ()
   (interactive)
-  (when (and (eq evil-state 'visual)
-             (eq evil-visual-selection 'screen-line))
-    (execute-kbd-macro "G"))
-  (end-of-buffer))
+  (if (eq evil-state 'visual)
+    (execute-kbd-macro "G")
+    (end-of-buffer)))
 
 
 (defun photon-C-k ()
   (interactive)
-  (when (and (eq evil-state 'visual)
-             (eq evil-visual-selection 'screen-line))
-    (execute-kbd-macro "gg"))
-  (beginning-of-buffer))
+  (if (eq evil-state 'visual)
+    (execute-kbd-macro "gg")
+    (beginning-of-buffer)))
 
 
 (defun photon-toggle ()
@@ -67,6 +65,7 @@
   (interactive)
   (if (eq major-mode 'python-ts-mode)
       (photon-venv t))
+  (eglot-tempel-mode t)
   (call-interactively 'eglot))
 
 

@@ -6,11 +6,17 @@
 	      ("<normal-state> K" . nil))
   :custom
   (project-vc-extra-root-markers '("Cargo.toml" "build.zig"))
+  (eglot-events-buffer-config (:size 0 :format lisp))
   :config
   (add-to-list 'eglot-server-programs
 	       '((rust-mode rust-ts-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
   (setq-default eglot-workspace-configuration
 		'(:basedpyright (:typeCheckingMode "standard"))))
+
+(use-package eglot-booster
+  :vc (:url "https://github.com/jdtsmith/eglot-booster.git")
+  :after eglot
+  :config (eglot-booster-mode t))
 
 (use-package dape
   :after eglot
@@ -41,7 +47,7 @@
 	      ("<remap> <photon-C-k>" . tempel-previous)))
 
 (use-package eglot-tempel
-  :after tempel 
+  :after tempel
   :init
   (eglot-tempel-mode t))
 
