@@ -6,7 +6,7 @@
 	      ("<normal-state> K" . nil))
   :custom
   (project-vc-extra-root-markers '("Cargo.toml" "build.zig"))
-  (eglot-events-buffer-config (:size 0 :format lisp))
+  (eglot-events-buffer-config '(:size 0 :format lisp))
   :config
   (add-to-list 'eglot-server-programs
 	       '((rust-mode rust-ts-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))

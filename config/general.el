@@ -37,10 +37,13 @@
 (setq make-backup-files nil
       create-lockfiles nil)
 
-(add-hook 'emacs-startup-hook (lambda ()
+(add-hook 'window-setup-hook (lambda ()
                                 (global-display-line-numbers-mode t)
                                 (display-line-numbers-mode -1)
-                                (load-theme 'photon-dark t)))
+				(load-theme 'photon-dark t)
+                                (make-frame-visible)
+				(revert-buffer-quick)
+				(message "Welcome, 10110110110. Shall we begin?\n%s" (format-time-string "%H:%M:%S %m/%d"))))
 
 (add-hook 'prog-mode-hook (lambda ()
 			    (electric-pair-mode t)
@@ -48,3 +51,4 @@
 			    (visual-line-mode -1)
 			    (setq truncate-lines t)
 			    (setq flymake-show-diagnostics-at-end-of-line t)))
+

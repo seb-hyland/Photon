@@ -30,7 +30,7 @@
   (interactive)
   (if (minibufferp)
       (call-interactively 'backward-kill-word)
-    (kill-region (point) (line-beginning-position))))
+    (delete-region (point) (line-beginning-position))))
 
 
 (defun photon-dape ()

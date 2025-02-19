@@ -26,7 +26,7 @@
 
 
 (defun photon-modeline-project ()
-  (if-let ((path (if buffer-file-name
+  (if-let* ((path (if buffer-file-name
 		     buffer-file-name
 		   (if dired-directory
 		       dired-directory))))
