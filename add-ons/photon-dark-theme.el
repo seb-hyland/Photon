@@ -68,7 +68,7 @@
   (child-frame-border                            (:foreground sumiInk-0))
   (cursor                                        (:background peachRed :foreground sumiInk-0 :bold t))
   (error                                         (:foreground peachRed))
-  (fringe                                        (:foreground surimiOrange))
+  (fringe                                        (:foreground dragonBlue))
   (glyph-face                                    (:background sumiInk-4))
   (glyphless-char                                (:foreground sumiInk-4))
   (header-line                                   (:background sumiInk-1b :overline fujiGray))

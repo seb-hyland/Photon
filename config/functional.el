@@ -86,16 +86,36 @@
 
 
 (use-package treesit-auto
+  :demand t
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode)
   (add-to-list 'auto-mode-alist '("\\.ino$" . c++-ts-mode)))
 
 
+(use-package treesit-fold
+  :demand t
+  :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold.git")
+  :config
+  (defun treesit-fold-better-toggle ()
+    (interactive)
+    (if (treesit-fold-open)
+	(treesit-fold-open-recursively)
+      (treesit-fold-close)))
+  :bind (
+	 :map treesit-fold-mode-map
+	 ("<remap> <evil-jump-forward>" . treesit-fold-better-toggle)
+	 ("<backtab>" . treesit-fold-open-all)
+	 ("C-<tab>" . treesit-fold-close-all))
+  :custom
+  (global-treesit-fold-mode t)
+  (global-treesit-fold-indicators-mode t))
+
+
 (use-package eat
   :demand t
   :vc (:url "https://codeberg.org/akib/emacs-eat.git")
-  :hook (eat-exec . (lambda (&rest _) (eat-line-mode)))
+  :hook (eat-exec . (lambda (&rest _) (eat-semi-char-mode)))
   :config
   (add-to-list 'display-buffer-alist
 	       '("^\\*eat\\*"
