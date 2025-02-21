@@ -37,13 +37,28 @@
 (setq make-backup-files nil
       create-lockfiles nil)
 
+(defun init-message ()
+  (interactive)
+  (let* ((current-hour (decoded-time-hour (decode-time)))
+	 (night-message "May the midnight oil burn bright.")
+	 (component (cond
+		     ((< current-hour 5) night-message)
+		     ((< current-hour 10) "Rise to the light of a new day.")
+		     ((< current-hour 13) "As the zenith rises and falls, falter not.")
+		     ((< current-hour 16) "As the shadows lengthen, pay heed to the falling leaves.")
+		     ((< current-hour 20) "Look up, and marvel at the infinite and forever light.")
+		     (t night-message)))
+	 (message-contents (concat "Welcome, 11000011010. " component "\n"
+				   (format-time-string "%H:%M:%S %m/%d"))))
+    (message message-contents)))
+
 (add-hook 'window-setup-hook (lambda ()
                                 (global-display-line-numbers-mode t)
                                 (display-line-numbers-mode -1)
 				(load-theme 'photon-dark t)
                                 (make-frame-visible)
 				(revert-buffer-quick)
-				(message "Welcome, 10110110110. Shall we begin?\n%s" (format-time-string "%H:%M:%S %m/%d"))))
+				(init-message)))
 
 (add-hook 'prog-mode-hook (lambda ()
 			    (electric-pair-mode t)

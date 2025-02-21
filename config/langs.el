@@ -1,7 +1,8 @@
 ;; -*- lexical-binding: t; -*-
 
 (use-package eglot
-  :after prog-mode
+  :defer t
+  :commands (eglot eglot-rename eglot-code-actions)
   :bind (:map eglot-mode-map
 	      ("<normal-state> K" . nil))
   :custom
@@ -20,8 +21,20 @@
 
 (use-package dape
   :after eglot
+  :commands (dape dape-breakpoint-toggle dape-breakpoint-expression)
   :init
-  (setq dape-buffer-window-arrangement 'right))
+  (setq dape-buffer-window-arrangement 'right)
+  :bind (
+	 :map dape-info-stack-line-map
+	 ("TAB" . dape--info-buffer-tab)
+	 :map dape-info-module-line-map
+	 ("TAB" . dape--info-buffer-tab)
+	 :map dape-info-sources-mode-map
+	 ("TAB" . dape--info-buffer-tab)
+	 :map dape-info-breakpoints-line-map
+	 ("TAB" . dape--info-buffer-tab)
+	 :map dape-info-threads-line-map
+	 ("TAB" . dape--info-buffer-tab)))
 
 (use-package corfu
   :demand t
@@ -60,7 +73,8 @@
 ;; Rust
 (add-to-list 'compilation-error-regexp-alist 'rust)
 (add-to-list 'compilation-error-regexp-alist-alist
-             '(rust "^[[:space:]]*-->[[:space:]]*\\([^:\n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3))
+	     '(rust "^[[:space:]]*-->[[:space:]]*\\([^:\n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3))
+(setenv "CARGO_TERM_COLOR" "always")
 
 
 ;; Zig

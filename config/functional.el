@@ -94,17 +94,20 @@
 
 (use-package eat
   :demand t
-  :vc (:url "https://codeberg.org/akib/emacs-eat.git"))
-
-
-(use-package popper
-  :after eat
-  :custom
-  (popper-reference-buffers '(eat-mode))
+  :vc (:url "https://codeberg.org/akib/emacs-eat.git")
+  :hook (eat-exec . (lambda (&rest _) (eat-line-mode)))
   :config
-  (popper-mode t)
-  (popper-echo-mode t))
-  
+  (add-to-list 'display-buffer-alist
+	       '("^\\*eat\\*"
+		 (display-buffer-pop-up-window))))
+
+
+(use-package compile
+  :demand t)
+
+(use-package ansi-color
+  :hook (compilation-filter . ansi-color-compilation-filter))
+
 
 (use-package perspective
   :demand t
@@ -173,8 +176,6 @@
   (dashboard-setup-startup-hook))
 
 (load-file (concat addons-dir "photon-dashboard.el"))
-(add-hook 'window-setup-hook (lambda ()
-			       (dashboard-open)))
 
 
 (use-package rainbow-delimiters

@@ -21,9 +21,12 @@
 
 (defun photon-toggle ()
   (interactive)
-  (if (equal (buffer-name) "*eat*")
-      (funcall-interactively 'popper-close-latest)
-    (eat)))
+  (let ((win (get-buffer-window "*eat*" t)))
+    (if win
+	(progn
+	  (delete-window win)
+	  (balance-windows))
+      (eat))))
 
 
 (defun photon-delete ()
@@ -39,12 +42,10 @@
 	 (executable 
 	  (cond ((eq major-mode 'zig-mode)
 		 (concat "zig-out/bin/" project-name))
-		((eq major-mode 'rust-ts-mode)
-		 (concat "target/debug/" project-name))
 		(t nil)))
 	 (adapter
 	  (cond ((eq major-mode 'zig-mode) "gdb")
-		((eq major-mode 'rust-ts-mode) "gdb")
+		((eq major-mode 'rust-ts-mode) "codelldb-rust")
 		((eq major-mode 'python-ts-mode) "debugpy")
 		(t nil))))
     (progn
@@ -197,6 +198,7 @@
    ["󰖟  LSP tools"
     ("e" "Activate LSP" photon-eglot)
     ("r" "Rename symbol" eglot-rename)
+    ("a" "Code actions..." eglot-code-actions)
     ("<tab>" "Reindent buffer" photon-reindent-buffer)
     ]
    [""
