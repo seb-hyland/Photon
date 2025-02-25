@@ -25,7 +25,17 @@
 
 
 (use-package consult
-  :after vertico)
+  :after vertico
+  :custom
+  (consult-imenu-config
+   '((rust-mode
+      :toplevel "Fn"
+      :types
+      ((?f "Fn")
+       (?s "Struct")
+       (?e "Enum")
+       (?t "Type")
+       (?i "Impl"))))))
 
 
 (use-package orderless
@@ -109,7 +119,8 @@
 	 ("C-<tab>" . treesit-fold-close-all))
   :custom
   (global-treesit-fold-mode t)
-  (global-treesit-fold-indicators-mode t))
+  (treesit-fold-line-count-show t)
+  (treesit-fold-line-count-format " %d "))
 
 
 (use-package eat
@@ -148,7 +159,8 @@
   (setq scroll-conservatively 101
         scroll-margin 0)
   :config
-  (ultra-scroll-mode t))
+  ;;(ultra-scroll-mode t)
+  )
 
 
 (use-package autothemer

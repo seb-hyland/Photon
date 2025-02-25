@@ -7,10 +7,13 @@
 	      ("<normal-state> K" . nil))
   :custom
   (project-vc-extra-root-markers '("Cargo.toml" "build.zig"))
-  (eglot-events-buffer-config '(:size 0 :format lisp))
   :config
+  (setf (plist-get eglot-events-buffer-config :size) 0)
+  (fset #'jsonrpc--log-event #'ignore)
   (add-to-list 'eglot-server-programs
 	       '((rust-mode rust-ts-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
+
+  (advice-add 'eglot-imenu :override (lambda (&rest _) (treesit-simple-imenu)))
   (setq-default eglot-workspace-configuration
 		'(:basedpyright (:typeCheckingMode "standard"))))
 
@@ -72,9 +75,9 @@
 
 ;; Rust
 (add-to-list 'compilation-error-regexp-alist 'rust)
+(setenv "CARGO_TERM_COLOR" "always")
 (add-to-list 'compilation-error-regexp-alist-alist
 	     '(rust "^[[:space:]]*-->[[:space:]]*\\([^:\n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3))
-(setenv "CARGO_TERM_COLOR" "always")
 
 
 ;; Zig

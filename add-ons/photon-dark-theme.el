@@ -378,6 +378,9 @@
   (tree-sitter-hl-face:case-pattern              (:foreground autumnYellow))
   (tree-sitter-hl-face:keyword.compiler          (:foreground sumiInk-4 :italic t :weight 'normal))
 
+  (treesit-fold-replacement-face                 (:foreground sumiInk-5 :background sumiInk-1))
+
+
   (focus-unfocused (:foreground sumiInk-4))
   (window-stool-face (:background sumiInk-2 :underline (:color sumiInk-3)))
 

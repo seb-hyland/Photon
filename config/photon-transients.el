@@ -29,11 +29,13 @@
       (eat))))
 
 
+(defun photon-delete-word ()
+  (interactive)
+  (call-interactively 'backward-kill-word))
+
 (defun photon-delete ()
   (interactive)
-  (if (minibufferp)
-      (call-interactively 'backward-kill-word)
-    (delete-region (point) (line-beginning-position))))
+  (delete-region (point) (line-beginning-position)))
 
 
 (defun photon-dape ()
@@ -97,6 +99,12 @@
 		      (insert command))
 		  (call-interactively 'compile))))))
   
+(defun photon-cargo ()
+  (interactive)
+  (let ((command "cargo "))
+    (compile
+     (read-from-minibuffer "Cargo command: " command))))
+
 
 (transient-define-suffix global-scale-inc ()
   :transient t
@@ -189,7 +197,7 @@
    ["  Keybind sets"
     ("w" "   Window settings..." photon/window)
     ("RET" "   Coding tools..." photon/coding)
-    ("g" " 󰊢  Magit..." photon/magit)
+    ("r" "   Rust..." photon/rust)
     ]])
 
 
@@ -239,23 +247,14 @@
    ])
 
 
-(transient-define-prefix photon/magit ()
+(transient-define-prefix photon/rust ()
   [""
-   ["󰓾 Core functions"
-    ("s" "Status" magit-status)
-    ("f" "Fetch upstream" magit-fetch-from-upstream)
-    ("u" "Push upstream" magit-push-current-to-upstream)
-    ("p" "Pull from upstream" magit-pull-from-upstream)
+   ["󱌣  Build"
+    ("RET" "Run" (lambda () (interactive) (compile "cargo run")))
+    ("b" "Build" (lambda () (interactive) (compile "cargo build")))
+    ("t" "Test" (lambda () (interactive) (compile "cargo test")))
     ]
-   [
-    " Other functions"
-    ("b" "Branches..." magit-branch)
-    ("c" "Commit" magit-commit-create)
-    ("d" "Diff" magit-diff-dwim)
-    ]
-   [
-    ""
-    ("F" "Fetch..." magit-fetch)
-    ("U" "Push..." magit-push)
-    ("P" "Pull..." magit-pull)
-    ]])
+   ["  Other utilities"
+    ("TAB" "Format" (lambda () (interactive) (compile "cargo fmt")))
+    ("c" "Check" (lambda () (interactive) (compile "cargo check")))
+    ("o" "Other..." photon-cargo)]])

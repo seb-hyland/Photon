@@ -24,7 +24,8 @@
 		   ("M-<return>" . eglot-find-declaration)
 		   ("S-<return>" . eldoc-doc-buffer)
      		   ("C-<return>" . photon-toggle)
-		   ("M-<backspace>" . photon-delete)
+		   ("M-<backspace>" . photon-delete-word)
+		   ("C-<backspace>" . photon-delete)
      		   ))
   (define-key photon-keymap (kbd (car binding)) (cdr binding)))
 
