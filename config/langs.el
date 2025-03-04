@@ -92,6 +92,11 @@
   :defer t
   :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
 
+(use-package websocket)
+(use-package typst-preview
+  :after typst-ts-mode
+  :vc (:url "https://github.com/havarddj/typst-preview.el.git"
+	    :rev :newest))
 
 ;; Python
 (use-package pyvenv
