@@ -45,17 +45,6 @@
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 
-(use-package ctrlf
-  :defer t
-  :bind (
-         :map ctrlf-minibuffer-mode-map
-         ("<escape>" . minibuffer-keyboard-quit)
-         ("<remap> <photon-C-j>" . ctrlf-forward-default)
-         ("<remap> <photon-C-k>" . ctrlf-backward-default))
-  :config
-  (ctrlf-mode t))
-
-
 (use-package evil
   :demand t
   :init
@@ -65,7 +54,9 @@
   :bind (
          :map evil-motion-state-map
          ("j" . evil-next-visual-line)
-         ("k" . evil-previous-visual-line))
+         ("k" . evil-previous-visual-line)
+         :map occur-mode-map
+	 ("<remap> <occur-mode-goto-occurrence>" . photon-occur-goto-item))
   :config
   (evil-mode t)
   (evil-set-undo-system 'undo-redo))
@@ -136,6 +127,7 @@
 (use-package compile
   :demand t)
 
+
 (use-package ansi-color
   :hook (compilation-filter . ansi-color-compilation-filter))
 
@@ -152,15 +144,12 @@
   :defer t)
 
 
-(use-package ultra-scroll
-  :demand t
-  :vc (:url "https://github.com/jdtsmith/ultra-scroll.git")
-  :init
-  (setq scroll-conservatively 101
-        scroll-margin 0)
-  :config
-  ;;(ultra-scroll-mode t)
-  )
+(use-package chatgpt-shell
+  :ensure t
+  :custom
+  (chatgpt-shell-google-key (getenv "GEMINI_API"))
+  (chatgpt-shell-model-version "gemini-2.0-flash-thinking-exp-01-21")
+  (chatgpt-shell-display-function #'display-buffer))
 
 
 (use-package autothemer
@@ -192,7 +181,6 @@
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
-
 
 
 (use-package spacious-padding

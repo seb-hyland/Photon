@@ -4,18 +4,24 @@
   :defer t
   :commands (eglot eglot-rename eglot-code-actions)
   :bind (:map eglot-mode-map
-	      ("<normal-state> K" . nil))
+	      ("<normal-state> K" . nil)
+	      ("M-<return>" . eglot-find-declaration))
   :custom
   (project-vc-extra-root-markers '("Cargo.toml" "build.zig"))
+  (eldoc-echo-area-use-multiline-p t)
   :config
   (setf (plist-get eglot-events-buffer-config :size) 0)
   (fset #'jsonrpc--log-event #'ignore)
-  (add-to-list 'eglot-server-programs
-	       '((rust-mode rust-ts-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
-
   (advice-add 'eglot-imenu :override (lambda (&rest _) (treesit-simple-imenu)))
   (setq-default eglot-workspace-configuration
-		'(:basedpyright (:typeCheckingMode "standard"))))
+		'(:basedpyright (:typeCheckingMode "standard")))
+  (defun eglot-open-link ()
+    "Open markdown link at point in the `eldoc-doc-buffer'."
+    (interactive)
+    (let ((url (get-text-property (point) 'help-echo)))
+      (if url
+	  (browse-url url)
+	(message "No URL found at point")))))
 
 (use-package eglot-booster
   :vc (:url "https://github.com/jdtsmith/eglot-booster.git")
@@ -74,17 +80,32 @@
 
 
 ;; Rust
-(add-to-list 'compilation-error-regexp-alist 'rust)
-(setenv "CARGO_TERM_COLOR" "always")
-(add-to-list 'compilation-error-regexp-alist-alist
-	     '(rust "^[[:space:]]*-->[[:space:]]*\\([^:\n]+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3))
+(use-package rust-mode
+  :init
+  (setq rust-mode-treesitter-derive t))
+
+(use-package rustic
+  :after rust-mode
+  :custom
+  (rustic-lsp-client 'eglot)
+  (xterm-color-names
+   ["#090c12"  ; black
+    "#ff94b7"  ; red
+    "#97db84"  ; green
+    "#ffc55c"  ; yellow
+    "#9fbbf5"  ; blue
+    "#c8a6ff"  ; magenta
+    "#5dc9ab"  ; cyan
+    "#E6E3D3"] ; white
+   )
+  (xterm-color-names-bright xterm-color-names)
+  (xterm-color-use-bold-for-bright t))
 
 
 ;; Zig
 (use-package zig-mode
   :defer t
-  :config
-  (add-to-list 'auto-mode-alist '("\\.zig$" . zig-mode)))
+  :mode "\\.zig$")
 
 
 ;; Typst
@@ -92,7 +113,19 @@
   :defer t
   :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
 
+(use-package websocket)
+(use-package typst-preview
+  :after typst-ts-mode
+  :vc (:url "https://github.com/havarddj/typst-preview.el.git"
+	    :rev :newest))
 
 ;; Python
 (use-package pyvenv
   :after python-ts-mode)
+
+;; Mojo
+(use-package mojo-mode
+  :defer t
+  :mode "\\.mojo$"
+  :vc (:url "https://github.com/andcarnivorous/mojo-hl.git")
+  :config (add-to-list 'eglot-server-programs '(mojo-mode . ("magic" "run" "mojo-lsp-server"))))

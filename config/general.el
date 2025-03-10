@@ -20,7 +20,7 @@
       delete-by-moving-to-trash t
       create-lockfiles nil)
 (setq-default display-line-numbers-width 3
-	      display-fill-column-indicator-column 90)
+	      display-fill-column-indicator-column 100)
 
 (scroll-bar-mode -1)   		        
 (tool-bar-mode -1)     		        
@@ -31,6 +31,7 @@
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (set-face-attribute 'default nil :family "JetBrainsMono Nerd Font" :height 125)
+(set-face-attribute 'variable-pitch nil :family "JetBrainsMono Nerd Font" :height 125)
 (prefer-coding-system 'utf-8)
 (global-visual-line-mode t)
 (menu-bar--display-line-numbers-mode-visual)

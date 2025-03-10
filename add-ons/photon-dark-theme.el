@@ -79,7 +79,7 @@
   (line-number                                   (:foreground sumiInk-4))
   (line-number-current-line                      (:background sumiInk-2 :foreground crystalBlue :weight 'semi-bold))
   (lv-separator                                  (:foreground waveBlue-2 :background sumiInk-2))
-  (match                                         (:background carpYellow :foreground sumiInk-0))
+  (match                                         (:background roninYellow :foreground sumiInk-0))
   (menu                                          (:foreground fujiWhite))
   (mode-line                                     (:background sumiInk-1b :color sumiInk-2))
   (mode-line-inactive                            (:background sumiInk-1b :foreground fujiGray :box (:line-width 6 :color sumiInk-1) :weight 'extra-light :overline fujiGray))
@@ -322,6 +322,9 @@
   (ansi-color-yellow                             (:foreground autumnYellow))
   (ansi-color-bright-white                       (:foreground old-white))
   (ansi-color-bright-white                       (:foreground old-white))
+
+  (rustic-compilation-warning                    (:foreground roninYellow))
+  (rustic-compilation-error                      (:foreground sakuraPink))
 
  ;; Tree sitter highlightning
   (tree-sitter-hl-face:annotation                (:foreground crystalBlue :weight 'semi-bold))

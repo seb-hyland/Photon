@@ -47,7 +47,7 @@
 		(t nil)))
 	 (adapter
 	  (cond ((eq major-mode 'zig-mode) "gdb")
-		((eq major-mode 'rust-ts-mode) "codelldb-rust")
+		((eq major-mode 'rustic-mode) "codelldb-rust")
 		((eq major-mode 'python-ts-mode) "debugpy")
 		(t nil))))
     (progn
@@ -83,14 +83,15 @@
 	  (message "WARNING: No virtual environment was automatically detected.")
 	(call-interactively 'pyvenv-activate)))))
 
+
 (defun photon-compile ()
   (interactive)
   (let* ((command (cl-case major-mode
-			((rust-mode rust-ts-mode) "cargo run")
+			((rust-mode rust-ts-mode rustic-mode) "cargo run")
 			((python-mode python-ts-mode) "python ")
 			(t "")))
 	 (root (cl-case major-mode
-		 ((rust-mode rust-ts-mode) (project-root (project-current)))
+		 ((rust-mode rust-ts-mode rustic-mode) (project-root (project-current)))
 		 (t nil)))
 	 (default-directory (if root root default-directory))
 	 (setup (minibuffer-with-setup-hook
@@ -98,12 +99,59 @@
 		      (delete-minibuffer-contents)
 		      (insert command))
 		  (call-interactively 'compile))))))
-  
+
+
 (defun photon-cargo ()
   (interactive)
   (let ((command "cargo "))
     (compile
      (read-from-minibuffer "Cargo command: " command))))
+
+
+(defun photon-open-docs ()
+  (interactive)
+  (if (equal (buffer-name) "*eldoc*")
+      (call-interactively 'eglot-open-link)
+    (call-interactively 'eldoc-doc-buffer)))
+
+
+(defun photon-occur ()
+  (interactive)
+  (call-interactively 'occur)
+  (let ((win (get-buffer-window "*Occur*")))
+    (select-window win)))
+
+
+(defun photon-occur-goto-item ()
+  (interactive)
+  (call-interactively 'occur-mode-goto-occurrence)
+  (let ((win (get-buffer-window "*Occur*")))
+    (quit-window t win)))
+
+
+(defun photon-J ()
+  (interactive)
+  (cond ((eq major-mode 'occur-mode)
+	 (progn
+	   (occur-next)
+	   (occur-mode-display-occurrence)))
+	((derived-mode-p 'compilation-mode)
+	 (call-interactively 'compilation-next-error))
+	((eq evil-state 'visual)
+	 (execute-kbd-macro "}"))
+	(t (evil-forward-paragraph))))
+
+(defun photon-K ()
+  (interactive)
+  (cond ((eq major-mode 'occur-mode)
+	 (progn
+	   (occur-prev)
+	   (occur-mode-display-occurrence)))
+	((derived-mode-p 'compilation-mode)
+	 (call-interactively 'compilation-previous-error))
+	((eq evil-state 'visual)
+	 (execute-kbd-macro "{"))
+	(t (evil-backward-paragraph))))
 
 
 (transient-define-suffix global-scale-inc ()
@@ -178,7 +226,7 @@
     ("O" "Open project file..." project-find-file)
     ""
     "  Quick commands"
-    ("f" "Search in buffer..." ctrlf-forward-default)
+    ("f" "Search in buffer..." consult-line)
     ("F" "󰁣 Search in directory..." consult-ripgrep)
     ("x" "Execute command..." execute-extended-command)
     ("p" "Switch perspective..." persp-switch)
@@ -198,6 +246,7 @@
     ("w" "   Window settings..." photon/window)
     ("RET" "   Coding tools..." photon/coding)
     ("r" "   Rust..." photon/rust)
+    ("m" " 󱙺  Machine learning..." photon/ml)
     ]])
 
 
@@ -250,11 +299,28 @@
 (transient-define-prefix photon/rust ()
   [""
    ["󱌣  Build"
-    ("RET" "Run" (lambda () (interactive) (compile "cargo run")))
-    ("b" "Build" (lambda () (interactive) (compile "cargo build")))
-    ("t" "Test" (lambda () (interactive) (compile "cargo test")))
+    ("RET" "Run" rustic-cargo-run)
+    ("r" "Run" rustic-cargo-run)
+    ("a" "Run with arguments..." (lambda () (interactive) (funcall 'rustic-cargo-run t)))
+    ("b" "Build" rustic-cargo-build)
+    ("t" "Test" rustic-cargo-test)
     ]
    ["  Other utilities"
-    ("TAB" "Format" (lambda () (interactive) (compile "cargo fmt")))
-    ("c" "Check" (lambda () (interactive) (compile "cargo check")))
-    ("o" "Other..." photon-cargo)]])
+    ("TAB" "Format" rustic-cargo-fmt)
+    ("c" "Check" rustic-cargo-check)
+    ]
+   ["  Dependencies"
+    ("d a" "Add dependency" rustic-cargo-add)
+    ("d r" "Remove dependency" rustic-cargo-rm)
+    ("d m" "Add missing dependencies" rustic-cargo-add-missing-dependencies)
+    ("d u" "Upgrade dependencies" rustic-cargo-upgrade)]])
+
+(transient-define-prefix photon/ml ()
+  [""
+   ["  ML"
+    ("m" "Open session" chatgpt-shell)
+    ("c" "Change model" chatgpt-shell-swap-model)
+    ("i" "Run inline" chatgpt-shell-quick-insert)
+    ("e" "Explain code" chatgpt-shell-explain-code)
+    ("f" "Fix error at point" chatgpt-shell-fix-error-at-point)
+    ]])
