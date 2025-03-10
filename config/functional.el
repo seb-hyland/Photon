@@ -100,7 +100,7 @@
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode)
-  (add-to-list 'auto-mode-alist '("\\.ino$" . c++-ts-mode)))
+  (add-to-list 'auto-mode-alist '("\\.ino$" . c++-mode)))
 
 
 (use-package treesit-fold
