@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
 (use-package eglot
-  :defer t
+  :demand t
   :commands (eglot eglot-rename eglot-code-actions)
   :bind (:map eglot-mode-map
 	      ("<normal-state> K" . nil)
@@ -54,6 +54,7 @@
          ("RET" . nil))
   :hook
   (prog-mode . corfu-mode)
+  (typst-ts-mode . corfu-mode)
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0.1)
@@ -111,7 +112,8 @@
 ;; Typst
 (use-package typst-ts-mode
   :defer t
-  :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git"))
+  :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git")
+  :config (add-to-list 'eglot-server-programs '(typst-ts-mode . "tinymist")))
 
 (use-package websocket)
 (use-package typst-preview
@@ -129,3 +131,9 @@
   :mode "\\.mojo$"
   :vc (:url "https://github.com/andcarnivorous/mojo-hl.git")
   :config (add-to-list 'eglot-server-programs '(mojo-mode . ("magic" "run" "mojo-lsp-server"))))
+
+;; Nextflow
+(use-package nextflow-mode
+  :defer t
+  :mode "\\.nf$"
+  :vc (:url "https://github.com/edmundmiller/nextflow-mode.git" :rev :newest))
