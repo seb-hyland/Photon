@@ -113,13 +113,13 @@
 (use-package typst-ts-mode
   :defer t
   :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git")
-  :config (add-to-list 'eglot-server-programs '(typst-ts-mode . "tinymist")))
+  :config (add-to-list 'eglot-server-programs '(typst-ts-mode . ("tinymist"))))
 
 (use-package websocket)
 (use-package typst-preview
   :after typst-ts-mode
-  :vc (:url "https://github.com/havarddj/typst-preview.el.git"
-	    :rev :newest))
+  :vc (:url "https://github.com/havarddj/typst-preview.el.git" :rev :newest)
+  :custom (typst-preview-invert-colors "never"))
 
 ;; Python
 (use-package pyvenv
@@ -137,3 +137,8 @@
   :defer t
   :mode "\\.nf$"
   :vc (:url "https://github.com/edmundmiller/nextflow-mode.git" :rev :newest))
+
+;; PDF
+(use-package pdf-tools
+  :defer t
+  :hook (pdf-view-mode . (lambda () (display-line-numbers-mode -1))))

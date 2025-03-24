@@ -207,9 +207,17 @@
                               "<:<" ";;;"))
   (global-ligature-mode t))
 
+
+(use-package vi-tilde-fringe
+  :config
+  (global-vi-tilde-fringe-mode t))
+
+
 (use-package dashboard
   :custom
   (nerd-icons-font-family "Symbols Nerd Font Mono")
+  :hook
+  (dashboard-mode . (lambda () (vi-tilde-fringe-mode -1)))
   :config
   (dashboard-setup-startup-hook))
 
