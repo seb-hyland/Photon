@@ -192,6 +192,8 @@
         (setq photon-focus-state t)
         (define-key evil-normal-state-map (kbd "SPC") 'photon-focus-toggle)
         (define-key evil-visual-state-map (kbd "SPC") 'photon-focus-toggle)
+        (define-key evil-normal-state-map (kbd "C-SPC") 'photon-focus-toggle)
+        (define-key evil-visual-state-map (kbd "C-SPC") 'photon-focus-toggle)
      	(with-eval-after-load 'dired
           (define-key dired-mode-map (kbd "<normal-state> SPC") 'photon-focus-toggle)
           (define-key dired-mode-map (kbd "<visual-state> SPC") 'photon-focus-toggle)))
@@ -207,8 +209,30 @@
 
 
 (defun photon-reindent-buffer ()
-  "Indent the entire buffer using tree-sitter's builtin indentation."
   (interactive)
   (save-excursion
     (mark-whole-buffer)
     (indent-for-tab-command)))
+
+
+(defun get-launch-directory ()
+  (let ((pwd (cdr (assoc "PWD" initial-environment))))
+    (if pwd
+        pwd
+      (expand-file-name "~"))))
+
+(defun photon-telescope-open ()
+  (interactive)
+  (consult-fd (get-launch-directory)))
+
+(defun photon-telescope-rg ()
+  (interactive)
+  (consult-ripgrep (get-launch-directory)))
+
+
+(defun eglot-open-link ()
+    (interactive)
+    (let ((url (get-text-property (point) 'help-echo)))
+      (if url
+	  (browse-url url)
+	(message "No URL found at point"))))

@@ -202,31 +202,16 @@
   (show-paren-mismatch                           (:background peachRed :foreground old-white))
 
   (tooltip                                       (:foreground sumiInk :background carpYellow))
+  (consult-file                                  (:foreground springViolet2))
 
-  (consult-file (:foreground springViolet2))
+  (highlight-indent-guides-character-face        (:foreground sumiInk-3))
+  (highlight-indent-guides-top-character-face    (:foreground sumiInk-5))
 
   (flycheck-inline-error                         (:foreground peachRed :background winterRed :height 150 :italic t))
   (flycheck-inline-info                          (:foreground crystalBlue :background waveBlue-2 :height 150 :italic t))
   (flycheck-inline-warning                       (:foreground carpYellow :background winterYellow :height 150 :italic t))
   (jinx-misspelled                               (:underline (:color roninYellow :style 'wave)))
 
-  ;; indent dots
-  (highlight-indent-guides-character-face        (:foreground sumiInk-3))
-  (highlight-indent-guides-stack-character-face  (:foreground sumiInk-3))
-  (highlight-indent-guides-stack-odd-face        (:foreground sumiInk-3))
-  (highlight-indent-guides-stack-even-face       (:foreground comet))
-  (highlight-indent-guides-stack-character-face  (:foreground sumiInk-3))
-  (highlight-indent-guides-even-face             (:foreground sumiInk-2))
-  (highlight-indent-guides-odd-face              (:foreground comet))
-
-  (highlight-indentation-current-column-face     (:background sumiInk-2))
-  (highlight-indentation-face                    (:foreground comet :background comet))
-
-  (highlight-operators-face                      (:foreground boatYellow2))
-  (highlight-quoted-symbol                       (:foreground springGreen))
-  (highlight-numbers-face                        (:foreground sakuraPink))
-  (highlight-symbol-face                         (:background winterBlue :foreground springBlue :weight 'normal))
-  
   (eldoc-highlight-function-argument (:foreground carpYellow :background winterYellow))
 
   ;; dashboard

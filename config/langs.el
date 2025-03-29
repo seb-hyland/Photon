@@ -3,6 +3,20 @@
 (use-package eglot
   :defer t
   :commands (eglot eglot-rename eglot-code-actions)
+  :init
+  (use-package eglot-booster
+    :demand t
+    :vc (:url "https://github.com/jdtsmith/eglot-booster.git")
+    :config (eglot-booster-mode t))
+  (use-package tempel
+    :demand t
+    :bind (:map tempel-map
+		("<remap> <photon-C-j>" . tempel-next)
+		("<remap> <photon-C-k>" . tempel-previous)))
+  (use-package eglot-tempel
+    :demand t
+    :init
+    (eglot-tempel-mode t))
   :bind (:map eglot-mode-map
 	      ("<normal-state> K" . nil)
 	      ("M-<return>" . eglot-find-declaration))
@@ -14,22 +28,11 @@
   (fset #'jsonrpc--log-event #'ignore)
   (advice-add 'eglot-imenu :override (lambda (&rest _) (treesit-simple-imenu)))
   (setq-default eglot-workspace-configuration
-		'(:basedpyright (:typeCheckingMode "standard")))
-  (defun eglot-open-link ()
-    "Open markdown link at point in the `eldoc-doc-buffer'."
-    (interactive)
-    (let ((url (get-text-property (point) 'help-echo)))
-      (if url
-	  (browse-url url)
-	(message "No URL found at point")))))
+		'(:basedpyright (:typeCheckingMode "standard"))))
 
-(use-package eglot-booster
-  :after eglot
-  :vc (:url "https://github.com/jdtsmith/eglot-booster.git")
-  :config (eglot-booster-mode t))
 
 (use-package dape
-  :after eglot
+  :defer t
   :commands (dape dape-breakpoint-toggle dape-breakpoint-expression)
   :init
   (setq dape-buffer-window-arrangement 'right)
@@ -63,16 +66,6 @@
   (corfu-popupinfo-delay '(0.1 . 0.1))
   (corfu-popupinfo-mode t))
 
-(use-package tempel
-  :after eglot
-  :bind (:map tempel-map
-	      ("<remap> <photon-C-j>" . tempel-next)
-	      ("<remap> <photon-C-k>" . tempel-previous)))
-
-(use-package eglot-tempel
-  :after eglot 
-  :init
-  (eglot-tempel-mode t))
 
 (use-package markdown-mode
   :after eglot

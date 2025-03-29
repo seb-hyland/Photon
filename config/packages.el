@@ -24,10 +24,24 @@
   (marginalia-mode t))
 
 
-(use-package consult
+(use-package orderless
   :after vertico
   :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+
+(use-package consult
+  :defer t
+  :commands (consult-line
+	     consult-ripgrep
+	     consult-imenu
+	     consult-imenu-multi
+	     consult-flymake
+	     consult-compile-error)
+  :custom
   (consult-line-start-from-top t)
+  (consult-async-min-input 1)
   (consult-imenu-config
    '((rust-mode
       :toplevel "Fn"
@@ -37,13 +51,6 @@
        (?e "Enum")
        (?t "Type")
        (?i "Impl"))))))
-
-
-(use-package orderless
-  :after vertico
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
 
 
 (use-package evil
@@ -70,7 +77,13 @@
 
 
 (use-package helpful
-  :defer t)
+  :defer t
+  :commands (helpful-key helpful-function helpful-variable))
+
+
+(use-package winner
+  :demand t
+  :config (winner-mode t))
 
 
 (use-package magit
@@ -81,7 +94,7 @@
 
 
 (use-package transient
-  :demand t
+  :defer t
   :bind (
       	 :map transient-base-map
       	 ("<escape>" . transient-quit-all)))
@@ -98,7 +111,8 @@
 
 
 (use-package treesit-fold
-  :demand t
+  :defer t
+  :hook (prog-mode . treesit-fold-mode)
   :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold.git")
   :config
   (defun treesit-fold-better-toggle ()
@@ -112,27 +126,28 @@
 	 ("<backtab>" . treesit-fold-open-all)
 	 ("C-<tab>" . treesit-fold-close-all))
   :custom
-  (global-treesit-fold-mode t)
   (treesit-fold-line-count-show t)
   (treesit-fold-line-count-format " %d "))
 
 
+(use-package highlight-indent-guides
+  :defer t
+  :hook
+  (prog-mode . highlight-indent-guides-mode)
+  :custom
+  (highlight-indent-guides-auto-enabled nil)
+  (highlight-indent-guides-method 'character)
+  (highlight-indent-guides-responsive 'top))
+
+
 (use-package eat
-  :demand t
+  :defer t
   :vc (:url "https://codeberg.org/akib/emacs-eat.git")
   :hook (eat-exec . (lambda (&rest _) (eat-semi-char-mode)))
   :config
   (add-to-list 'display-buffer-alist
 	       '("^\\*eat\\*"
 		 (display-buffer-pop-up-window))))
-
-
-(use-package compile
-  :demand t)
-
-
-(use-package ansi-color
-  :hook (compilation-filter . ansi-color-compilation-filter))
 
 
 (use-package perspective
@@ -148,14 +163,21 @@
 
 
 (use-package chatgpt-shell
-  :ensure t
+  :defer t
+  :vc (:url "https://github.com/xenodium/chatgpt-shell.git" :rev :newest)
+  :commands (chatgpt-shell
+	     chatgpt-shell-swap-model
+	     chatgpt-shell-quick-insert
+	     chatgpt-shell-explain-code
+	     chatgpt-shell-fix-error-at-point)
   :custom
   (chatgpt-shell-google-key (getenv "GEMINI_API"))
-  (chatgpt-shell-model-version "gemini-2.0-flash-thinking-exp-01-21")
+  (chatgpt-shell-model-version "gemini-2.5-pro-exp")
   (chatgpt-shell-display-function #'display-buffer))
 
 
 (use-package autothemer
+  :demand t
   :config
   (add-to-list 'custom-theme-load-path addons-dir))
 
@@ -166,8 +188,9 @@
   (nerd-icons-color-icons t)
   (nerd-icons-scale-factor 1))
 
+
 (use-package nerd-icons-dired
-  :after nerd-icons
+  :defer t
   :hook
   (dired-mode . nerd-icons-dired-mode)
   (dired-mode . dired-hide-details-mode))
@@ -185,13 +208,13 @@
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
-
 (use-package spacious-padding
   :demand t
   :init
   (spacious-padding-mode))
 
 (use-package ligature
+  :demand t
   :config
   (ligature-set-ligatures 'prog-mode '("--" "---" "==" "===" "!=" "!==" "=!="
                               "=:=" "=/=" "<=" ">=" "&&" "&&&" "&=" "++" "+++" "***" ";;" "!!"
@@ -210,11 +233,28 @@
 
 
 (use-package vi-tilde-fringe
+  :demand t
   :config
   (global-vi-tilde-fringe-mode t))
 
 
+(use-package devdocs
+  :defer t
+  :commands (devdocs-lookup)
+  :bind (
+	 :map devdocs-mode-map
+	      ("C-j" . devdocs-go-forward)
+	      ("C-k" . devdocs-go-back))
+  :config
+  (define-key devdocs-mode-map (kbd "<normal-state> SPC") (lookup-key evil-normal-state-map (kbd "SPC"))))
+
+
+(use-package quickrun
+  :defer t
+  :commands (quickrun quickrun-shell))
+
 (use-package dashboard
+  :demand t
   :custom
   (nerd-icons-font-family "Symbols Nerd Font Mono")
   :hook
@@ -231,6 +271,8 @@
 
 
 (use-package org
+  :defer t
+  :mode "\\.org$"
   :config
   (delete-selection-mode t)
   (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file))

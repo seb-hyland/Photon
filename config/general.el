@@ -18,7 +18,8 @@
       display-line-numbers-type 'relative
       split-width-threshold 1
       delete-by-moving-to-trash t
-      create-lockfiles nil)
+      create-lockfiles nil
+      custom-file (file-name-concat user-emacs-directory "custom.el"))
 (setq-default display-line-numbers-width 3
 	      display-fill-column-indicator-column 100)
 
@@ -31,7 +32,9 @@
 
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 (set-face-attribute 'default nil :family "JetBrainsMono Nerd Font" :height 125)
+(set-face-attribute 'fixed-pitch nil :family "JetBrainsMono Nerd Font" :height 125)
 (set-face-attribute 'variable-pitch nil :family "JetBrainsMono Nerd Font" :height 125)
+(set-face-attribute 'variable-pitch-text nil :height 125)
 (prefer-coding-system 'utf-8)
 (global-visual-line-mode t)
 (menu-bar--display-line-numbers-mode-visual)
@@ -53,11 +56,19 @@
 				   (format-time-string "%H:%M:%S %m/%d"))))
     (message message-contents)))
 
+(defun cleanup-buffers ()
+  (interactive)
+  (dolist (buf (buffer-list))
+    (let ((name (buffer-name buf)))
+      (unless (member name '("*Warnings*" "*dashboard*"))
+	(kill-buffer buf)))))
+
 (add-hook 'window-setup-hook (lambda ()
                                 (global-display-line-numbers-mode t)
                                 (display-line-numbers-mode -1)
 				(load-theme 'photon-dark t)
 				(revert-buffer-quick)
+				(cleanup-buffers)
 				(init-message)))
 
 (add-hook 'prog-mode-hook (lambda ()
