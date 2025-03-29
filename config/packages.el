@@ -27,6 +27,7 @@
 (use-package consult
   :after vertico
   :custom
+  (consult-line-start-from-top t)
   (consult-imenu-config
    '((rust-mode
       :toplevel "Fn"

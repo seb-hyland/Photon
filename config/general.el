@@ -57,7 +57,6 @@
                                 (global-display-line-numbers-mode t)
                                 (display-line-numbers-mode -1)
 				(load-theme 'photon-dark t)
-                                (make-frame-visible)
 				(revert-buffer-quick)
 				(init-message)))
 

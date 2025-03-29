@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
 (use-package eglot
-  :demand t
+  :defer t
   :commands (eglot eglot-rename eglot-code-actions)
   :bind (:map eglot-mode-map
 	      ("<normal-state> K" . nil)
@@ -24,8 +24,8 @@
 	(message "No URL found at point")))))
 
 (use-package eglot-booster
-  :vc (:url "https://github.com/jdtsmith/eglot-booster.git")
   :after eglot
+  :vc (:url "https://github.com/jdtsmith/eglot-booster.git")
   :config (eglot-booster-mode t))
 
 (use-package dape
@@ -70,7 +70,7 @@
 	      ("<remap> <photon-C-k>" . tempel-previous)))
 
 (use-package eglot-tempel
-  :after tempel
+  :after eglot 
   :init
   (eglot-tempel-mode t))
 
@@ -129,7 +129,7 @@
 (use-package mojo-mode
   :defer t
   :mode "\\.mojo$"
-  :vc (:url "https://github.com/andcarnivorous/mojo-hl.git")
+  :vc (:url "https://github.com/andcarnivorous/mojo-hl.git" :rev :newest)
   :config (add-to-list 'eglot-server-programs '(mojo-mode . ("magic" "run" "mojo-lsp-server"))))
 
 ;; Nextflow
@@ -141,4 +141,5 @@
 ;; PDF
 (use-package pdf-tools
   :defer t
+  :mode "\\.pdf$"
   :hook (pdf-view-mode . (lambda () (display-line-numbers-mode -1))))

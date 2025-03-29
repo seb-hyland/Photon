@@ -1,5 +1,9 @@
 ;; -*- lexical-binding: t; -*-
 
+;; Hide frame
+(push '(visibility . nil) initial-frame-alist)
+(add-hook 'window-setup-hook #'make-frame-visible)
+(run-with-timer 5 nil #'make-frame-visible)
 
 ;; Setup use-package
 (require 'package)
@@ -37,19 +41,18 @@
 (load "general")
 
 ;; Load functional packages
-(load "functional")
+(load "packages")
 
 ;; Load language preferences 
 (load "langs")
 
 ;; Load Photon transients
-(load "photon-transients")
+(load "functions")
 
 ;; Load Photon keybinds 
-(load "photon-keys")
+(load "keys")
 
 ;; Load modeline
 (add-hook 'window-setup-hook (lambda () (load "modeline")))
-
 
 (setq gc-cons-threshold (expt 2 23))
