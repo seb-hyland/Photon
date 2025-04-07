@@ -207,9 +207,12 @@
   (highlight-indent-guides-character-face        (:foreground sumiInk-3))
   (highlight-indent-guides-top-character-face    (:foreground sumiInk-5))
 
-  (flycheck-inline-error                         (:foreground peachRed :background winterRed :height 150 :italic t))
-  (flycheck-inline-info                          (:foreground crystalBlue :background waveBlue-2 :height 150 :italic t))
-  (flycheck-inline-warning                       (:foreground carpYellow :background winterYellow :height 150 :italic t))
+  (flymake-warning                               (:underline (:color carpYellow :style 'line)))
+  (flymake-error                                 (:underline (:color peachRed :style 'line)))
+  (flymake-note                                  (:underline (:color waveAqua2 :style 'line)))
+  (flymake-warning-echo                          (:foreground carpYellow))
+  (flymake-error-echo                            (:foreground peachRed))
+  (flymake-note-echo                             (:foreground waveAqua2))
   (jinx-misspelled                               (:underline (:color roninYellow :style 'wave)))
 
   (eldoc-highlight-function-argument (:foreground carpYellow :background winterYellow))
@@ -262,8 +265,8 @@
   (vertico-group-separator                       (:foreground sumiInk-5 :strike-through t))
   (vertico-current                               (:background sumiInk-2 :weight 'normal))
 
-  (vertico-posframe-border                       (:background sumiInk))
-  (vertico-posframe                              (:background sumiInk))
+  (vertico-posframe-border                       (:background sumiInk-1))
+  (vertico-posframe                              (:background sumiInk-1))
 
   (orderless-match-face-0                        (:foreground fujiWhite :weight 'bold))
   (orderless-match-face-1                        (:foreground peachRed :weight 'bold))
@@ -311,7 +314,7 @@
   (rustic-compilation-warning                    (:foreground roninYellow))
   (rustic-compilation-error                      (:foreground sakuraPink))
 
- ;; Tree sitter highlightning
+  ;; Tree sitter highlightning
   (tree-sitter-hl-face:annotation                (:foreground crystalBlue :weight 'semi-bold))
   (tree-sitter-hl-face:annotation.builtin        (:foreground sakuraPink :weight 'semi-bold))
   (tree-sitter-hl-face:annotation.type           (:foreground peachRed))
@@ -382,7 +385,7 @@
   (transient-key (:foreground peachRed :bold t))
   (transient-key-stay (:foreground springBlue :backgroud winterBlue :bold t))
   (transient-key-exit (:foreground peachRed :background winterRed :bold t))
- ))
+  ))
 
 ;;;###autoload
 (and load-file-name

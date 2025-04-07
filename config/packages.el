@@ -18,6 +18,14 @@
   (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
 
+(use-package vertico-posframe
+  :after vertico
+  :vc (:url "https://github.com/tumashu/vertico-posframe.git")
+  :custom
+  (vertico-posframe-border-width 20)
+  :config (vertico-posframe-mode t))
+
+
 (use-package marginalia
   :after vertico
   :config
@@ -28,7 +36,8 @@
   :after vertico
   :custom
   (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+  (completion-category-overrides '((file (styles orderless))
+				   (buffer (styles orderless basic)))))
 
 
 (use-package consult
@@ -42,6 +51,8 @@
   :custom
   (consult-line-start-from-top t)
   (consult-async-min-input 1)
+  (xref-show-xrefs-function #'consult-xref)
+  (xref-show-definitions-function #'consult-xref)
   (consult-imenu-config
    '((rust-mode
       :toplevel "Fn"
@@ -52,13 +63,26 @@
        (?t "Type")
        (?i "Impl"))))))
 
+(use-package consult-eglot
+  :after eglot)
+
+
+(use-package embark
+  :defer t
+  :init
+  (use-package embark-consult
+    :demand t)
+  :bind
+  (("C-." . embark-act)))
+
 
 (use-package evil
   :demand t
   :init
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-respect-visual-line-mode t)
+  (setq evil-want-integration t
+	evil-want-keybinding nil
+	evil-want-minibuffer t
+	evil-respect-visual-line-mode t)
   :bind (
          :map evil-motion-state-map
          ("j" . evil-next-visual-line)
@@ -74,6 +98,11 @@
   :after evil
   :config
   (evil-collection-init))
+
+
+(use-package dired
+  :ensure nil
+  :custom (dired-dwim-target t))
 
 
 (use-package helpful
@@ -92,6 +121,14 @@
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
   (magit-format-file-function #'magit-format-file-nerd-icons))
 
+(use-package forge
+  :after magit)
+
+(use-package code-review
+  :vc (:url "https://github.com/doomelpa/code-review.git")
+  :after forge
+  :custom (code-review-auth-login-marker 'forge))
+
 
 (use-package transient
   :defer t
@@ -103,11 +140,11 @@
 (use-package treesit-auto
   :demand t
   :custom
-  (c-basic-offset 4)
+  (c-ts-mode-indent-offset 4)
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode)
-  (add-to-list 'auto-mode-alist '("\\.ino$" . c++-mode)))
+  (add-to-list 'auto-mode-alist '("\\.ino$" . c++-ts-mode)))
 
 
 (use-package treesit-fold
@@ -150,6 +187,11 @@
 		 (display-buffer-pop-up-window))))
 
 
+(use-package ansi-color
+  :demand t
+  :hook (compilation-filter . ansi-color-compilation-filter))
+
+
 (use-package perspective
   :demand t
   :init
@@ -164,7 +206,7 @@
 
 (use-package chatgpt-shell
   :defer t
-  :vc (:url "https://github.com/xenodium/chatgpt-shell.git" :rev :newest)
+  :vc (:url "https://github.com/xenodium/chatgpt-shell.git")
   :commands (chatgpt-shell
 	     chatgpt-shell-swap-model
 	     chatgpt-shell-quick-insert
@@ -217,18 +259,18 @@
   :demand t
   :config
   (ligature-set-ligatures 'prog-mode '("--" "---" "==" "===" "!=" "!==" "=!="
-                              "=:=" "=/=" "<=" ">=" "&&" "&&&" "&=" "++" "+++" "***" ";;" "!!"
-                              "??" "???" "?:" "?." "?=" "<:" ":<" ":>" ">:" "<:<" "<>" "<<<" ">>>"
-                              "<<" ">>" "||" "-|" "_|_" "|-" "||-" "|=" "||=" "##" "###" "####"
-                              "#{" "#[" "]#" "#(" "#?" "#_" "#_(" "#:" "#!" "#=" "^=" "<$>" "<$"
-                              "$>" "<+>" "<+" "+>" "<*>" "<*" "*>" "</" "</>" "/>" "<!--" "<#--"
-                              "-->" "->" "->>" "<<-" "<-" "<=<" "=<<" "<<=" "<==" "<=>" "<==>"
-                              "==>" "=>" "=>>" ">=>" ">>=" ">>-" ">-" "-<" "-<<" ">->" "<-<" "<-|"
-                              "<=|" "|=>" "|->" "<->" "<~~" "<~" "<~>" "~~" "~~>" "~>" "~-" "-~"
-                              "~@" "[||]" "|]" "[|" "|}" "{|" "[<" ">]" "|>" "<|" "||>" "<||"
-                              "|||>" "<|||" "<|>" "..." ".." ".=" "..<" ".?" "::" ":::" ":=" "::="
-                              ":?" ":?>" "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__" "???"
-                              "<:<" ";;;"))
+				       "=:=" "=/=" "<=" ">=" "&&" "&&&" "&=" "++" "+++" "***" ";;" "!!"
+				       "??" "???" "?:" "?." "?=" "<:" ":<" ":>" ">:" "<:<" "<>" "<<<" ">>>"
+				       "<<" ">>" "||" "-|" "_|_" "|-" "||-" "|=" "||=" "##" "###" "####"
+				       "#{" "#[" "]#" "#(" "#?" "#_" "#_(" "#:" "#!" "#=" "^=" "<$>" "<$"
+				       "$>" "<+>" "<+" "+>" "<*>" "<*" "*>" "</" "</>" "/>" "<!--" "<#--"
+				       "-->" "->" "->>" "<<-" "<-" "<=<" "=<<" "<<=" "<==" "<=>" "<==>"
+				       "==>" "=>" "=>>" ">=>" ">>=" ">>-" ">-" "-<" "-<<" ">->" "<-<" "<-|"
+				       "<=|" "|=>" "|->" "<->" "<~~" "<~" "<~>" "~~" "~~>" "~>" "~-" "-~"
+				       "~@" "[||]" "|]" "[|" "|}" "{|" "[<" ">]" "|>" "<|" "||>" "<||"
+				       "|||>" "<|||" "<|>" "..." ".." ".=" "..<" ".?" "::" ":::" ":=" "::="
+				       ":?" ":?>" "//" "///" "/*" "*/" "/=" "//=" "/==" "@_" "__" "???"
+				       "<:<" ";;;"))
   (global-ligature-mode t))
 
 
@@ -243,8 +285,8 @@
   :commands (devdocs-lookup)
   :bind (
 	 :map devdocs-mode-map
-	      ("C-j" . devdocs-go-forward)
-	      ("C-k" . devdocs-go-back))
+	 ("C-j" . devdocs-go-forward)
+	 ("C-k" . devdocs-go-back))
   :config
   (define-key devdocs-mode-map (kbd "<normal-state> SPC") (lookup-key evil-normal-state-map (kbd "SPC"))))
 
@@ -252,6 +294,13 @@
 (use-package quickrun
   :defer t
   :commands (quickrun quickrun-shell))
+
+
+(use-package binfo
+  :defer t
+  :commands (binfo-mode)
+  :load-path addons-dir)
+
 
 (use-package dashboard
   :demand t

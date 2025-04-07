@@ -27,20 +27,6 @@
 (defun set-pin-p () (interactive) (set-pin 'pin-p))
 
 
-(defun photon-C-j ()
-  (interactive)
-  (if (eq evil-state 'visual)
-    (execute-kbd-macro "G")
-    (end-of-buffer)))
-
-
-(defun photon-C-k ()
-  (interactive)
-  (if (eq evil-state 'visual)
-    (execute-kbd-macro "gg")
-    (beginning-of-buffer)))
-
-
 (defun photon-toggle ()
   (interactive)
   (let ((win (get-buffer-window "*eat*" t)))
@@ -215,6 +201,16 @@
     (indent-for-tab-command)))
 
 
+(defun photon-line ()
+  (interactive)
+  (let ((vertico-posframe-mode nil))
+    (consult-line)))
+
+(defun photon-rg ()
+  (interactive)
+  (let ((vertico-posframe-mode nil))
+    (consult-ripgrep)))
+
 (defun get-launch-directory ()
   (let ((pwd (cdr (assoc "PWD" initial-environment))))
     (if pwd
@@ -236,3 +232,8 @@
       (if url
 	  (browse-url url)
 	(message "No URL found at point"))))
+
+
+(defun sockeye ()
+  (interactive)
+  (dired "/ssh:sthyland@sockeye.arc.ubc.ca:~/"))

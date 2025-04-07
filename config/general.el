@@ -19,6 +19,7 @@
       split-width-threshold 1
       delete-by-moving-to-trash t
       create-lockfiles nil
+      auth-sources '("~/.authinfo")
       custom-file (file-name-concat user-emacs-directory "custom.el"))
 (setq-default display-line-numbers-width 3
 	      display-fill-column-indicator-column 100)
@@ -49,8 +50,8 @@
 		     ((< current-hour 5) night-message)
 		     ((< current-hour 10) "Rise to the light of a new day.")
 		     ((< current-hour 13) "As the zenith rises and falls, falter not.")
-		     ((< current-hour 16) "As the shadows lengthen, pay heed to the falling leaves.")
-		     ((< current-hour 20) "Look up, and marvel at the infinite and forever light.")
+		     ((< current-hour 17) "As the shadows lengthen, pay heed to the falling leaves.")
+		     ((< current-hour 22) "Look up, and marvel at the infinite and forever light.")
 		     (t night-message)))
 	 (message-contents (concat "Welcome, 11000011010. " component "\n"
 				   (format-time-string "%H:%M:%S %m/%d"))))
@@ -58,23 +59,23 @@
 
 (defun cleanup-buffers ()
   (interactive)
-  (dolist (buf (buffer-list))
-    (let ((name (buffer-name buf)))
-      (unless (member name '("*Warnings*" "*dashboard*"))
-	(kill-buffer buf)))))
+  (if (eq (length command-line-args) 1)
+      (dolist (buf (buffer-list))
+	(let ((name (buffer-name buf)))
+	  (unless (member name '("*Warnings*" "*dashboard*"))
+	    (kill-buffer buf))))))
 
 (add-hook 'window-setup-hook (lambda ()
-                                (global-display-line-numbers-mode t)
-                                (display-line-numbers-mode -1)
-				(load-theme 'photon-dark t)
-				(revert-buffer-quick)
-				(cleanup-buffers)
-				(init-message)))
+                               (global-display-line-numbers-mode t)
+                               (display-line-numbers-mode -1)
+			       (load-theme 'photon-dark t)
+			       (revert-buffer-quick)
+			       (cleanup-buffers)
+			       (init-message)))
 
 (add-hook 'prog-mode-hook (lambda ()
 			    (electric-pair-mode t)
 			    (display-fill-column-indicator-mode)
 			    (visual-line-mode -1)
-			    (setq truncate-lines t)
-			    (setq flymake-show-diagnostics-at-end-of-line t)))
+			    (setq truncate-lines t)))
 

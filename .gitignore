@@ -8,3 +8,6 @@ debug-adapters/*
 tramp
 custom.el
 devdocs/*
+*code-review-*
+forge-database*
+eshell/*

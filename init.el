@@ -9,15 +9,16 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+(require 'use-package)
+(setq use-package-always-ensure t
+      use-package-vc-prefer-newest t)
+
 (defvar addons-dir (concat user-emacs-directory "add-ons/"))
 (add-to-list 'load-path addons-dir)
 (defvar config-dir (concat user-emacs-directory "config/"))
 (add-to-list 'load-path config-dir)
-
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
-(setq use-package-always-ensure t)
 
 ;; Reduce GC during startup
 (setq gc-cons-threshold most-positive-fixnum

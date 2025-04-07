@@ -11,8 +11,8 @@
   (use-package tempel
     :demand t
     :bind (:map tempel-map
-		("<remap> <photon-C-j>" . tempel-next)
-		("<remap> <photon-C-k>" . tempel-previous)))
+		("<remap> <electric-newline-and-maybe-indent>" . tempel-next)
+		("<remap> <evil-insert-digraph>" . tempel-previous)))
   (use-package eglot-tempel
     :demand t
     :init
@@ -52,9 +52,9 @@
   :demand t
   :bind (
     	 :map corfu-map
-    	 ("<remap> <photon-C-j>" . corfu-next)
-    	 ("<remap> <photon-C-k>" . corfu-previous)
-         ("RET" . nil))
+	 ("<remap> <vertico-next>" . corfu-next)
+	 ("<remap> <vertico-previous>" . corfu-previous)
+	 ("RET" . nil))
   :hook
   (prog-mode . corfu-mode)
   (typst-ts-mode . corfu-mode)
@@ -65,7 +65,6 @@
   (completion-ignore-case t)
   (corfu-popupinfo-delay '(0.1 . 0.1))
   (corfu-popupinfo-mode t))
-
 
 (use-package markdown-mode
   :after eglot
@@ -111,7 +110,7 @@
 (use-package websocket)
 (use-package typst-preview
   :after typst-ts-mode
-  :vc (:url "https://github.com/havarddj/typst-preview.el.git" :rev :newest)
+  :vc (:url "https://github.com/havarddj/typst-preview.el.git")
   :custom (typst-preview-invert-colors "never"))
 
 ;; Python
@@ -121,18 +120,12 @@
 ;; Mojo
 (use-package mojo-mode
   :defer t
-  :mode "\\.mojo$"
-  :vc (:url "https://github.com/andcarnivorous/mojo-hl.git" :rev :newest)
+  :mode ("\\.mojo$" "\\.🔥$")
+  :vc (:url "https://github.com/andcarnivorous/mojo-hl.git")
   :config (add-to-list 'eglot-server-programs '(mojo-mode . ("magic" "run" "mojo-lsp-server"))))
 
 ;; Nextflow
 (use-package nextflow-mode
   :defer t
   :mode "\\.nf$"
-  :vc (:url "https://github.com/edmundmiller/nextflow-mode.git" :rev :newest))
-
-;; PDF
-(use-package pdf-tools
-  :defer t
-  :mode "\\.pdf$"
-  :hook (pdf-view-mode . (lambda () (display-line-numbers-mode -1))))
+  :vc (:url "https://github.com/edmundmiller/nextflow-mode.git"))
