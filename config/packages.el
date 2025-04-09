@@ -18,8 +18,11 @@
   (rfn-eshadow-update-overlay . vertico-directory-tidy))
 
 
+(use-package posframe
+  :after vertico)
+
 (use-package vertico-posframe
-  :after vertico
+  :after posframe
   :load-path addons-dir
   :custom
   (vertico-posframe-border-width 20)
