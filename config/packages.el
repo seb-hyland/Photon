@@ -20,7 +20,7 @@
 
 (use-package vertico-posframe
   :after vertico
-  :vc (:url "https://github.com/tumashu/vertico-posframe.git")
+  :load-path addons-dir
   :custom
   (vertico-posframe-border-width 20)
   :config (vertico-posframe-mode t))

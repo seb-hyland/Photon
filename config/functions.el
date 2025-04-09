@@ -95,9 +95,9 @@
 (defun photon-compile ()
   (interactive)
   (let* ((command (cl-case major-mode
-			((rust-mode rust-ts-mode rustic-mode) "cargo run")
-			((python-mode python-ts-mode) "python ")
-			(t "")))
+		    ((rust-mode rust-ts-mode rustic-mode) "cargo run")
+		    ((python-mode python-ts-mode) "python ")
+		    (t "")))
 	 (root (cl-case major-mode
 		 ((rust-mode rust-ts-mode rustic-mode) (project-root (project-current)))
 		 (t nil)))
@@ -227,13 +227,36 @@
 
 
 (defun eglot-open-link ()
-    (interactive)
-    (let ((url (get-text-property (point) 'help-echo)))
-      (if url
-	  (browse-url url)
-	(message "No URL found at point"))))
+  (interactive)
+  (let ((url (get-text-property (point) 'help-echo)))
+    (if url
+	(browse-url url)
+      (message "No URL found at point"))))
 
 
 (defun sockeye ()
   (interactive)
   (dired "/ssh:sthyland@sockeye.arc.ubc.ca:~/"))
+
+
+(defun async-eshell-command (cmd)
+  (interactive (list (read-string "Eshell command: ")))
+  (if (get-buffer "*async-eshell*")
+      (kill-buffer "*async-eshell*"))
+  (let* ((buf-name "*async-eshell*")
+         (buf (get-buffer-create buf-name)))
+    (with-current-buffer buf
+      (unless (derived-mode-p 'eshell-mode)
+        (eshell-mode))
+      (display-buffer buf
+                      `(display-buffer-in-side-window
+                        . ((side . right)
+                           (window-width . 60)
+                           (preserve-size . (nil . t)))))
+      (goto-char (point-max))
+      (let ((inhibit-read-only t))
+	(eshell/clear t)
+        (insert (propertize cmd 'face 'bold))
+        (eshell-send-input)
+	(evil-normal-state)))
+    buf))
