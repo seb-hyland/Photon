@@ -250,10 +250,12 @@
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
+
 (use-package spacious-padding
   :demand t
   :init
   (spacious-padding-mode))
+
 
 (use-package ligature
   :demand t
@@ -289,6 +291,11 @@
 	 ("C-k" . devdocs-go-back))
   :config
   (define-key devdocs-mode-map (kbd "<normal-state> SPC") (lookup-key evil-normal-state-map (kbd "SPC"))))
+
+
+(use-package atomic-chrome
+  :defer t
+  :commands (atomic-chrome-start-server))
 
 
 (use-package quickrun
