@@ -21,12 +21,12 @@
 (use-package posframe
   :after vertico)
 
-(use-package vertico-posframe
-  :after posframe
-  :load-path addons-dir
-  :custom
-  (vertico-posframe-border-width 20)
-  :config (vertico-posframe-mode t))
+;; (use-package vertico-posframe
+;;   :after posframe
+;;   :load-path addons-dir
+;;   :custom
+;;   (vertico-posframe-border-width 20)
+;;   :config (vertico-posframe-mode t))
 
 
 (use-package marginalia
@@ -70,13 +70,13 @@
   :after eglot)
 
 
-(use-package embark
-  :defer t
-  :init
-  (use-package embark-consult
-    :demand t)
-  :bind
-  (("C-." . embark-act)))
+;; (use-package embark
+;;   :defer t
+;;   :init
+;;   (use-package embark-consult
+;;     :demand t)
+;;   :bind
+;;   (("C-." . embark-act)))
 
 
 (use-package evil
@@ -118,32 +118,11 @@
   :config (winner-mode t))
 
 
-(use-package magit
-  :defer t
-  :custom
-  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1)
-  (magit-format-file-function #'magit-format-file-nerd-icons))
-
-(use-package forge
-  :after magit)
-
-(use-package code-review
-  :vc (:url "https://github.com/doomelpa/code-review.git")
-  :after forge
-  :custom (code-review-auth-login-marker 'forge))
-
-
-(use-package transient
-  :defer t
-  :bind (
-      	 :map transient-base-map
-      	 ("<escape>" . transient-quit-all)))
-
-
 (use-package treesit-auto
   :demand t
   :custom
   (c-ts-mode-indent-offset 4)
+  (treesit-font-lock-level 4)
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode)
@@ -180,14 +159,14 @@
   (highlight-indent-guides-responsive 'top))
 
 
-(use-package eat
-  :defer t
-  :vc (:url "https://codeberg.org/akib/emacs-eat.git")
-  :hook (eat-exec . (lambda (&rest _) (eat-semi-char-mode)))
-  :config
-  (add-to-list 'display-buffer-alist
-	       '("^\\*eat\\*"
-		 (display-buffer-pop-up-window))))
+;; (use-package eat
+;;   :defer t
+;;   :vc (:url "https://codeberg.org/akib/emacs-eat.git")
+;;   :hook (eat-exec . (lambda (&rest _) (eat-semi-char-mode)))
+;;   :config
+;;   (add-to-list 'display-buffer-alist
+;; 	       '("^\\*eat\\*"
+;; 		 (display-buffer-pop-up-window))))
 
 
 (use-package ansi-color
@@ -201,24 +180,6 @@
   (setq persp-suppress-no-prefix-key-warning t)
   :config
   (persp-mode t))
-
-
-(use-package avy
-  :defer t)
-
-
-(use-package chatgpt-shell
-  :defer t
-  :vc (:url "https://github.com/xenodium/chatgpt-shell.git")
-  :commands (chatgpt-shell
-	     chatgpt-shell-swap-model
-	     chatgpt-shell-quick-insert
-	     chatgpt-shell-explain-code
-	     chatgpt-shell-fix-error-at-point)
-  :custom
-  (chatgpt-shell-google-key (getenv "GEMINI_API"))
-  (chatgpt-shell-model-version "gemini-2.5-pro-exp")
-  (chatgpt-shell-display-function #'display-buffer))
 
 
 (use-package autothemer
@@ -248,10 +209,10 @@
   (eval-after-load 'dired
     (setq dired-kill-when-opening-new-dired-buffer t)))
 
-(use-package nerd-icons-corfu
-  :after corfu
-  :config
-  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+;; (use-package nerd-icons-corfu
+;;   :after corfu
+;;   :config
+;;   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 
 (use-package spacious-padding
@@ -285,27 +246,6 @@
   (global-vi-tilde-fringe-mode t))
 
 
-(use-package devdocs
-  :defer t
-  :commands (devdocs-lookup)
-  :bind (
-	 :map devdocs-mode-map
-	 ("C-j" . devdocs-go-forward)
-	 ("C-k" . devdocs-go-back))
-  :config
-  (define-key devdocs-mode-map (kbd "<normal-state> SPC") (lookup-key evil-normal-state-map (kbd "SPC"))))
-
-
-(use-package atomic-chrome
-  :defer t
-  :commands (atomic-chrome-start-server))
-
-
-(use-package quickrun
-  :defer t
-  :commands (quickrun quickrun-shell))
-
-
 (use-package binfo
   :defer t
   :commands (binfo-mode)
@@ -320,13 +260,12 @@
   (dashboard-mode . (lambda () (vi-tilde-fringe-mode -1)))
   :config
   (dashboard-setup-startup-hook))
-
 (load-file (concat addons-dir "photon-dashboard.el"))
 
 
 (use-package rainbow-delimiters
   :defer t
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook (emacs-lisp-mode . rainbow-delimiters-mode))
 
 
 (use-package org
