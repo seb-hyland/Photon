@@ -55,7 +55,7 @@
 			     ((< current-hour 17) "As the shadows lengthen, pay heed to the falling leaves.")
 			     ((< current-hour 22) "Look up, and marvel at the infinite and forever light.")
 			     (t night-message)))
-	      (message-contents (concat "Welcome, 11000011010. " component "\n"
+	      (message-contents (concat "Welcome, " (propertize "ssh" 'face 'italic) ". " component "\n"
 				    (format-time-string "%H:%M:%S %m/%d"))))
 	(message message-contents)))
 

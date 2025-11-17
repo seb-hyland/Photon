@@ -28,7 +28,6 @@
 ;;   (vertico-posframe-border-width 20)
 ;;   :config (vertico-posframe-mode t))
 
-
 (use-package marginalia
     :after vertico
     :config
@@ -84,7 +83,7 @@
     :init
     (setq evil-want-integration t
 	evil-want-keybinding nil
-	evil-want-minibuffer t
+	;; evil-want-minibuffer t
 	evil-respect-visual-line-mode t)
     :bind (
               :map evil-motion-state-map
@@ -92,6 +91,8 @@
               ("k" . evil-previous-visual-line)
               :map occur-mode-map
 	      ("<remap> <occur-mode-goto-occurrence>" . photon-occur-goto-item))
+    :hook
+    (minibuffer-setup-hook . (lambda () (evil-initialize) (evil-insert-state)))
     :config
     (evil-mode t)
     (evil-set-undo-system 'undo-redo))

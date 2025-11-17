@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (setq dashboard-center-content t
       dashboard-vertically-center-content t)
 
