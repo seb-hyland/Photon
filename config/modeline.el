@@ -25,28 +25,41 @@
     (propertize symbol 'face '(:weight extra-light) 'face 'mode-line)))
 
 
-(defun photon-modeline-project ()
-  (if-let* ((path (if buffer-file-name
-		     buffer-file-name
-		   (if dired-directory
-		       dired-directory))))
-      (let ((buffer-name
-	     (cond ((vc-git-root path)
-		    (let ((status (vc-git--run-command-string (vc-git-root path) "status" "--porcelain")))
-		      (if (or (string= "" status)
-			      (null status))
-			  (concat "(󰊢 " (file-name-nondirectory (directory-file-name (vc-git-root path))) ")"))
-		      (concat "[󰊢 " (file-name-nondirectory (directory-file-name (vc-git-root path))) "]")))
-		   ((project-name (project-current))
-		    (concat "[ " (project-name (project-current)) "]")))))
-	(propertize buffer-name 'face '(:weight extra-light) 'face 'mode-line))))
-
+(defun photon--get-buffer-name ()
+    (let* ((buf-file-name (buffer-file-name))
+	   (name (if buf-file-name
+		     (file-name-nondirectory buf-file-name)
+		     (buffer-name))))
+	(cons name buf-file-name)))
 
 (defun photon-buffer-name ()
-  (let ((name 
-	 (cond ((buffer-file-name) (file-name-nondirectory (buffer-file-name)))
-	       (t (buffer-name)))))
-    (propertize name 'face '(:weight bold) 'face 'mode-line)))
+    (cl-destructuring-bind (name . buf-file-name) (photon--get-buffer-name)
+	(propertize name
+	    'face '(:weight bold)
+	    'face 'mode-line
+	    'help-echo buf-file-name)))
+
+
+(defun photon-modeline-diagnostics ()
+    (let ((output-str ""))
+	(if (eglot-managed-p)
+	    (let ((diagnostics (flymake--project-diagnostics))
+		     (errors 0)
+		     (warnings 0))
+		(dolist (diag diagnostics)
+		    (let ((diag-type (flymake-diagnostic-type diag)))
+			(cond
+			    ((eq diag-type 'eglot-error) (cl-incf errors))
+			    ((eq diag-type 'eglot-warning) (cl-incf warnings)))))
+		(when (not (eq errors 0))
+		    (setq output-str
+			(concat output-str (propertize (concat " " (number-to-string errors))
+					       'face '(:foreground "#FF94B7")))))
+		(when (not (eq warnings 0))
+		    (setq output-str
+			(concat output-str (propertize (concat " " " " (number-to-string warnings))
+					       'face '(:foreground "#FCE397")))))))
+	output-str))
 
 
 (setq-default mode-line-format
@@ -55,7 +68,7 @@
 		(:eval (photon-modeline-evil)) "   "
 		(:eval (photon-modeline-modification)) " "
 		(:eval (photon-buffer-name)) "   "
-		(:eval (photon-modeline-project)) "   "
+		(:eval (photon-modeline-diagnostics))
 		mode-line-format-right-align
 		(:eval (photon-modeline-major-mode))
 		"   "

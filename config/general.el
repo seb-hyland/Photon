@@ -20,6 +20,7 @@
     delete-by-moving-to-trash t
     create-lockfiles nil
     lisp-indent-offset 4
+    scroll-step 1
     auth-sources '("~/.authinfo")
     custom-file (file-name-concat user-emacs-directory "custom.el"))
 (setq-default display-line-numbers-width 4

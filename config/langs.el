@@ -66,11 +66,19 @@
     (completion-ignore-case t)
     (corfu-popupinfo-delay '(0.1 . 0.1))
     (corfu-popupinfo-mode t)
+    (corfu-max-width 50)
+    (corfu-popupinfo-max-width 30)
     (corfu-bar-width 0)
-    (corfu-left-margin-width 0)
+    (corfu-left-margin-width 1)
     (corfu-right-margin-width 0)
     :config
-    (setf (alist-get 'child-frame-border-width corfu--frame-parameters) 6))
+    (setf (alist-get 'child-frame-border-width corfu--frame-parameters) 8)
+    ;; Override the "fringe" face for corfu buffers
+    (defun corfu-fringe-restyle (buffer)
+	(with-current-buffer buffer
+	    (face-remap-add-relative 'fringe :background "#2A2A37"))
+	buffer)
+    (advice-add 'corfu--make-buffer :filter-return #'corfu-fringe-restyle))
 
 (use-package markdown-mode
     :after eglot
@@ -82,7 +90,7 @@
     :custom
     (eldoc-box-max-pixel-height 300)
     :config
-    (setf (alist-get 'internal-border-width eldoc-box-frame-parameters) 8))
+    (setf (alist-get 'internal-border-width eldoc-box-frame-parameters) 12))
 
 
 ;; Rust

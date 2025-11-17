@@ -24,10 +24,12 @@
 			      (cond
 			       ((minibuffer-window-active-p (selected-window)) (keyboard-escape-quit))
 			       ((evil-visual-state-p) (evil-exit-visual-state))
-			       (t (evil-normal-state)))))
+				  (t (evil-normal-state)))))
+		   ("C-g" . (lambda () (interactive) (message (cdr (photon--get-buffer-name)))))
      		   ("C-/ k" . helpful-key)
      		   ("C-/ f" . helpful-function)
      		   ("C-/ v" . helpful-variable)
+     		   ("C-/ s" . helpful-symbol)
 		   ("M-#" . async-eshell-command)
 		   ("S-<return>" . eldoc-box-help-at-point)
      		   ("C-<return>" . photon-toggle)
