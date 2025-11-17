@@ -11,6 +11,7 @@
     frame-title-format nil
     default-frame-alist '((width . 200)
 			     (height . 35)
+			     (undecorated . t)
 			     (undecorated-round . t)
 			     (drag-internal-border . t)
 			     (internal-border-width . 4)
