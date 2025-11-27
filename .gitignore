@@ -1,6 +1,6 @@
 auto-save-list/*
 eln-cache/*
-elpa/*
+straight/*
 tree-sitter/*
 projects
 transient/*

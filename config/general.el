@@ -23,9 +23,11 @@
     lisp-indent-offset 4
     scroll-step 1
     auth-sources '("~/.authinfo")
-    custom-file (file-name-concat user-emacs-directory "custom.el"))
+    custom-file "/tmp/custom.el")
 (setq-default display-line-numbers-width 4
-    display-fill-column-indicator-column 120)
+    display-fill-column-indicator-column 120
+    indent-tabs-mode nil
+    tab-width 4)
 
 (scroll-bar-mode -1)   		        
 (tool-bar-mode -1)     		        

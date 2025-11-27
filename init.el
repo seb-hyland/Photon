@@ -1,19 +1,22 @@
 ;; -*- lexical-binding: t; -*-
 
-;; Setup use-package
-(require 'package)
-(setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                         ("org" . "https://orgmode.org/elpa/")
-                         ("elpa" . "https://elpa.gnu.org/packages/")))
-(package-initialize)
-(unless package-archive-contents
-  (package-refresh-contents))
-
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
-(setq use-package-always-ensure t
-      use-package-vc-prefer-newest t)
+;; Setup straight.el
+(setq straight-use-package-by-default t)
+(defvar bootstrap-version)
+(let ((bootstrap-file
+	  (expand-file-name
+              "straight/repos/straight.el/bootstrap.el"
+              (or (bound-and-true-p straight-base-dir)
+		  user-emacs-directory)))
+	 (bootstrap-version 7))
+    (unless (file-exists-p bootstrap-file)
+	(with-current-buffer
+            (url-retrieve-synchronously
+		"https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+		'silent 'inhibit-cookies)
+	    (goto-char (point-max))
+	    (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
 
 (defvar addons-dir (concat user-emacs-directory "add-ons/"))
 (add-to-list 'load-path addons-dir)
@@ -36,14 +39,14 @@
 ;; Load general config
 (load "general")
 
+;; Load Photon helpers
+(load "functions")
+
 ;; Load functional packages
 (load "packages")
 
 ;; Load language preferences 
 (load "langs")
-
-;; Load Photon transients
-(load "functions")
 
 ;; Load Photon keybinds 
 (load "keys")

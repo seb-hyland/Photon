@@ -4,8 +4,6 @@
     :demand t
     :bind (
               :map vertico-map
-              ("<remap> <photon-C-j>" . vertico-next)
-              ("<remap> <photon-C-k>" . vertico-previous)
               ("RET" . vertico-directory-enter)
               ("DEL" . vertico-directory-delete-char)
               ("M-DEL" . vertico-directory-delete-word))
@@ -97,7 +95,6 @@
     (evil-mode t)
     (evil-set-undo-system 'undo-redo))
 
-
 (use-package evil-collection
     :after evil
     :config
@@ -105,7 +102,7 @@
 
 
 (use-package dired
-    :ensure nil
+    :straight nil
     :custom (dired-dwim-target t))
 
 
@@ -133,7 +130,8 @@
 (use-package treesit-fold
     :defer t
     :hook (prog-mode . treesit-fold-mode)
-    :vc (:url "https://github.com/emacs-tree-sitter/treesit-fold.git")
+    :straight
+    (:host github :repo "emacs-tree-sitter/treesit-fold")
     :config
     (defun treesit-fold-better-toggle ()
 	(interactive)
@@ -195,7 +193,6 @@
     (nerd-icons-color-icons t)
     (nerd-icons-scale-factor 1))
 
-
 (use-package nerd-icons-dired
     :defer t
     :hook
@@ -238,6 +235,7 @@
 
 (use-package binfo
     :defer t
+    :straight nil
     :commands (binfo-mode)
     :load-path addons-dir)
 
@@ -246,8 +244,6 @@
     :demand t
     :custom
     (nerd-icons-font-family "Symbols Nerd Font Mono")
-    :hook
-    (dashboard-mode . (lambda () (vi-tilde-fringe-mode -1)))
     :config
     (dashboard-setup-startup-hook))
 (load-file (concat addons-dir "photon-dashboard.el"))
@@ -259,8 +255,25 @@
 
 
 (use-package org
-    :defer t
-    :mode "\\.org$"
+    :demand t
+    :custom
+    (org-hide-emphasis-markers t)
     :config
     (delete-selection-mode t)
     (setf (cdr (assoc 'file org-link-frame-setup)) 'find-file))
+
+(use-package org-modern
+    :after org
+    :hook (org-mode . org-modern-mode)
+    :custom
+    (org-modern-star 'replace))
+
+(use-package org-present
+    :after org
+    :commands (org-present)
+    :bind (
+              :map org-present-mode-keymap))
+
+
+(use-package vc-jj
+    :demand t)

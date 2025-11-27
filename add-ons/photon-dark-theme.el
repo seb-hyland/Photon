@@ -85,10 +85,10 @@
 	(menu                                          (:foreground fujiWhite))
 	(mode-line                                     (:background sumiInk-1b :foreground fujiWhite :bold t))
 	(mode-line-inactive                            (:background sumiInk-1b :foreground fujiGrey
-							   :box (:line-width 6 :color sumiInk-1)
+							   :box (:line-width 10 :color sumiInk-1b)
 							   :weight 'extra-light :overline fujiGrey))
 	(mode-line-active                              (:background sumiInk-1b :foreground fujiWhite
-							   :box (:line-width 6 :color sumiInk-1)
+							   :box (:line-width 10 :color sumiInk-1b)
 							   :overline fujiWhite))
 	(mode-line-highlight                           (:foreground boatYellow2))
 	(mode-line-buffer-id                           (:foreground crystalBlue))

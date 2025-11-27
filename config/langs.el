@@ -4,10 +4,10 @@
     :defer t
     :commands (eglot eglot-rename eglot-code-actions)
     :init
-    (use-package eglot-booster
-	:demand t
-	:vc (:url "https://github.com/jdtsmith/eglot-booster.git")
-	:config (eglot-booster-mode t))
+    ;; (use-package eglot-booster
+	;; :demand t
+	;; :straight (:host github :repo "jdtsmith/eglot-booster")
+	;; :config (eglot-booster-mode t))
     (use-package tempel
 	:demand t
 	:bind (:map tempel-map
@@ -21,15 +21,58 @@
 	      ("<normal-state> K" . nil)
 	      ("M-<return>" . eglot-find-declaration))
     :custom
-    (project-vc-extra-root-markers '("Cargo.toml" "build.zig"))
+    (project-vc-extra-root-markers '("build.zig"))
     (eldoc-echo-area-use-multiline-p t)
     (eglot-ignored-server-capabilities '(:inlayHintProvider))
+    (eglot-code-action-indications '(eldoc-hint))
     :config
     (setf (plist-get eglot-events-buffer-config :size) 0)
     (fset #'jsonrpc--log-event #'ignore)
     (advice-add 'eglot-imenu :override (lambda (&rest _) (treesit-simple-imenu)))
     (setq-default eglot-workspace-configuration
-	'(:basedpyright (:typeCheckingMode "standard"))))
+	    '(:basedpyright (:typeCheckingMode "standard"))))
+
+;; (use-package lsp-proxy
+;;     :straight (:host github :repo "jadestrong/lsp-proxy")
+;;     :custom
+;;     (lsp-proxy-enable-bytecode nil)
+;;     :config
+;;     ;; Snippet completion
+;;     (use-package tempel :demand t)
+;;     (use-package peg)
+;;     (defun lsp-proxy-tempel--parse (snippet)
+;;         "Define a parser to convert incoming snippets into something `tempel' can understand."
+;;         (with-temp-buffer
+;;             (insert snippet) (goto-char (point-min))
+;;             (with-peg-rules
+;;                 (
+;;                     (snippet (* (or anything text)))
+;;                     (anything (or tabstop braced placeholder choice))
+;;                     (tabstop (and "$" int )  `(num -- (if (= 0 num) 'q 'p)))
+;;                     (braced (and "${" int "}") `(num --  (if (= 0 num) 'q 'p)))
+;;                     (placeholder (and "${" int ":" (or anything name) "}")
+;;                         `(num place -- (let ((placeholder (if (string-empty-p place)
+;;                                                               "_"
+;;                                                               place)))
+;;                                            `(p ,placeholder ,num))))
+;;                     (choice  (and "${" int "|" choices "|}" `(num choices -- `(p ,choices ,num))))
+;;                     (int (substring (+ [0-9])) `(num -- (string-to-number num)))
+;;                     (text (substring (+ (not (or "$" (eob))) (any))))
+;;                     (name (substring (* (not (or (set "$}") (eob))) (any))))
+;;                     (choices (substring (* (not (or (set "$|") (eob))) (any)))))
+;;                 (peg-run (peg snippet)))))
+;;     (defun lsp-proxy-tempel--convert (snippet)
+;;         "Parse a `SNIPPET' from `lsp-proxy' into a format usable by `tempel'."
+;;         `( ,@(reverse (lsp-proxy-tempel--parse snippet)) q))
+;;     (defun lsp-proxy-tempel-expand-snippet (snippet &optional start end expand-env)
+;;         "Handle expansion of incoming snippets."
+;;         (ignore expand-env)
+;;         (when (and start end)
+;;             (delete-region start end))
+;;         (tempel-insert (lsp-proxy-tempel--convert snippet)))
+;;     ;; Override `lsp-proxy--expand-snippet' to support tempel over yasnippet
+;;     (advice-add 'lsp-proxy--expand-snippet :override #'lsp-proxy-tempel-expand-snippet))
+
 
 
 (use-package dape
@@ -69,7 +112,7 @@
     (corfu-max-width 50)
     (corfu-popupinfo-max-width 30)
     (corfu-bar-width 0)
-    (corfu-left-margin-width 1)
+    (corfu-left-margin-width 0)
     (corfu-right-margin-width 0)
     :config
     (setf (alist-get 'child-frame-border-width corfu--frame-parameters) 8)
@@ -95,8 +138,8 @@
 
 ;; Rust
 (use-package rust-mode
-    :init
-    (setq rust-mode-treesitter-derive t))
+    :custom
+    (rust-mode-treesitter-derive t))
 
 (use-package rustic
     :after rust-mode
@@ -125,13 +168,22 @@
 ;; Typst
 (use-package typst-ts-mode
     :defer t
-    :vc (:url "https://codeberg.org/meow_king/typst-ts-mode.git")
-    :config (add-to-list 'eglot-server-programs '(typst-ts-mode . ("tinymist"))))
+    :straight (:host codeberg :repo "meow_king/typst-ts-mode")
+    :hook
+    (typst-ts-mode . (lambda () (add-hook 'after-save-hook #'typst-ts-compile nil t)))
+    :config
+    (add-to-list 'eglot-server-programs '(typst-ts-mode . ("tinymist"))))
+(use-package doc-view
+    :after typst-ts-mode
+    :bind (:map doc-view-mode-map
+              ("C-n" . doc-view-next-page)
+              ("C-p" . doc-view-previous-page))
+    :hook (doc-view-mode . (lambda () (display-line-numbers-mode -1))))
 
 (use-package websocket)
 (use-package typst-preview
     :after typst-ts-mode
-    :vc (:url "https://github.com/havarddj/typst-preview.el.git")
+    :straight (:host github :repo "havarddj/typst-preview.el")
     :custom (typst-preview-invert-colors "never"))
 
 ;; Python
@@ -142,11 +194,23 @@
 (use-package mojo-mode
     :defer t
     :mode ("\\.mojo$" "\\.🔥$")
-    :vc (:url "https://github.com/andcarnivorous/mojo-hl.git")
+    :straight (:host github :repo "andcarnivorous/mojo-hl")
     :config (add-to-list 'eglot-server-programs '(mojo-mode . ("magic" "run" "mojo-lsp-server"))))
 
 ;; Nextflow
 (use-package nextflow-mode
     :defer t
     :mode "\\.nf$"
-    :vc (:url "https://github.com/edmundmiller/nextflow-mode.git"))
+    :straight (:host github :repo "edmundmiller/nextflow-mode"))
+
+;; Quarto rendering
+(use-package quarto-mode
+    :defer t
+    :init
+    (use-package ess)
+    :mode (("\\.qmd" . poly-quarto-mode)))
+
+(use-package meson-mode
+    :defer t
+    :custom
+    (meson-indent-basic 4))
